@@ -1,3 +1,4 @@
+from urllib import response
 from django.test import TestCase
 from django.urls import reverse
 
@@ -12,3 +13,10 @@ class HomeTest(TestCase):
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Amir Ebrahim')
+
+    def test_title(self):
+        """To test the title
+        """
+
+        response = self.client.get(reverse('home'))
+        self.assertContains(response, 'Home')
