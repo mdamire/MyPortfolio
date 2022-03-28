@@ -62,3 +62,17 @@
     background-color: #555;
     color: white;
 } 
+
+.main {
+    padding: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: white;
+}
+
+@media (min-width: 768px) {
+    .main {
+        padding-right: 40px;
+        padding-left: 40px;
+    }
+}

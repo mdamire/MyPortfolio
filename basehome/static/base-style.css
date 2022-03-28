@@ -11,9 +11,7 @@ body {
 /*
  * Main content
  */
-
 .main {
-    padding: 20px;
     padding-left: 10px;
     padding-right: 10px;
     background-color: white;
@@ -24,4 +22,9 @@ body {
         padding-right: 40px;
         padding-left: 40px;
     }
+}
+
+/* heading row */
+.header-row {
+    background-color: #4cb32da9
 }
