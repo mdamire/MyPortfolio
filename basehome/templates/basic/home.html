@@ -1,5 +1,92 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'basic/home-style.css' %}">
+{% endblock%}
 
 {% block content %}
-test
+    <div class="card home-top">
+        <div class="row no-gutters d-flex justify-content-center">
+            <div class="col-auto">
+                <img src="{% static 'images/profilepic.jpg' %}" class="img-fluid" alt="">
+            </div>
+            <div class="col-md align-middle">
+                <div class="card-block px-2">
+                    <h1 class="card-title display-1">Amir Ebrahim</h1>
+                    <h5 class="card-text custom-card-text">
+                        Hi!! I am a full stack software developer. I like a good desined software that 
+                        can help the user in the best way possible. It takes a lot of amibition and passion
+                        to be able to achive that.<br>
+                        To my view, software is a tool to make a better and pieceful world. 
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content mt-5 mb-5 p-3 border">
+        <div class="row d-flex justify-content-center">
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'images/python.png' %}" class="rounded-circle border" height="100px" weidth="100px" alt="Python"/>
+                    <figcaption class="d-flex justify-content-center">Python</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'images/django.png' %}" class="rounded-circle border" height="100px" weidth="100px" alt="Django"/>
+                    <figcaption class="d-flex justify-content-center">Django</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'images/bash.png' %}" class="rounded border" height="100px" weidth="100px" alt="Bash"/>
+                    <figcaption class="d-flex justify-content-center">Bash</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'images/perl.png' %}" class="rounded border" height="100px" weidth="100px" alt="Perl"/>
+                    <figcaption class="d-flex justify-content-center">Perl</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'images/mysql.jpg' %}" class="rounded-circle border" height="100px" weidth="100px" alt="mysql"/>
+                    <figcaption class="d-flex justify-content-center">SQL/MySQL</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'images/react.png' %}" class="rounded-circle border" height="100px" weidth="100px" alt="React"/>
+                    <figcaption class="d-flex justify-content-center">React</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'images/linux.png' %}" class="rounded-circle border" height="100px" weidth="100px" alt="Linux"/>
+                    <figcaption class="d-flex justify-content-center">Linux</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'images/docker.png' %}" class="rounded-circle border" height="100px" weidth="100px" alt="Docker"/>
+                    <figcaption class="d-flex justify-content-center">Docker</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'images/bootstrap.png' %}" class="rounded-circle border" height="100px" weidth="100px" alt="Bootstrap"/>
+                    <figcaption class="d-flex justify-content-center">Bootstrap</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'images/git.png' %}" class="rounded-circle border" height="100px" weidth="100px" alt="Git"/>
+                    <figcaption class="d-flex justify-content-center">Git</h4>
+                </figure>
+            </div>
+        </div>
+    </div>
 {% endblock  %}
