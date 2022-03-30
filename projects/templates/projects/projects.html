@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block heading %}
+    <h2 class="pt-5 pb-2">
+        Projects kk
+    </h2>
+{% endblock  %}
+
+{% block content %}
+    {% for post in post_list %}
+        {{ post.title }}
+    {% empty %}
+        no post yet
+    {% endfor %}
+{% endblock  %}
