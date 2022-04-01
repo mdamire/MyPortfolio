@@ -1,22 +1,40 @@
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import ListView
+from django.http import Http404
 
 from .models import ProjectPosts
 
 # Create your views here.
-class ProjectView(ListView):
+def projectView(request):
     template_name = "projects/projects.html"
-    context_object_name = 'post_list'
+    post_list = ProjectPosts.objects.filter(
+            parent__isnull = True
+        ).order_by(
+            '-update_date'
+        )
+    return render(request, template_name, {
+            "page_heading": 'Projects',
+            "post_list": post_list,
+        })
 
-    def get_queryset(self):
-        return ProjectPosts.objects.filter(
-                parent__isnull = True
-            ).order_by(
-                '-update_date'
-            )
     
-def ProjectPostDetailView(request, title):
+def projectPostDetailView(request, title):
     post = get_object_or_404(ProjectPosts, url_param=title)
+    if post.is_parent:
+        try:
+            child = ProjectPosts.objects.filter(
+                    parent = post    
+                ).order_by(
+                    'serial'
+                )
+        except ProjectPosts.DoesNotExist:
+            raise Http404("Page not found")
+        
+        return render(request, "projects/projects.html", {
+            "page_heading": post.title,
+            "post_list": child,
+        })
+
     group_posts = ProjectPosts.objects.filter(
             parent=post.parent
         ).order_by(

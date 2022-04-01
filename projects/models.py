@@ -7,14 +7,20 @@ class ProjectPosts(models.Model):
     sub_title = models.CharField(max_length=500)
     url_name = models.CharField(
             max_length=40, 
-            default='details', 
+            default='projects:details', 
             null=False,
             blank=False,
         )
     url_param = models.CharField(max_length=40, unique=True)
-    parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True)
-    serial = models.FloatField(null=True)
-    body = models.CharField(max_length=7000, null=True)
+    is_parent = models.BooleanField(default=False)
+    parent = models.ForeignKey(
+            "self", 
+            on_delete=models.CASCADE, 
+            null=True, 
+            blank=True,
+        )
+    serial = models.FloatField(null=True, blank=True)
+    body = models.CharField(max_length=7000, null=True, blank=True)
     update_date = models.DateField()
     publish_date = models.DateField()
 

@@ -2,11 +2,25 @@
 
 {% block title %}{{ post.title }}{% endblock  %}
 
+{% block sidebar %}
+    {% if group.count > 1 %}
+        {% for gpost in group %}
+            {% if post.id == gpost.id %}
+                <li class="active">
+                    <a href={% url gpost.url_name gpost.url_param %}>{{ gpost.title }}</a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% url gpost.url_name gpost.url_param %}">{{ gpost.title }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endblock sidebar %}
+
 {% block content %}
+    <h2 class="post-title">{{ post.title }}</h2>
     {% autoescape off %}
         <div class='bg-success'>{{ post.body }}</div>
     {% endautoescape %}
-    {% for gpost in group %}
-        {{ gpost.title }}
-    {% endfor %}
 {% endblock  %}

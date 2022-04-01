@@ -1,7 +1,7 @@
 {% extends 'page-base.html' %}
 
 {% block heading %}
-    Projects
+    {{ page_heading }}
 {% endblock  %}
 
 {% block content %}
@@ -20,6 +20,6 @@
             </div>
         </div>
     {% empty %}
-        no post yet
+        <h3 class="p-3">No Post Yet</h3>
     {% endfor %}
 {% endblock  %}
