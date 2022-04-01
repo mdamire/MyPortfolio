@@ -1,0 +1,12 @@
+{% extends 'post-base.html' %}
+
+{% block title %}{{ post.title }}{% endblock  %}
+
+{% block content %}
+    {% autoescape off %}
+        <div class='bg-success'>{{ post.body }}</div>
+    {% endautoescape %}
+    {% for gpost in group %}
+        {{ gpost.title }}
+    {% endfor %}
+{% endblock  %}

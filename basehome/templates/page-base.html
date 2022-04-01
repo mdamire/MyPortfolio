@@ -1,13 +1,8 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static 'post-base-style.css' %}">
-{% endblock head %}
 
 
 {% block body %}
-    <nav class="navbar navbar-expand-sm navbar-custom navbar-light navbar-fixed-top">
+    <nav class="navbar navbar-expand-sm navbar-custom navbar-light">
         <div class="container-md d-flex">
             <div class="justify-content-start">
                 <a class="navbar-brand" href="{% url 'home' %}">
@@ -37,23 +32,22 @@
     </nav>
 
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-3 col-lg-2 sidebar">
-                <ul class="nav flex-column nav-sidebar">
-                    <li class="active"><a href="#">Overview</a></li>
-                    <li><a href="#">Reports</a></li>
-                    <li><a href="#">Analytics</a></li>
-                    <li><a href="#">Export</a></li>
-                </ul>
+        {% if request.path != '/home/' %}
+            <div class="row header-row">
+                <div class="col-md-6 mx-auto header-main">
+                    <h1>
+                        {% block heading %}
+                        {% endblock %}
+                    </h1>
+                </div>
             </div>
+        {% endif %}
 
-            <div class="col-md-6 offset-md-3 col-lg-8 offset-lg-2 post-main">
+        <div class="row">
+            <div class="col-md-6 mx-auto main">
                 {% block content %}
                 {% endblock %}
             </div>
-
-            <div class="col-md-3 col-lg-2 rightbar">
-            </div>
         </div>
     </div>
-{% endblock %}
+{% endblock  %}

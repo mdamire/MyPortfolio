@@ -1,14 +1,24 @@
-{% extends 'base.html' %}
+{% extends 'page-base.html' %}
 
 {% block heading %}
-    <h2 class="pt-5 pb-2">
-        Projects kk
-    </h2>
+    Projects
 {% endblock  %}
 
 {% block content %}
     {% for post in post_list %}
-        {{ post.title }}
+        <div class="container-fluid container-no-padding">
+            <div class="row post-list-row">
+                <div class="col-md-2 text-muted post-list-date">
+                    {{post.update_date}}
+                </div>
+                <div class="col-md">
+                    <a href="{% url 'projects:details' post.url_param%}" class="post-list-heading">
+                        <h3>{{post.title}}</h3>
+                    </a>
+                    {{post.sub_title}}
+                </div>
+            </div>
+        </div>
     {% empty %}
         no post yet
     {% endfor %}
