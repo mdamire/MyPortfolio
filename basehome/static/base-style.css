@@ -1,6 +1,7 @@
 
 body {
     margin: 0;
+    margin-bottom: 120px;
 }
 
 .navbar-custom {
@@ -59,9 +60,34 @@ body {
     margin: 0px 0px 0px 0px;
 }
 
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+.footer-row {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #4cb32da9;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    font-size: medium;
+    color: rgb(65, 65, 65);
+}
+
+.footer-button {
+    padding: 0px 5px 0px 5px;
+    background-color: green;
+}
+
 @media (min-width: 768px) {
     .main {
         padding-top: 30px;
+    }
+
+    body {
+        margin-bottom: 100px;
     }
 
     .header-row {
