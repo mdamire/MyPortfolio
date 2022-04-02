@@ -34,8 +34,10 @@ def projectPostDetailView(request, title):
             }))
 
     template_name = 'projects/details.html'
+    context = {
+        'post': post,
+    }
 
-    group_posts = []
     if post.is_child():
         group_posts = ProjectPosts.objects.filter(
                 parent=post.parent
@@ -43,8 +45,7 @@ def projectPostDetailView(request, title):
                 'serial'
             )
 
-    context = {
-        'post': post,
-        'group': group_posts,
-    }
+        template_name = 'projects/details-sidebar.html'
+        context['group'] = group_posts
+
     return render(request, template_name, context)

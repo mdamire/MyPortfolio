@@ -1,13 +1,14 @@
-{% extends 'post-base.html' %}
+{% extends 'page-base.html' %}
 
-{% block title %}{{ post.title }}{% endblock  %}
-
-{% block sidebar %}
-{% endblock sidebar %}
+{% block heading %}
+    {{ post.title }}
+{% endblock  %}
 
 {% block content %}
-    <h2 class="post-title">{{ post.title }}</h2>
+    <div class="text-muted pb-3">
+        {{post.update_date}}
+    </div>
     {% autoescape off %}
-        <div class='bg-success'>{{ post.body }}</div>
+    <div>{{ post.body }}</div>
     {% endautoescape %}
 {% endblock  %}
