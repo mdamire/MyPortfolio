@@ -24,6 +24,12 @@ class ProjectPosts(models.Model):
     update_date = models.DateField()
     publish_date = models.DateField()
 
+    def is_child(self):
+        if self.parent:
+            return True
+
+        return False
+
     def __str__(self) -> str:
         return self.title
     

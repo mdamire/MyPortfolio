@@ -2,11 +2,13 @@
 
 
 {% block body %}
-    <nav class="navbar navbar-expand-sm navbar-custom navbar-light">
+    <nav class="navbar navbar-expand-sm navbar-custom navbar-light navbar-fixed-top">
         <div class="container-md d-flex">
             <div class="justify-content-start">
                 <a class="navbar-brand" href="{% url 'home' %}">
-                    Logo
+                    {% if request.path != '/' %}
+                        Amir Ebrahim
+                    {% endif %}
                 </a>
             </div>
 
@@ -20,7 +22,7 @@
                             <a class="nav-link" href="{% url 'projects:projects' %}">Projects</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Blog</a>
+                            <a class="nav-link" href="{% url 'blogs:blogs' %}">Blog</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'about' %}">About</a>
@@ -32,7 +34,7 @@
     </nav>
 
     <div class="container-fluid">
-        {% if request.path != '/home/' %}
+        {% if request.path != '/' %}
             <div class="row header-row">
                 <div class="col-md-6 mx-auto header-main">
                     <h1>
