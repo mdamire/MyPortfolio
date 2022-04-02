@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block body %}
+    <nav class="navbar navbar-expand-sm navbar-custom navbar-light">
+        <div class="container-md d-flex">
+            <div class="justify-content-start">
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    {% if request.path != '/' %}
+                        Amir Ebrahim
+                    {% endif %}
+                </a>
+            </div>
+
+            <div class="justify-content-end">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                    <ul class="nav navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'projects:projects' %}">Projects</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'blogs:blogs' %}">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'about' %}">About</a>
+                        </li>    
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        {% if request.path != '/' %}
+            <div class="row header-row">
+                <div class="col-md-6 mx-auto header-main">
+                    <h1>
+                        {% block heading %}
+                        {% endblock %}
+                    </h1>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-6 mx-auto main">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+        <div class="row footer-row">
+            <div class="col-md-10 mx-auto">
+                <div class="container-fluid container-no-padding">
+                    <div class="row">
+                        <div class="col-md-4 d-flex justify-content-left">
+                            <span>Connect with me: </span>
+                            <a href="https://www.linkedin.com/in/amir-ebrahim/">
+                                <img 
+                                    src="{% static 'logos/linkedin.png' %}" 
+                                    class="ms-2 border border-dark" 
+                                    height="25px" weidth="25px" 
+                                    alt="linkedin"
+                                />
+                            </a>
+                            <a href="https://www.facebook.com/md.amire">
+                                <img 
+                                    src="{% static 'logos/facebook.png' %}" 
+                                    class="ps-2" 
+                                    height="25px" 
+                                    weidth="25px" 
+                                    alt="facebook"
+                                />
+                            </a>
+                        </div>
+                        <div class="col-md-4 d-flex justify-content-center">
+                            <small>Copyright © 2022</small>
+                        </div>
+                        <div class="col-md-4 d-flex justify-content-end">
+                            <div class="btn footer-button btn-success"
+                                <a href="{% url 'home' %}">
+                                    Send me an email
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock  %}

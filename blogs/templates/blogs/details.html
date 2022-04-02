@@ -1,0 +1,14 @@
+{% extends 'page-base.html' %}
+
+{% block heading %}
+    {{ post.title }}
+{% endblock  %}
+
+{% block content %}
+    <div class="text-muted pb-3">
+        {{post.update_date}}
+    </div>
+    {% autoescape off %}
+    <div>{{ post.body }}</div>
+    {% endautoescape %}
+{% endblock  %}
