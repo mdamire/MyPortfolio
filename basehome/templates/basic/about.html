@@ -1,5 +1,89 @@
 {% extends 'page-base.html' %}
+{% load static %}
 
 {% block heading %}
     About
 {% endblock  %}
+
+{% block content %}
+    <div class="container-fluid mb-5">
+        <div class="row">
+            <div class="col-sm-6">
+                <a href="{% static 'files/AmirEbrahimCV.pdf' %}" download='AmirEbrahimCV.pdf'>
+                    <button class="about-btn">
+                        <i class="fa fa-download"></i> Download My CV
+                    </button>
+                </a>
+            </div>
+            <div class="col-sm-6">
+                <button class="about-btn">Send me a message</button>
+            </div>
+        </div>
+    </div>
+
+    <table class="table about-table">
+        <tr>
+            <td>
+                <h4>Work Experience</h3>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h5>AlaTest/ValueChecker</h5>
+                <span class="text-muted">February 2022 - March 2022</span>
+            </td>
+            <td>
+                <b>Software Developer</b>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h5>Dynamic Solution Innovators LTD.</h5>
+                <span class="text-muted">January 2015 - January 2022</span>
+            </td>
+            <td>
+                <b>Software Engineer</b>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h4 class="pt-3">Info</h4>
+            </td>
+        </tr>
+        <tr>
+            <td><h6>Birth Place</h6></td>
+            <td>Dhaka, Bangladesh</td>
+        </tr>
+        <tr>
+            <td><h6>Currently Location</h6></td>
+            <td>Stockholm, Sweden</td>
+        </tr>
+        <tr>
+            <td><h6>Language</h6></td>
+            <td>English, Bangali</td>
+        </tr>
+        <tr>
+            <td>
+                <h4 class="pt-3">Education</h4>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h5>Malmö University</h5>
+                <span class="text-muted">August 2022 - Present</span>
+            </td>
+            <td>
+                <b>MSc in Data Science</b>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h5>American International University - Bangladesh</h5>
+                <span class="text-muted">April 2011 - March 2015</span>
+            </td>
+            <td>
+                <b>BSc in Computer Science and Engineering</b>
+            </td>
+        </tr>
+    </table>
+{% endblock content %}

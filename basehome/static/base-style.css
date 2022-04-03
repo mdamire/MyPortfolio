@@ -81,6 +81,20 @@ html {
     background-color: green;
 }
 
+.about-btn {
+    background-color: #4cb32da9;
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    cursor: pointer;
+    font-size: 20px;
+    width: 100%;
+}
+
+.about-btn:hover {
+    background-color: RoyalBlue;
+  }
+
 @media (min-width: 768px) {
     .main {
         padding-top: 30px;
