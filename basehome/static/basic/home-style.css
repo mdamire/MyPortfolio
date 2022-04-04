@@ -13,10 +13,14 @@
     margin-top: 10px;
 }
 
+.card .custom-card-text {
+    font-weight:normal;
+}
+
 
 @media (min-width: 992px) {
     .home-top {
-        margin-top: 60px;
+        margin-top: 50px;
         height: auto;
         border-style: solid;
         border-width: 2px;
