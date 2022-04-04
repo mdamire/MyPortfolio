@@ -15,12 +15,43 @@
             </div>
             <div class="col-md align-middle">
                 <div class="card-block px-2">
-                    <h1 class="card-title display-1">Amir Ebrahim</h1>
-                    <h5 class="card-text custom-card-text">
-                        Hi!! I am a full stack software developer. I like a good desined software that 
-                        can help the user in the best way possible. It takes a lot of amibition and passion
-                        to be able to achive that.<br>
-                        To my view, software is a tool to make a better and pieceful world. 
+                    <div class="card-title">
+                        <h1 class="display-1 text-center">Amir Ebrahim</h1>
+                        <div class="pt-2 d-flex justify-content-center">
+                            {% comment %} <span>Connect with me: </span> {% endcomment %}
+                            <a href="https://www.linkedin.com/in/amir-ebrahim/">
+                                <img 
+                                    src="{% static 'logos/linkedin.png' %}" 
+                                    class="border border-dark" 
+                                    height="40px" weidth="40px" 
+                                    alt="linkedin"
+                                />
+                            </a>
+                            <a href="https://www.facebook.com/md.amire">
+                                <img 
+                                    src="{% static 'logos/facebook.png' %}" 
+                                    class="ms-3" 
+                                    height="40px" 
+                                    weidth="40px" 
+                                    alt="facebook"
+                                />
+                            </a>
+                            <a href="https://github.com/mdamire">
+                                <img 
+                                    src="{% static 'logos/github.png' %}" 
+                                    class="ms-3" 
+                                    height="40px" 
+                                    weidth="40px" 
+                                    alt="github"
+                                />
+                            </a>
+                            
+                        </div>
+                    </div>
+                    
+                    <h5 class="card-text custom-card-text pt-2">
+                        Hi!! I am a full stack software developer. Software is a tool to 
+                        make our life easier and happier. I am lucky to be a part of it.
                     </p>
                 </div>
             </div>
@@ -90,5 +121,24 @@
                 </figure>
             </div>
         </div>
+    </div>
+
+    <div class="container-fluid container-no-padding mt-5">
+        <h4 class="d-flex justify-content-center"><u>Recent Posts</u></h4>
+        {% for post in post_list %}
+            <div class="row home-post-list-row">
+                <div class="col-md-2 text-muted post-list-date">
+                    {{post.update_date}}
+                </div>
+                <div class="col-md">
+                    <a href="{% url 'blogs:details' post.url_param%}" class="post-list-heading">
+                        <h3>{{post.title}}</h3>
+                    </a>
+                    {{post.sub_title}}
+                </div>
+            </div>
+        {% empty %}
+            <h3 class="p-3">No Post Yet</h3>
+        {% endfor %}
     </div>
 {% endblock  %}
