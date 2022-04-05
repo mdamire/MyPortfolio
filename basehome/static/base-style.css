@@ -4,8 +4,16 @@ body {
     margin-bottom: 120px;
 }
 
+/*set background color*/
+.navbar-custom, .header-row, .footer-row {
+    background-color: #aad2ba;
+}
+
+.post-list-row, .home-post-list-row {
+    border-bottom: 2px solid #aad2ba;
+}
+
 .navbar-custom {
-    background-color: #4cb32da9;
     height: 56px;
 }
 
@@ -25,7 +33,6 @@ body {
 .header-row {
     padding-top: 30px;
     padding-bottom: 15px;
-    background-color: #4cb32da9;
 }
 
 .header-main {
@@ -36,13 +43,11 @@ body {
 }
 
 .post-list-row {
-    border-bottom: 2px solid #4cb32da9;
     padding-bottom: 10px;
     margin-bottom: 10px;
 }
 
 .home-post-list-row {
-    border-bottom: 2px solid #4cb32da9;
     padding-bottom: 5px;
     margin-bottom: 5px;
 }
@@ -52,12 +57,12 @@ body {
 }
 
 .post-list-heading {
-    color: green;
+    color: #31572c;
     text-decoration: none;
 }
 
 .post-list-heading:hover {
-    color: #4cb32da9;
+    color: #6b8f71;
     text-decoration: underline;
 }
 
@@ -74,7 +79,6 @@ html {
 .footer-row {
     padding-top: 10px;
     padding-bottom: 10px;
-    background-color: #4cb32da9;
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -84,11 +88,11 @@ html {
 
 .footer-button {
     padding: 0px 5px 0px 5px;
-    background-color: green;
+    background-color: #31572c;
 }
 
 .about-btn {
-    background-color: #4cb32da9;
+    background-color: #31572c;
     border: none;
     color: white;
     padding: 12px 30px;
@@ -98,7 +102,7 @@ html {
 }
 
 .about-btn:hover {
-    background-color: RoyalBlue;
+    background-color: #6b8f71;
   }
 
 @media (min-width: 768px) {
