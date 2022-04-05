@@ -5,7 +5,7 @@
     height: auto;
     border-style: solid;
     border-width: 1px;
-    border-color: #4cb32da9;
+    border-color: #aad2ba;
 }
 
 
@@ -18,13 +18,10 @@
 }
 
 
-@media (min-width: 992px) {
+@media (min-width: 1410px) {
     .home-top {
         margin-top: 50px;
-        height: auto;
-        border-style: solid;
         border-width: 2px;
-        border-color: #4cb32da9;
         position: relative;
     }
 

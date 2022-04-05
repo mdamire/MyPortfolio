@@ -1,6 +1,10 @@
 {% extends 'page-base.html' %}
 {% load static %}
 
+{% block title %}
+    About
+{% endblock title %}
+
 {% block heading %}
     About
 {% endblock  %}
@@ -16,7 +20,9 @@
                 </a>
             </div>
             <div class="col-sm-6">
-                <button class="about-btn">Send me a message</button>
+                <button class="about-btn">
+                    <i class="fa fa-envelope"></i> Send me a message
+                </button>
             </div>
         </div>
     </div>
@@ -47,7 +53,7 @@
         </tr>
         <tr>
             <td>
-                <h4 class="pt-3">Info</h4>
+                <h4 class="mt-5">Info</h4>
             </td>
         </tr>
         <tr>
@@ -64,7 +70,7 @@
         </tr>
         <tr>
             <td>
-                <h4 class="pt-3">Education</h4>
+                <h4 class="mt-5">Education</h4>
             </td>
         </tr>
         <tr>

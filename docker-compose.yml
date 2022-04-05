@@ -1,10 +1,30 @@
 version: '3'
 
 services:
+
+  db:
+    image: mysql:5.7
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: 'django-db'
+      MYSQL_ROOT_PASSWORD: 'secret'
+      
   web:
     build: .
     volumes:
       - .:/code
-      - db.sqlite3
     ports:
       - "8000:8000"
+    environment:
+      MYSQL_DATABASE: 'django-db'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'secret'
+      MYSQL_HOST: 'db'
+      MYSQL_PORT: '3306'
+    depends_on:
+      - db
+
+
+volumes:
+  mysql-data:
