@@ -13,12 +13,29 @@
     margin-top: 10px;
 }
 
-.card .custom-card-text {
-    font-weight:normal;
+.home-img {
+    height: 100px;
+    width: 100px;
 }
 
+.home-logo {
+    height: 40px;
+    width: 40px;
+}
 
-@media (min-width: 1410px) {
+@media (max-width: 992px) {
+    .home-img {
+        height: 140px;
+        width: 140px;
+    }
+
+    .home-logo {
+        height: 60px;
+        width: 60px;
+    }
+}
+
+@media (min-width: 768px) {
     .home-top {
         margin-top: 50px;
         border-width: 2px;
