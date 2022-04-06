@@ -4,7 +4,7 @@
 
 {% block body %}
     <nav class="navbar navbar-expand-sm navbar-custom navbar-light">
-        <div class="container-md d-flex">
+        <div class="container-xxl d-flex">
             <div class="justify-content-start">
                 <a class="navbar-brand" href="{% url 'home' %}">
                     {% if request.path != '/' %}
@@ -37,7 +37,7 @@
     <div class="container-fluid">
         {% if request.path != '/' %}
             <div class="row header-row">
-                <div class="col-md-6 mx-auto header-main">
+                <div class="col-xxl-6 mx-auto header-main">
                     <h1>
                         {% block heading %}
                         {% endblock %}
@@ -47,21 +47,20 @@
         {% endif %}
 
         <div class="row">
-            <div class="col-md-6 mx-auto main">
+            <div class="col-xxl-6 mx-auto main">
                 {% block content %}
                 {% endblock %}
             </div>
         </div>
         <div class="row footer-row">
-            <div class="col-md-10 mx-auto">
+            <div class="col-xxl-10 mx-auto">
                 <div class="container-fluid container-no-padding">
                     <div class="row">
-                        <div class="col-md-4 d-flex justify-content-center">
+                        <div class="col-sm-4 d-flex justify-content-center">
                             <a href="https://www.linkedin.com/in/amir-ebrahim/">
                                 <img 
                                     src="{% static 'logos/linkedin.png' %}" 
-                                    class="ms-2 border border-dark" 
-                                    height="25px" weidth="25px" 
+                                    class="ms-2 border border-dark footer-logo" 
                                     alt="linkedin"
                                     data-bs-toggle="tooltip"
                                     title="Connect with me on LinkedIn"
@@ -70,9 +69,7 @@
                             <a href="https://www.facebook.com/md.amire">
                                 <img 
                                     src="{% static 'logos/facebook.png' %}" 
-                                    class="ms-3" 
-                                    height="25px" 
-                                    weidth="25px" 
+                                    class="ms-3 footer-logo" 
                                     alt="facebook"
                                     data-bs-toggle="tooltip"
                                     title="Connect with me on Facebook"
@@ -81,25 +78,21 @@
                             <a href="https://github.com/mdamire">
                                 <img 
                                     src="{% static 'logos/github.png' %}" 
-                                    class="ms-3" 
-                                    height="25px" 
-                                    weidth="25px" 
+                                    class="ms-3 footer-logo" 
                                     alt="github"
                                     data-bs-toggle="tooltip"
                                     title="Connect with me on GitHub"
                                 />
                             </a>
                         </div>
-                        <div class="col-md-4 d-flex justify-content-center">
+                        <div class="col-sm-4 d-flex justify-content-center">
                             <small>Copyright © 2022</small>
                         </div>
-                        <div class="col-md-4 d-flex justify-content-center">
+                        <div class="col-sm-4 d-flex justify-content-center">
                             <a href="https://github.com/mdamire">
                                 <img 
                                     src="{% static 'logos/sendemail.png' %}" 
-                                    class="ms-2" 
-                                    height="25px" 
-                                    weidth="30px" 
+                                    class="ms-2 footer-logo-msg" 
                                     alt="send message"
                                     data-bs-toggle="tooltip"
                                     title="Send me a message"

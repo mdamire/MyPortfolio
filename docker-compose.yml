@@ -22,6 +22,7 @@ services:
       MYSQL_PASSWORD: 'secret'
       MYSQL_HOST: 'db'
       MYSQL_PORT: '3306'
+      ALLOWED_HOST: '0.0.0.0,localhost,192.168.31.38'
     depends_on:
       - db
 
