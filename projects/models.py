@@ -20,7 +20,7 @@ class ProjectPosts(models.Model):
             blank=True,
         )
     serial = models.FloatField(null=True, blank=True)
-    body = models.CharField(max_length=7000, null=True, blank=True)
+    body = models.TextField(null=True, blank=True)
     is_published = models.BooleanField(default=True)
     update_date = models.DateField()
     publish_date = models.DateField()
