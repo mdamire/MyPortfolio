@@ -1,0 +1,53 @@
+
+/* home card*/
+.home-top {
+    margin-top: 10px;
+    height: auto;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #aad2ba;
+}
+
+
+.card h1 {
+    margin-top: 10px;
+}
+
+.home-img {
+    height: 100px;
+    width: 100px;
+}
+
+.home-logo {
+    height: 40px;
+    width: 40px;
+}
+
+@media (max-width: 992px) {
+    .home-img {
+        height: 140px;
+        width: 140px;
+    }
+
+    .home-logo {
+        height: 60px;
+        width: 60px;
+    }
+}
+
+@media (min-width: 768px) {
+    .home-top {
+        margin-top: 50px;
+        border-width: 2px;
+        position: relative;
+    }
+
+    .card .custom-card-text {
+        position: absolute;
+        bottom: 0px;
+    }
+}
+
+.content {
+    border-width: 1px;
+}
