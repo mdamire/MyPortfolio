@@ -13,7 +13,7 @@ class BlogsPosts(models.Model):
     sub_title = models.CharField(max_length=500)
     url_param = models.CharField(max_length=80, unique=True)
     tags = models.ManyToManyField(BlogsTags)
-    body = models.CharField(max_length=7000)
+    body = models.TextField()
     is_published = models.BooleanField(default=True)
     update_date = models.DateField()
     publish_date = models.DateField()

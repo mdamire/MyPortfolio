@@ -9,7 +9,8 @@ from .models import ProjectPosts
 def projectView(request):
     template_name = "projects/list-page.html"
     post_list = ProjectPosts.objects.filter(
-            parent__isnull = True
+            parent__isnull = True,
+            is_published = True
         ).order_by(
             '-update_date'
         )
@@ -21,6 +22,10 @@ def projectView(request):
     
 def projectPostDetailView(request, title):
     post = get_object_or_404(ProjectPosts, url_param=title)
+
+    if post.is_published == False:
+        raise Http404("Post not avilable")
+
     if post.is_parent:
         childrens = ProjectPosts.objects.filter(
                 parent = post    
