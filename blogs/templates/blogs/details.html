@@ -1,5 +1,6 @@
 {% extends 'page-base.html' %}
 {% load static %}
+{% load custom_tags %}
 
 {% block title %}
     {{ post.title }}
@@ -14,6 +15,6 @@
         {{post.update_date}}
     </div>
     {% autoescape off %}
-    <div>{{ post.body }}</div>
+    {% render_as_template post.body %}
     {% endautoescape %}
 {% endblock  %}
