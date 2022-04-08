@@ -2,6 +2,10 @@
 {% load static %}
 {% load custom_tags %}
 
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'content-style.css' %}">
+{% endblock %}
+
 {% block title %}
     {{ post.title }}
 {% endblock title %}
