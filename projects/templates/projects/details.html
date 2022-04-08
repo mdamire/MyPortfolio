@@ -1,4 +1,10 @@
 {% extends 'page-base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'content-style.css' %}">
+{% endblock %}
 
 {% block title %}
     {{ post.title }}
@@ -13,6 +19,6 @@
         {{post.update_date}}
     </div>
     {% autoescape off %}
-        <div>{{ post.body }}</div>
+        {% render_as_template post.body %}
     {% endautoescape %}
 {% endblock  %}

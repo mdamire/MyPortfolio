@@ -5,6 +5,7 @@ jobs:
   build:
     docker:
       - image: cimg/python:3.10.3
+        user: root
         environment:
           - MYSQL_DATABASE: test_test
           - MYSQL_USER: root
@@ -26,6 +27,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
+            apt-get update -qq && apt-get install libjpeg-dev zlib1g-dev
             pip install -r requirements.txt
       - save_cache:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
