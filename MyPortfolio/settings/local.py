@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-x0k6m&_$3++2qgnv+b*$sjwhh$@+2^o31$=z#$ryu%plj5)1#n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', True)
+DEBUG = True
 
-ALLOWED_HOSTS = os.environ['ALLOWED_HOST'].split(',')
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -79,13 +79,9 @@ WSGI_APPLICATION = 'MyPortfolio.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ['MYSQL_DATABASE'],
-        'USER': os.environ['MYSQL_USER'],
-        'PASSWORD': os.environ['MYSQL_PASSWORD'],
-        'HOST': os.environ['MYSQL_HOST'],
-        'PORT': os.environ['MYSQL_PORT'],
-    }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    },
 }
 
 
