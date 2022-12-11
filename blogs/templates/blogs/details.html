@@ -18,7 +18,5 @@
     <div class="text-muted pb-3">
         {{post.update_date}}
     </div>
-    {% autoescape off %}
-            {% render_as_template post.body %}
-    {% endautoescape %}
+    {{post.body|safe}}
 {% endblock  %}
