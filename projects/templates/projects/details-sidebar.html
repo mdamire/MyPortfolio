@@ -21,7 +21,7 @@
 {% block content %}
     <h2 class="post-title">{{ post.title }}</h2>
     <div class="text-muted pb-3">
-        {{post.update_date}}
+        {{post.publish_date}}
     </div>
     {% autoescape off %}
         <div>{{ post.body }}</div>

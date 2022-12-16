@@ -9,12 +9,12 @@ from blogs.models import BlogsPosts
 # Create your views here.
 def homeView(request):
     template_name = "basic/home.html"
-    projects = ProjectPosts.objects.order_by('-update_date')[:5]
-    blogs = BlogsPosts.objects.order_by('-update_date')[:5]
+    projects = ProjectPosts.objects.order_by('-publish_date')[:10]
+    blogs = BlogsPosts.objects.order_by('-publish_date')[:10]
 
     post_list = sorted(
         chain(projects, blogs), 
-        key=attrgetter('update_date'),
+        key=attrgetter('publish_date'),
         reverse=True
     )[:5]
 
