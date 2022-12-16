@@ -15,8 +15,8 @@ class BlogsPosts(models.Model):
     tags = models.ManyToManyField(BlogsTags)
     body = models.TextField()
     is_published = models.BooleanField(default=True)
-    update_date = models.DateField()
-    publish_date = models.DateField()
+    update_date = models.DateField(auto_now=True)
+    publish_date = models.DateField(auto_now_add=True)
 
     def __str__(self) -> str:
         return self.title

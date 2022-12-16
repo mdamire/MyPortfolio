@@ -12,7 +12,7 @@ def projectView(request):
             parent__isnull = True,
             is_published = True
         ).order_by(
-            '-update_date'
+            '-publish_date'
         )
     return render(request, template_name, {
             "page_heading": 'Projects',

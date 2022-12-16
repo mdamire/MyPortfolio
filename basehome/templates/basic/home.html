@@ -132,7 +132,7 @@
         {% for post in post_list %}
             <div class="row home-post-list-row">
                 <div class="col-md-2 text-muted post-list-date">
-                    {{post.update_date}}
+                    {{post.publish_date}}
                 </div>
                 <div class="col-md">
                     <a href="{% url 'blogs:details' post.url_param%}" class="post-list-heading">

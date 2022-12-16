@@ -22,8 +22,8 @@ class ProjectPosts(models.Model):
     serial = models.FloatField(null=True, blank=True)
     body = models.TextField(null=True, blank=True)
     is_published = models.BooleanField(default=True)
-    update_date = models.DateField()
-    publish_date = models.DateField()
+    update_date = models.DateField(auto_now=True)
+    publish_date = models.DateField(auto_now_add=True)
 
     def is_child(self):
         if self.parent:
