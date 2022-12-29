@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 
@@ -30,6 +31,10 @@ class ProjectPosts(models.Model):
             return True
 
         return False
+
+    @property
+    def absolute_url(self):
+        return f"{settings.DOMAIN}/projects/{self.url_param}"
 
     def __str__(self) -> str:
         return self.title

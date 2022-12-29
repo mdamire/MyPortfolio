@@ -3,8 +3,10 @@ from .local import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', True)
+
 ALLOWED_HOSTS = os.environ['ALLOWED_HOST'].split(',')
 
+DOMAIN = os.environ.get('domain')
 
 DATABASES = {
     'default': {

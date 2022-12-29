@@ -23,9 +23,6 @@ def projectView(request):
 def projectPostDetailView(request, title):
     post = get_object_or_404(ProjectPosts, url_param=title)
 
-    if post.is_published == False:
-        raise Http404("Post not avilable")
-
     if post.is_parent:
         childrens = ProjectPosts.objects.filter(
                 parent = post    

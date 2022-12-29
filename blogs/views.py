@@ -19,9 +19,6 @@ def blogView(request):
     
 def blogPostDetailView(request, title):
     post = get_object_or_404(BlogsPosts, url_param=title)
-    if post.is_published == False:
-        raise Http404("Post not available")
-
     template_name = 'blogs/details.html'
     context = {
         'post': post,
