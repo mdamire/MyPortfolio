@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 class BlogsTags(models.Model):
@@ -17,6 +18,10 @@ class BlogsPosts(models.Model):
     is_published = models.BooleanField(default=True)
     update_date = models.DateField(auto_now=True)
     publish_date = models.DateField(auto_now_add=True)
+
+    @property
+    def absolute_url(self):
+        return f"{settings.DOMAIN}/blogs/{self.url_param}"
 
     def __str__(self) -> str:
         return self.title

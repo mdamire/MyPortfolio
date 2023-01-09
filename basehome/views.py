@@ -9,8 +9,8 @@ from blogs.models import BlogsPosts
 # Create your views here.
 def homeView(request):
     template_name = "basic/home.html"
-    projects = ProjectPosts.objects.order_by('-publish_date')[:10]
-    blogs = BlogsPosts.objects.order_by('-publish_date')[:10]
+    projects = ProjectPosts.objects.order_by('-publish_date').filter(is_published=True)
+    blogs = BlogsPosts.objects.order_by('-publish_date').filter(is_published=True)
 
     post_list = sorted(
         chain(projects, blogs), 
