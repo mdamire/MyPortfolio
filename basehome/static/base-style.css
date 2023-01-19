@@ -1,75 +1,32 @@
-
-body {
-    margin: 0;
-    margin-bottom: 120px;
-}
-
-/*set background color*/
-.navbar-custom, .header-row, .footer-row {
-    background-color: #aad2ba;
-}
-
-.post-list-row, .home-post-list-row {
-    border-bottom: 2px solid #aad2ba;
-}
-
-/*
- * Main content
- */
-.main {
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top: 10px;
-    margin-left: 0px;
-    margin-right: 0px;
-    background-color: white;
-}
-
-/* heading row */
-.header-row {
-    padding-top: 30px;
-    padding-bottom: 15px;
-}
-
-.header-main {
-    padding-left: 10px;
-    padding-right: 10px;
-    margin-left: 0px;
-    margin-right: 0px;
-}
-
-.post-list-row {
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-}
-
-.home-post-list-row {
-    padding-bottom: 5px;
-    margin-bottom: 5px;
-}
-
-.post-list-date {
-    padding-right: 0px;
-}
-
-.post-list-heading {
-    color: #31572c;
-    text-decoration: none;
-}
-
-.post-list-heading:hover {
-    color: #6b8f71;
-    text-decoration: underline;
-}
-
-.container-no-padding {
-    padding: 0px 0px 0px 0px;
-    margin: 0px 0px 0px 0px;
-}
-
 html {
     position: relative;
     min-height: 100%;
+}
+
+/*set background color*/
+.bg-color{
+    background-color: #aad2ba;
+}
+
+/* custom class */
+.header-row {
+    padding-top: 60px;
+    padding-bottom: 25px;
+}
+
+.main {
+    padding-top: 30px;
+    padding-bottom: 80px;
+    background-color: white;
+}
+
+.main-text {
+    padding-left: 60px;
+    padding-right: 60px;
+}
+
+.header-text {
+    padding-left: 60px;
 }
 
 .footer-row {
@@ -80,11 +37,6 @@ html {
     width: 100%;
     font-size: medium;
     color: rgb(65, 65, 65);
-}
-
-.footer-button {
-    padding: 0px 5px 0px 5px;
-    background-color: #31572c;
 }
 
 .footer-logo {
@@ -106,11 +58,53 @@ html {
     width: 100%;
 }
 
-.about-btn:hover {
+.custom-button-light {
+    background-color: #a8ecb4;
+    padding: 10px;
+    cursor: pointer;
+    
+}
+
+.about-btn:hover, .custom-button-light:hover {
     background-color: #6b8f71;
 }
 
+.align-center {
+    text-align: center;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.align-right {
+    text-align: right;
+}
+
+a {
+    color: #31572c;
+}
+
+a:hover {
+    color: #6b8f71;
+}
+
 @media (max-width: 992px) {
+    .header-row {
+        padding-top: 30px;
+        padding-bottom: 15px;
+    }
+
+    .main {
+        padding-top: 10px;
+        padding-bottom: 110px;
+    }
+
+    .main-text, .header-text {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
     .footer-logo {
         height: 45px;
         width: 45px;
@@ -119,25 +113,5 @@ html {
     .footer-logo-msg {
         height: 45px;
         width: 90px;
-    }
-}
-
-@media (min-width: 768px) {
-    .main {
-        padding-top: 30px;
-    }
-
-    body {
-        margin-bottom: 100px;
-    }
-
-    .header-row {
-        padding-top: 60px;
-        padding-bottom: 25px;
-    }
-
-    .post-list-row {
-        padding-bottom: 30px;
-        margin-bottom: 30px;
     }
 }

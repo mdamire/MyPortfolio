@@ -1,0 +1,51 @@
+
+.home-img {
+    height: 100px;
+    width: 100px;
+}
+
+.home-logo {
+    height: 40px;
+    width: 40px;
+}
+
+.content {
+    border-width: 1px;
+}
+
+.home-post-list-row {
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+.profile-pic {
+    height: 400px;
+    width: auto;
+}
+
+.bio-text {
+    padding-top: 25px;
+}
+
+
+@media (max-width: 992px) {
+    .bio-text {
+        padding-top: 10px;
+        padding-bottom: 15px;
+    }
+
+    .profile-pic {
+        height: 700px;
+        width: auto;
+    }
+
+    .home-img {
+        height: 140px;
+        width: 140px;
+    }
+
+    .home-logo {
+        height: 60px;
+        width: 60px;
+    }
+}

@@ -23,7 +23,7 @@ urlpatterns = [
     path('tinymce/', include('tinymce.urls')),
     path('projects/', include('projects.urls')),
     path('blogs/', include('blogs.urls')),
-    path('', include('basehome.urls')),
+    path('', include('contents.urls')),
 ]
 
 if settings.DEBUG:
