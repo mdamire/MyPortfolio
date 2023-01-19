@@ -1,0 +1,164 @@
+{% extends 'base-page.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock  %}
+
+{% block head %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'contents/static-pages-style.css' %}">
+{% endblock%}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-4">
+            <img src="{% get_media_prefix %}images/profilepic.jpg" class="img-fluid rounded profile-pic d-block mx-auto" alt="profilepic">        
+        </div>
+        <div class="col-lg-8 border-bottom" align="center">
+            <p class="bio-text">
+                <h3 style="padding-bottom: 0px;">Hi!!! I am <b>Amir Ebrahim</b>.</h3>
+                Welcome to my website.<br><br>
+
+                I am a <b>full stack software developer</b>. I started my career as a <b>JAVA</b> developer in 2015. Although 
+                I have worked with difference technologies since I started, my current weapon of choice is
+                <b>Python/Django</b> and I work mainly on backend.<br><br>
+
+                I am from <b>Bangladesh</b> and living in <b>Stockholm, Sweden</b>. I like to 
+                code, go places and watch football. Hope you will enjoy reading my posts as much as I enjoyed writing 
+                them. <br><br>
+                <a href="{% url 'about' %}">See more about me</a><br>
+            </p>
+        </div>
+    </div>
+    
+
+    <div class="row mt-4">
+        <div class="col-lg py-3 mx-3 border-bottom" align="center">
+            
+            <a class="btn custom-button-light" href="https://www.linkedin.com/in/amir-ebrahim/" role="button">
+                <img 
+                    src="{% static 'logos/linkedin.png' %}" 
+                    class="home-logo" 
+                    alt="linkedin"
+                    data-bs-toggle="tooltip"
+                    title="Connect with me on LinkedIn"
+                />
+            </a>
+            <a class="btn custom-button-light" href="https://github.com/mdamire" role="button">
+                <img 
+                    src="{% static 'logos/github.png' %}" 
+                    class="home-logo" 
+                    alt="github"
+                    data-bs-toggle="tooltip"
+                    title="Connect with me on GitHub"
+                />
+            </a>
+            <br>
+            <b>Connect with me</b>
+        </div>
+        <div class="col-lg py-3 mx-3 border-bottom" align="center">
+            
+            <a class="btn custom-button-light" href="#" role="button">
+                <img 
+                    src="{% static 'logos/sendemail.png' %}" 
+                    class="home-logo" 
+                    alt="github"
+                    data-bs-toggle="tooltip"
+                    title="Connect with me on GitHub"
+                />
+            </a>
+            <br>
+            <b>Send me a message</b>&nbsp;&nbsp;
+        </div>
+    </div>
+
+
+    <div class="content mt-5 border-bottom">
+        <div class="row d-flex justify-content-center">
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'logos/python.png' %}" class="rounded-circle home-img" alt="Python"/>
+                    <figcaption class="d-flex justify-content-center">Python</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'logos/django.png' %}" class="rounded-circle home-img" alt="Django"/>
+                    <figcaption class="d-flex justify-content-center">Django</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'logos/java.png' %}" class="rounded home-img" alt="Java"/>
+                    <figcaption class="d-flex justify-content-center">Java</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'logos/bash.png' %}" class="rounded home-img" alt="Bash"/>
+                    <figcaption class="d-flex justify-content-center">Bash</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'logos/perl.png' %}" class="rounded home-img" alt="Perl"/>
+                    <figcaption class="d-flex justify-content-center">Perl</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'logos/mysql.jpg' %}" class="rounded-circle home-img" alt="mysql"/>
+                    <figcaption class="d-flex justify-content-center">SQL/MySQL</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'logos/react.png' %}" class="rounded-circle home-img" alt="React"/>
+                    <figcaption class="d-flex justify-content-center">React</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'logos/linux.png' %}" class="rounded-circle home-img" alt="Linux"/>
+                    <figcaption class="d-flex justify-content-center">Linux</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'logos/docker.png' %}" class="rounded-circle home-img" alt="Docker"/>
+                    <figcaption class="d-flex justify-content-center">Docker</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'logos/bootstrap.png' %}" class="rounded-circle home-img" alt="Bootstrap"/>
+                    <figcaption class="d-flex justify-content-center">Bootstrap</h4>
+                </figure>
+            </div>
+            <div class="col-auto p-3">
+                <figure>
+                    <img src="{% static 'logos/git.png' %}" class="rounded-circle home-img" alt="Git"/>
+                    <figcaption class="d-flex justify-content-center">Git</h4>
+                </figure>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid container-no-padding mt-5">
+        <h3 class="d-flex justify-content-center pb-3"><b>Recent Posts</b></h3>
+        {% for post in post_list %}
+            <div class="row home-post-list-row">
+                <div class="col-lg-2 text-muted post-list-date">
+                    {{post.publish_date}}
+                </div>
+                <div class="col-lg">
+                    <a href="{% url 'blogs:details' post.url_param%}" class="post-list-heading">
+                        <h3>{{post.title}}</h3>
+                    </a>
+                    {{post.sub_title}}
+                </div>
+            </div>
+        {% empty %}
+            <h3 class="p-3">No Post Yet</h3>
+        {% endfor %}
+    </div>
+{% endblock  %}

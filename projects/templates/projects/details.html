@@ -1,10 +1,6 @@
-{% extends 'page-base.html' %}
+{% extends 'base-post.html' %}
 {% load static %}
 {% load custom_tags %}
-
-{% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static 'content-style.css' %}">
-{% endblock %}
 
 {% block title %}
     {{ post.title }}
@@ -15,8 +11,5 @@
 {% endblock  %}
 
 {% block content %}
-    <div class="text-muted pb-3">
-        {{post.publish_date}}
-    </div>
     {{post.body|safe}}
 {% endblock  %}
