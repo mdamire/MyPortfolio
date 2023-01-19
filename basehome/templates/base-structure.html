@@ -23,7 +23,7 @@
                             <a class="nav-link" href="{% url 'projects:projects' %}">Projects</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'blogs:blogs' %}">Blog</a>
+                            <a class="nav-link" href="{% url 'blogs:blogs' %}">Blogs</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'about' %}">About</a>
@@ -40,23 +40,14 @@
     <div class="footer-row bg-color">
         <div class="container-xxl">
             <div class="row">
-                <div class="col-sm" align="left">
+                <div class="col-sm align-left">
                     <a href="https://www.linkedin.com/in/amir-ebrahim/">
                         <img 
                             src="{% static 'logos/linkedin.png' %}" 
-                            class="ms-2 border border-dark footer-logo" 
+                            class="ms-2 footer-logo" 
                             alt="linkedin"
                             data-bs-toggle="tooltip"
                             title="Connect with me on LinkedIn"
-                        />
-                    </a>
-                    <a href="https://www.facebook.com/md.amire">
-                        <img 
-                            src="{% static 'logos/facebook.png' %}" 
-                            class="ms-3 footer-logo" 
-                            alt="facebook"
-                            data-bs-toggle="tooltip"
-                            title="Connect with me on Facebook"
                         />
                     </a>
                     <a href="https://github.com/mdamire">
@@ -69,14 +60,14 @@
                         />
                     </a>
                 </div>
-                <div class="col-sm" align="center">
+                <div class="col-sm align-center">
                     <small>Copyright © 2023</small>
                 </div>
-                <div class="col-sm" align="right">
+                <div class="col-sm align-right">
                     <a href="https://github.com/mdamire">
                         <img 
                             src="{% static 'logos/sendemail.png' %}" 
-                            class="ms-2 footer-logo-msg" 
+                            class="footer-logo" 
                             alt="send message"
                             data-bs-toggle="tooltip"
                             title="Send me a message"
