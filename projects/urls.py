@@ -1,9 +1,9 @@
 from django.urls import path
 
-from .views import projectView, projectPostDetailView
+from .views import ProjectPostListView, projectPostDetailView
 
 app_name = "projects"
 urlpatterns = [
     path('<str:title>', projectPostDetailView, name='details'),
-    path('', projectView, name='projects'),
+    path('', ProjectPostListView.as_view(), name='projects'),
 ]

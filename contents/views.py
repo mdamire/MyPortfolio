@@ -15,7 +15,7 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
 
-        projects = ProjectPosts.objects.order_by('-publish_date').filter(is_published=True)
+        projects = ProjectPosts.objects.order_by('-publish_date').filter(parent__isnull=True, is_published=True)
         blogs = BlogsPosts.objects.order_by('-publish_date').filter(is_published=True)
 
         post_list = sorted(

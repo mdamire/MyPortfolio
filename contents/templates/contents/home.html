@@ -18,14 +18,15 @@
                 <h3 style="padding-bottom: 0px;">Hi!!! I am <b>Amir Ebrahim</b>.</h3>
                 Welcome to my website.<br><br>
 
-                I am a <b>full stack software developer</b>. I started my career as a <b>JAVA</b> developer in 2015. Although 
-                I have worked with difference technologies since I started, my current weapon of choice is
-                <b>Python/Django</b> and I work mainly on backend.<br><br>
+                I am a <b>software developer</b>. I am from <b>Dhaka, Bangladesh</b> and living in <b>Stockholm, Sweden</b>. I 
+                started my career as a <b>JAVA</b> developer in 2015. I have worked with different technologies since
+                I started but my current weapon of choice is <b>Python/Django</b> and I work mainly on backend.<br><br>
 
-                I am from <b>Bangladesh</b> and living in <b>Stockholm, Sweden</b>. I like to 
-                code, go places and watch football. Hope you will enjoy reading my posts as much as I enjoyed writing 
-                them. <br><br>
-                <a href="{% url 'about' %}">See more about me</a><br>
+                <div class="warning">
+                    "None of us, including me, ever do great things. But we can all do small things, 
+                    with great love, and together we can do something wonderful." – Mother Teresa
+                </div>
+                <br><a href="{% url 'about' %}">See more about me</a><br>
             </p>
         </div>
     </div>
@@ -151,7 +152,7 @@
                     {{post.publish_date}}
                 </div>
                 <div class="col-lg">
-                    <a href="{% url 'blogs:details' post.url_param%}" class="post-list-heading">
+                    <a href="{% url post.url_name post.url_param%}" class="post-list-heading">
                         <h3>{{post.title}}</h3>
                     </a>
                     {{post.sub_title}}

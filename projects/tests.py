@@ -31,8 +31,6 @@ class TestProject(TestCase):
             url_param = 'post_3',
             update_date = timezone.datetime.now(),
             publish_date = timezone.datetime.now(),
-            is_parent = True,
-
         )
         self.p4 = ProjectPosts.objects.create(
             title = 'post 4',
@@ -63,7 +61,7 @@ class TestProject(TestCase):
         self.assertEqual(res.status_code, 200) 
 
     def test_defaults(self):
-        self.assertEqual(self.p1.is_parent, False)
+        self.assertEqual(self.p1.is_parent, True)
         self.assertEqual(self.p1.url_name, 'projects:details')
         self.assertEqual(self.p1.is_published, True)
 
@@ -86,11 +84,11 @@ class TestProject(TestCase):
         self.assertContains(res, self.p1.title)
 
         res = self.client.get(reverse('projects:details', args=[self.p3.url_param]))
-        self.assertEqual(res.status_code, 302)
-        self.assertEqual(res.url, '/projects/' + self.p5.url_param)
+        self.assertEqual(res.status_code, 200)
 
         res = self.client.get(reverse('projects:details', args=[self.p4.url_param]))
-        self.assertQuerysetEqual(res.context['group'], [self.p5, self.p4])
+        self.assertIsNotNone(res.context['sidebar'])
 
+        #available even though not published
         res = self.client.get(reverse('projects:details', args=[self.p2.url_param]))
-        self.assertEqual(res.status_code, 404)
+        self.assertEqual(res.status_code, 200)
