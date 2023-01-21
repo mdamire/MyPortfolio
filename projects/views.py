@@ -1,53 +1,53 @@
-from django.shortcuts import get_object_or_404, redirect, render
+from typing import Dict, Any
+
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import ListView
-from django.http import Http404
 
 from .models import ProjectPosts
+from .repository import get_project_parents, get_project_children_link_html
 
-# Create your views here.
-def projectView(request):
+class ProjectPostListView(ListView):
     template_name = "projects/list-page.html"
-    post_list = ProjectPosts.objects.filter(
-            parent__isnull = True,
-            is_published = True
-        ).order_by(
-            '-publish_date'
-        )
-    return render(request, template_name, {
-            "page_heading": 'Projects',
-            "post_list": post_list,
-        })
+    queryset = ProjectPosts.objects.filter(
+        parent__isnull = True,
+        is_published = True
+    ).order_by('-publish_date')
+    context_object_name = "post_list"
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["page_heading"] = 'Projects'
+        return context
 
     
 def projectPostDetailView(request, title):
     post = get_object_or_404(ProjectPosts, url_param=title)
-
-    if post.is_parent:
-        childrens = ProjectPosts.objects.filter(
-                parent = post    
-            )
-        if childrens.count() < 1:
-            raise Http404("No page for this post")
-        
-        child = childrens.order_by('serial')[0]
-        return redirect(reverse('projects:details', kwargs={
-                "title": child.url_param
-            }))
-
     template_name = 'projects/details.html'
     context = {
         'post': post,
     }
 
-    if post.is_child():
-        group_posts = ProjectPosts.objects.filter(
-                parent=post.parent
-            ).order_by(
-                'serial'
-            )
+    # Children posts
+    if hasattr(post, 'children') and post.children:
+        context['child_posts_html'] = get_project_children_link_html(post)
+    
+    # Sibling posts
+    sibling_posts = ProjectPosts.objects.filter(parent=post.parent).order_by('serial', 'publish_date')
+    if not post.is_parent and sibling_posts.count() > 1:
+        sidebar_list = []
+        for post in sibling_posts:
+            sidebar_list.append({
+                'label': post.title,
+                'url': reverse('projects:details', kwargs={"title": post.url_param})
+            })
+            
+        context['sidebar'] = {
+            'Related posts' : sidebar_list
+        }
 
-        template_name = 'projects/details-sidebar.html'
-        context['group'] = group_posts
+    # Parent Post
+    if post.parent:
+        context['parent_posts'] = get_project_parents(post)
 
     return render(request, template_name, context)

@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 
+from basehome.models import PostBase
+
 # Create your models here.
 class BlogsTags(models.Model):
     name = models.CharField(max_length=80)
@@ -9,15 +11,10 @@ class BlogsTags(models.Model):
     def __str__(self):
         return self.name
 
-class BlogsPosts(models.Model):
-    title = models.CharField(max_length=100)
-    sub_title = models.CharField(max_length=500)
-    url_param = models.CharField(max_length=80, unique=True)
+class BlogsPosts(PostBase):
     tags = models.ManyToManyField(BlogsTags)
-    body = models.TextField()
-    is_published = models.BooleanField(default=True)
-    update_date = models.DateField(auto_now=True)
-    publish_date = models.DateField(auto_now_add=True)
+
+    url_name = 'blogs:details'
 
     @property
     def absolute_url(self):

@@ -152,7 +152,7 @@
                     {{post.publish_date}}
                 </div>
                 <div class="col-lg">
-                    <a href="{% url 'blogs:details' post.url_param%}" class="post-list-heading">
+                    <a href="{% url post.url_name post.url_param%}" class="post-list-heading">
                         <h3>{{post.title}}</h3>
                     </a>
                     {{post.sub_title}}

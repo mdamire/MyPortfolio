@@ -11,5 +11,9 @@
 {% endblock  %}
 
 {% block content %}
+    <div class="text-muted pb-4">
+        <small>{{post.publish_date}}</small>
+    </div>
+    
     {{post.body|safe}}
 {% endblock  %}

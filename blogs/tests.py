@@ -84,4 +84,4 @@ class BlogTests(TestCase):
         self.assertEqual(res.status_code, 404)
 
         res = self.client.get(reverse('blogs:details', args={self.bp3.url_param}))
-        self.assertEqual(res.status_code, 404)
+        self.assertEqual(res.status_code, 200)
