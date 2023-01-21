@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'projects',
     'blogs',
     'tinymce',
+    'contents',
 ]
 
 MIDDLEWARE = [
@@ -123,7 +124,7 @@ DOMAIN = "http://localhost:8000"
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR.parent, "static/")
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR.parent, "media/")
 MEDIA_URL = "/media/"

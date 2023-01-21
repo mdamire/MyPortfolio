@@ -1,0 +1,66 @@
+{% extends 'base-structure.html' %}
+{% load static %}
+
+
+{% block head %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'base-post-style.css' %}">
+{% endblock %}
+
+
+{% block body-content %}
+    {% if request.path != '/' %}
+        <div class="header-row bg-color">
+            <div class="container-xxl">
+                <div class="row">
+                    <div class="col-xxl">
+                        <h1 class="header-text">
+                            {% block heading %}
+                            {% endblock %}
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    
+        
+    <div class="container-xxl">
+        <div class="row main main-text">
+            {% if sidebar %}
+            <div class="col-lg-9">
+            {% else %}
+            <div class="col-lg">
+            {% endif %}
+                {% block content %}
+                {% endblock %}
+            </div>
+            
+            <!-- sidebar = {'group1': [{'label': <l>, 'url': <v>}, {'label': <l>, 'url': <v>}], ...} -->
+            {% if sidebar %}
+                <div class="col-lg-3 d-lg-block d-none sidebar sticky-top h-100 shadow" id="sidebar">
+                    {% for key, value in sidebar.items %}
+                        <div class="card">
+                            <div class="card-header">
+                                <a data-bs-toggle="collapse" href="#collapse{{ forloop.counter }}">
+                                    {{ key|title }}
+                                </a>
+                            </div>
+                            {% if forloop.counter == 1 %}
+                            <div id="collapse{{ forloop.counter }}" class="collapse show" data-bs-parent="#sidebar">
+                            {% else %}
+                            <div id="collapse{{ forloop.counter }}" class="collapse" data-bs-parent="#sidebar">
+                            {% endif %}
+                                <div class="card-body">
+                                    {% for data in value %}
+                                        <a href={{data.url}}><small>{{ data.label }}</small></a><br>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

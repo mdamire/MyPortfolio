@@ -1,0 +1,36 @@
+{% extends 'base-structure.html' %}
+{% load static %}
+
+
+{% block head %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'base-page-style.css' %}">
+{% endblock %}
+
+
+{% block body-content %}
+    {% if request.path != '/' %}
+        <div class="header-row bg-color">
+            <div class="container-xxl">
+                <div class="row">
+                    <div class="col-xxl">
+                        <h1 class="header-text">
+                            {% block heading %}
+                            {% endblock %}
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    
+        
+    <div class="container-xxl">
+        <div class="row">
+            <div class="col-xxl main main-text">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
