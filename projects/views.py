@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import ListView
 
+from basehome.utils import get_sidebar_section_links
 from .models import ProjectPosts
 from .repository import get_project_parents, get_project_children_link_html
 
@@ -32,19 +33,23 @@ def projectPostDetailView(request, title):
     if hasattr(post, 'children') and post.children:
         context['child_posts_html'] = get_project_children_link_html(post)
     
+    context['sidebar'] = {}
     # Sibling posts
     sibling_posts = ProjectPosts.objects.filter(parent=post.parent).order_by('serial', 'publish_date')
     if not post.is_parent and sibling_posts.count() > 1:
         sidebar_list = []
-        for post in sibling_posts:
+        for spost in sibling_posts:
             sidebar_list.append({
-                'label': post.title,
-                'url': reverse('projects:details', kwargs={"title": post.url_param})
+                'label': spost.title,
+                'url': reverse('projects:details', kwargs={"title": spost.url_param})
             })
             
-        context['sidebar'] = {
-            'Related posts' : sidebar_list
-        }
+        context['sidebar']['Related posts'] = sidebar_list
+    
+    # post section links
+    section_links = get_sidebar_section_links(post.body)
+    if section_links:
+        context['sidebar'][section_links[0]] = section_links[1]
 
     # Parent Post
     if post.parent:
