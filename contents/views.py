@@ -1,3 +1,4 @@
+import os
 from typing import Any, Dict
 from itertools import chain
 from operator import attrgetter
@@ -8,6 +9,7 @@ from django.conf import settings
 
 from projects.models import ProjectPosts
 from blogs.models import BlogsPosts
+from .api import get_file_from_key
 
 
 class HomeView(TemplateView):
@@ -36,4 +38,5 @@ class AboutView(TemplateView):
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['my_email'] = settings.MY_EMAIL
+        context['cv'] = get_file_from_key(settings.CV_FILE)
         return context

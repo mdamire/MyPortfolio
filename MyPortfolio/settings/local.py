@@ -162,3 +162,7 @@ TINYMCE_DEFAULT_CONFIG = {
    'menubar': True,
    'statusbar': True,
 }
+
+
+# File keys
+CV_FILE = 'cv'

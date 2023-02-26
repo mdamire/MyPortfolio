@@ -11,6 +11,7 @@ class Image(models.Model):
 class Files(models.Model):
     title = models.CharField(max_length=100)
     file = models.FileField(upload_to='files/')
+    key = models.CharField(max_length=100, null=True, unique=True)
 
     def __str__(self):
         return self.title
