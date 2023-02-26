@@ -31,6 +31,13 @@
     font-style: italic;
 }
 
+.code {
+    background-color: rgba(242, 242, 242, 1);
+    padding: 20px;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
 @media (max-width: 992px) {
     .p {
         margin-top: 30px;
