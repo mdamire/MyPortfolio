@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+MY_EMAIL = 'md.amire02@gmail.com'
+
 
 # Application definition
 

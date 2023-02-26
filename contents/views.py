@@ -4,6 +4,7 @@ from operator import attrgetter
 
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.conf import settings
 
 from projects.models import ProjectPosts
 from blogs.models import BlogsPosts
@@ -25,8 +26,14 @@ class HomeView(TemplateView):
         )[:5]
         context['post_list'] = post_list
 
+        context['my_email'] = settings.MY_EMAIL
         return context
 
 
 class AboutView(TemplateView):
     template_name = 'contents/about.html'
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['my_email'] = settings.MY_EMAIL
+        return context
