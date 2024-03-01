@@ -1,0 +1,15 @@
+.nav-text {
+    color: #31572c;
+}
+
+.nav-text:hover {
+    color: #6b8f71;
+}
+
+.navbar-light {
+    border-bottom: 2px solid #31572c;
+}
+
+.navbar .nav-link.active {
+    background-color: #6b8f71; /* Change the color to your desired color */
+}

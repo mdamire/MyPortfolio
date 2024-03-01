@@ -18,12 +18,15 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
+from homepage import views as homepage_views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tinymce/', include('tinymce.urls')),
     path('projects/', include('projects.urls')),
     path('blogs/', include('blogs.urls')),
     path('', include('contents.urls')),
+    path('nhome/', homepage_views.HomePageView, name='new-home'),
 ]
 
 if settings.DEBUG:

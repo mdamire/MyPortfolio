@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'blogs',
     'tinymce',
     'contents',
+    'homepage',
+    'common',
 ]
 
 MIDDLEWARE = [
