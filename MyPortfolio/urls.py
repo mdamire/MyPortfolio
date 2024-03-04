@@ -18,7 +18,7 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from homepage import views as homepage_views
+from pages.views import HomePageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,7 +26,7 @@ urlpatterns = [
     path('projects/', include('projects.urls')),
     path('blogs/', include('blogs.urls')),
     path('', include('contents.urls')),
-    path('nhome/', homepage_views.HomePageView, name='new-home'),
+    path('nhome/', HomePageView, name='new-home'),
 ]
 
 if settings.DEBUG:

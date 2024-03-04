@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_cleanup.apps.CleanupConfig',
     'basehome',
     'projects',
     'blogs',
@@ -47,6 +48,8 @@ INSTALLED_APPS = [
     'contents',
     'homepage',
     'common',
+    'pages',
+    'posts',
 ]
 
 MIDDLEWARE = [

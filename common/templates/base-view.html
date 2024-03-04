@@ -10,16 +10,21 @@
         | Amir Ebrahim
     </title>
     
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/general-style.css' %}">
+
+    {% for static in statics %}
+        {% if static.type == 'js' %}
+            <script src="{{static.url}}"></script>
+        {% elif static.type == 'css' %}
+            <link rel="stylesheet" type="text/css" href="{{static.url}}">    
+        {% endif %}
+    {% endfor %}
+    
     
     {% block head %}
     {% endblock %}
 </head>
 
-<body data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" tabindex="0">
+<body data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="65" tabindex="0">
     <nav class="navbar navbar-light bg-light px-3 fixed-top">
         <div class="container-md">
             <a class="navbar-brand" href="#"><div class="nav-text">Home</div></a>
@@ -27,7 +32,7 @@
             <ul class="nav nav-pills">
                 {% for nav_item in nav_items %}
                     <li class="nav-item">
-                    <a class="nav-link nav-text" href="{{nav_item.url}}">{{nav_item.title}}</a>
+                        <a class="nav-link nav-text" href="{{nav_item.url}}">{{nav_item.title}}</a>
                     </li>
                 {% endfor %}
                 <li class="nav-item">
@@ -39,6 +44,7 @@
     <div>
         <div class="container-md">
             <div class="px-md-5" style="margin-top: 60px">
+                static: {% static 'common/css/default.css' %}
                 {% block content %}
                 {% endblock %}
             </div>

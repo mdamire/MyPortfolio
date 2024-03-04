@@ -1,25 +1,10 @@
 from django.shortcuts import render
-from django.template import engines
 
 from common.static import get_static_context
+from common.utils import render_template
 from .models import HomePageSection
 
 
-
-def render_template(template_string, context):
-    # Get the Django template engine
-    django_engine = engines['django']
-    
-    # Create a template object from the template string
-    template = django_engine.from_string(template_string)
-    
-    # Render the template with the provided context
-    output = template.render(context)
-    
-    return output
-
-
-# Create your views here.
 def HomePageView(request):
     ncontext = {'ctest': 'TEST WORKED'}
     sections = [
@@ -43,4 +28,4 @@ def HomePageView(request):
     }
     context.update(get_static_context())
     
-    return render(request, 'home-page.html', context)
+    return render(request, 'pages/homepage.html', context)
