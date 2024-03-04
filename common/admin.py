@@ -20,5 +20,5 @@ class SiteAssetForm(forms.ModelForm):
 
 @admin.register(SiteAsset)
 class SiteAssetAdmin(admin.ModelAdmin):
-    list_display = ('key', )
+    list_display = ('key', 'description')
     form = SiteAssetForm

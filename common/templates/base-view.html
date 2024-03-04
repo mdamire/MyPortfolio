@@ -24,27 +24,23 @@
     {% endblock %}
 </head>
 
-<body data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="65" tabindex="0">
-    <nav class="navbar navbar-light bg-light px-3 fixed-top">
+<body data-bs-spy="scroll" data-bs-target="#navbar1" data-bs-offset="60" tabindex="0">
+    <nav id="navbar1" class="navbar navbar-light bg-light px-3 fixed-top">
         <div class="container-md">
             <a class="navbar-brand" href="#"><div class="nav-text">Home</div></a>
 
             <ul class="nav nav-pills">
-                {% for nav_item in nav_items %}
+                {% for nav_item in navbar_items %}
                     <li class="nav-item">
                         <a class="nav-link nav-text" href="{{nav_item.url}}">{{nav_item.title}}</a>
                     </li>
                 {% endfor %}
-                <li class="nav-item">
-                    <a class="nav-link nav-text" href="{% url 'blogs:blogs' %}">Posts</a>
-                </li>
             </ul>
         </div>
     </nav>
     <div>
         <div class="container-md">
             <div class="px-md-5" style="margin-top: 60px">
-                static: {% static 'common/css/default.css' %}
                 {% block content %}
                 {% endblock %}
             </div>

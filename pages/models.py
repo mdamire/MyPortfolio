@@ -13,6 +13,10 @@ class HomePageSection(TimeStampedModel):
         help_text="Entering a value here will display it's link in the top bar."
     )
     serial = models.IntegerField(default=0)
+    render_django_template = models.BooleanField(
+        default=False, 
+        help_text="Set this to true, when the 'body' field contains Django template code that requires rendering"
+    )
 
     class Meta:
         ordering = ('serial', 'created')

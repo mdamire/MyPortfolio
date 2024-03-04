@@ -23,10 +23,7 @@ from pages.views import HomePageView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tinymce/', include('tinymce.urls')),
-    path('projects/', include('projects.urls')),
-    path('blogs/', include('blogs.urls')),
-    path('', include('contents.urls')),
-    path('nhome/', HomePageView, name='new-home'),
+    path('nhome/', HomePageView, name='home'),
 ]
 
 if settings.DEBUG:
