@@ -9,9 +9,6 @@ class NavbarItem():
         self.url = url
 
 
-NAVBAR_ITEMS_CONTEXT_KEY = 'navbar_items'
-
-
 def get_navbar_items(is_homepage):
     haburl = '' if is_homepage else reverse('home')
     items = [
@@ -20,9 +17,3 @@ def get_navbar_items(is_homepage):
     ]
 
     return items
-
-
-def get_navbar_context(is_homepage):
-    nc = {NAVBAR_ITEMS_CONTEXT_KEY: get_navbar_items(is_homepage)}
-
-    return nc

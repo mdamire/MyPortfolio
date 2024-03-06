@@ -26,3 +26,14 @@ class SiteAsset(models.Model):
         null=True, blank=True, 
         help_text="Optional: A note to yourself of where or how this can be used."
     )
+
+
+class AbstractRenderableContent(models.Model):
+    content = models.TextField()
+    requires_rendering = models.BooleanField(
+        default=False,
+        help_text="Set this to true, when the 'content' field contains Django template code that requires rendering"
+    )
+
+    class Meta:
+        abstract = True

@@ -1,0 +1,20 @@
+
+{% block content %}
+{% for post in post_list %}
+    <div class="container-fluid container-no-padding">
+        <div class="row post-list-row">
+            <div class="col-md-2 text-muted post-list-date">
+                {{post.publish_date}}
+            </div>
+            <div class="col-md">
+                <a href="" class="post-list-heading">
+                    <h3>{{post.title}}</h3>
+                </a>
+                {{post.sub_title}}
+            </div>
+        </div>
+    </div>
+{% empty %}
+    <h3 class="p-3">No Post Yet</h3>
+{% endfor %}
+{% endblock  %}

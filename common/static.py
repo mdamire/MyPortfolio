@@ -25,8 +25,6 @@ DEFAULT_CSS_FILES = [
 ]
 
 CUSTOM_STYLE_KEY = 'style'
-STATIC_LIST_CONTEXT_KEY = 'statics'
-
 
 def get_custom_static_list():
     csl = [SiteStatic(sf.file.url) for sf in SiteAsset.objects.filter(key=CUSTOM_STYLE_KEY)]
@@ -44,9 +42,3 @@ def get_css_full_list() -> List[str]:
     cfl = [ss.url for ss in get_static_full_list()]
 
     return cfl
-
-
-def get_static_context() -> dict:
-    sc = {STATIC_LIST_CONTEXT_KEY: get_static_full_list()}
-
-    return sc

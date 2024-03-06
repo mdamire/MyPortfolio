@@ -141,7 +141,7 @@ TINYMCE_DEFAULT_CONFIG = {
    'height': 800,
    'cleanup_on_startup': True,
    'custom_undo_redo_levels': 20,
-   'selector': 'textarea',
+#    'selector': 'textarea',
    'plugins': '''
    textcolor save link image media preview codesample contextmenu
    table code lists fullscreen insertdatetime nonbreaking
@@ -156,7 +156,7 @@ TINYMCE_DEFAULT_CONFIG = {
    ''',
    'toolbar2': '''
    link image media | codesample | visualblocks visualchars |
-   charmap hr pagebreak nonbreaking anchor | code |
+   charmap hr pagebreak nonbreaking anchor | code 
    ''',
    'contextmenu': 'formats | link image',
    'menubar': True,

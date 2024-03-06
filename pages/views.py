@@ -1,20 +1,12 @@
 from django.shortcuts import render
+from django.views.generic import ListView
 
-from common.utils import render_template, site_context
+from common.mixins import SiteContextMixin, MultipleObjectContentRendererMixin
 from .models import HomePageSection
 
 
-def HomePageView(request):
-    s_context = {}
-
-    sections = [
-        {
-            'body': render_template(section.body, s_context) if section.render_django_template else section.body,
-            'navbar_title': section.navbar_title,
-        }
-        for section in HomePageSection.objects.all()
-    ]
-
-    context = site_context(sections=sections, is_homepage=True)
-    
-    return render(request, 'pages/homepage.html', context)
+class HomePageView(ListView, SiteContextMixin, MultipleObjectContentRendererMixin):
+    template_name = 'pages/homepage.html'
+    is_homepage = True
+    context_object_name = 'sections'
+    model = HomePageSection

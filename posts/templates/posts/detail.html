@@ -1,0 +1,9 @@
+{% extends 'base-view.html' %}
+
+{% block heading-content %}
+    {{post.heading}}
+{% endblock %}
+
+{% block main-content %}
+    {{post.content|safe}}
+{% endblock  %}

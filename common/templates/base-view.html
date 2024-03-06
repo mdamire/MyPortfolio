@@ -10,7 +10,6 @@
         | Amir Ebrahim
     </title>
     
-
     {% for static in statics %}
         {% if static.type == 'js' %}
             <script src="{{static.url}}"></script>
@@ -25,10 +24,9 @@
 </head>
 
 <body data-bs-spy="scroll" data-bs-target="#navbar1" data-bs-offset="60" tabindex="0">
-    <nav id="navbar1" class="navbar navbar-light bg-light px-3 fixed-top">
+    <nav id="navbar1" class="navbar navbar-custom px-3 fixed-top">
         <div class="container-md">
             <a class="navbar-brand" href="#"><div class="nav-text">Home</div></a>
-
             <ul class="nav nav-pills">
                 {% for nav_item in navbar_items %}
                     <li class="nav-item">
@@ -39,11 +37,22 @@
         </div>
     </nav>
     <div>
-        <div class="container-md">
-            <div class="px-md-5" style="margin-top: 60px">
-                {% block content %}
-                {% endblock %}
+        {% if not is_homepage %}
+        <div class="heading container-fluid" style="margin-top: 60px">
+            <div class="container-md">
+                <div class="align-middle">
+                    <h1>
+                        {% block heading-content %}
+                        {% endblock %}
+                    </h1>
+                </div>
             </div>
+        </div>
+        {% endif %}
+        
+        <div class="container-md">
+            {% block main-content %}
+            {% endblock %}
         </div>
     </div>
 </body>

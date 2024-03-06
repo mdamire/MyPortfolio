@@ -1,9 +1,10 @@
 import re
-import os
+
 from django.contrib import admin
-from .models import SiteAsset
 from django import forms
 from django.core.exceptions import ValidationError
+
+from .models import SiteAsset
 
 
 class SiteAssetForm(forms.ModelForm):
