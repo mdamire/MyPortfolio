@@ -5,6 +5,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.db import models
 from tinymce.widgets import TinyMCE
+from django.templatetags.static import static
 
 from common.static import get_css_full_list
 from .models import PostDetail
@@ -17,11 +18,12 @@ class PostDetailForm(forms.ModelForm):
     
     class Meta:
         fields = (
-            'permalink', 'heading', 'introduction', 'content', 'requires_rendering', 'is_published', 'publish_date'
+            'permalink', 'heading', 'introduction', 'content', 'requires_rendering', 'include_sublinks',
+            'is_published', 'publish_date'
         )
         widgets = {
             'introduction': TinyMCE(mce_attrs={'content_css': get_css_full_list(), 'height': 300}),
-            'content': TinyMCE(mce_attrs={'content_css': get_css_full_list()}),
+            'content': TinyMCE(mce_attrs={'content_css': get_css_full_list() + [static('posts/post.css')]}),
         }
     
     def clean_permalink(self):

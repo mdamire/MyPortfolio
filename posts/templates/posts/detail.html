@@ -1,9 +1,48 @@
 {% extends 'base-view.html' %}
 
 {% block heading-content %}
-    {{post.heading}}
+    {{post.heading|title}}
 {% endblock %}
 
+
 {% block main-content %}
-    {{post.content|safe}}
+    <div class="">
+        <h6 class="pt-md-4 pt-2"><small>
+            {% if post.publish_date %}
+                {{post.publish_date|date:"F j, Y"}}
+            {% else %}
+                {{post.created|date:"F j, Y"}}
+            {% endif %}
+        </small></h6>
+
+        <div class="pt-md-4 pt-2">
+        <button id="collapse-button" data-bs-toggle="collapse" type="button" class="collapsible px-md-5 px-2" data-bs-target="#collapseBody" aria-expanded="true" aria-controls="collapseBody">
+            <div class="row">
+                <div class="col">
+                    Post Contents
+                </div>
+                <div id="collapse-sign" class="col f-text" style="text-align: right;">
+                    <!-- value comes from posts.js -->
+                </div>
+            </div>
+        </button>
+        <div id="collapseBody" class="collapse show">
+            <div id="collapse-text" class="card card-body pt-md-4 pt-2 px-md-5 px-2">
+                {% for sublink in sublinks %}
+                    <p class="my-2">
+                        {% for i in sublink.indent_range %}
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                        {% endfor %}
+                        <a href="#{{sublink.div_id}}">{{sublink.text}}</a>
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+        </div>   
+
+        <div class="pt-md-5 pt-2 post-content">
+            {{post.content|safe}}
+        </div>
+
+    </div>
 {% endblock  %}

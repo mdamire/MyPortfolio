@@ -9,11 +9,12 @@ from .renderer import ContentRenderer
 
 class SiteContextMixin(ContextMixin):
     is_homepage = False
+    extra_statics = []
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['navbar_items'] = get_navbar_items(self.is_homepage)
-        context['statics'] = get_static_full_list()
+        context['statics'] = list(get_static_full_list()) + list(self.extra_statics)
         context['is_homepage'] = self.is_homepage
 
         return context

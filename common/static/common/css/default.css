@@ -1,3 +1,7 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
 .nav-text {
     color: white;
 }
@@ -23,8 +27,11 @@
 .heading {
     background-color: #187f58;
     color: white;
-    /* text-shadow: 1px 1px rgb(180, 180, 180); */
-    height: 100px;
+    height: 80px;
     display: flex;
     align-items: center;
+}
+
+.heading-text {
+    font-size: 28px;
 }

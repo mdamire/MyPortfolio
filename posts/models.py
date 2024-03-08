@@ -14,3 +14,7 @@ class PostDetail(TimeStampedModel, AbstractRenderableContent):
     is_published = models.BooleanField(default=False)
     publish_date = models.DateField(null=True, blank=True)
     view_count = models.IntegerField(default=0)
+    include_sublinks = models.BooleanField(
+        default=True, 
+        help_text="Post sublinks will be generated from any header tag and will aprear in Post Content section"
+    )

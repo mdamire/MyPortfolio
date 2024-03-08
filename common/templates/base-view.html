@@ -11,9 +11,7 @@
     </title>
     
     {% for static in statics %}
-        {% if static.type == 'js' %}
-            <script src="{{static.url}}"></script>
-        {% elif static.type == 'css' %}
+        {% if static.type == 'css' %}
             <link rel="stylesheet" type="text/css" href="{{static.url}}">    
         {% endif %}
     {% endfor %}
@@ -23,7 +21,11 @@
     {% endblock %}
 </head>
 
+{% if is_homepage %}
 <body data-bs-spy="scroll" data-bs-target="#navbar1" data-bs-offset="60" tabindex="0">
+{% else %}
+<body>
+{% endif %}
     <nav id="navbar1" class="navbar navbar-custom px-3 fixed-top">
         <div class="container-md">
             <a class="navbar-brand" href="#"><div class="nav-text">Home</div></a>
@@ -37,14 +39,14 @@
         </div>
     </nav>
     <div>
+        <div style="margin-top: 60px"></div>
+
         {% if not is_homepage %}
-        <div class="heading container-fluid" style="margin-top: 60px">
+        <div class="heading container-fluid">
             <div class="container-md">
-                <div class="align-middle">
-                    <h1>
-                        {% block heading-content %}
-                        {% endblock %}
-                    </h1>
+                <div class="heading-text">
+                    {% block heading-content %}
+                    {% endblock %}
                 </div>
             </div>
         </div>
@@ -55,5 +57,11 @@
             {% endblock %}
         </div>
     </div>
+
+    {% for static in statics %}
+        {% if static.type == 'js' %}
+            <script src="{{static.url}}"></script>
+        {% endif %}
+    {% endfor %}
 </body>
 </html>

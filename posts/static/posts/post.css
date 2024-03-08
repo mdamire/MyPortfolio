@@ -1,0 +1,39 @@
+body {
+    background-color: #0d1116;
+    color: white;
+}
+
+.post-sublink {
+    padding-top: 60px; 
+    margin-top: -60px;
+}
+
+
+
+.f-text {
+    color: white;
+}
+
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+    background-color: #161b22;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+}
+
+#collapse-sign{
+    text-shadow: 0px 0px 2px white;
+} 
+
+#collapse-text {
+    background-color: #161b22;
+    color: white;
+    border-radius: 0px;
+    border-top: 1px solid grey;
+    padding: 18px;
+}
