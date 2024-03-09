@@ -1,6 +1,8 @@
-from django.views.generic import DetailView
+from operator import attrgetter
 
-from common.mixins import SiteContextMixin, SingleObjectContentRendererMixin
+from django.views.generic import DetailView, ListView
+
+from common.mixins import SiteContextMixin, SingleObjectContentRendererMixin, MultipleObjectContentRendererMixin
 from common.static import SiteStatic
 from .models import PostDetail
 from .sublink import parse_sublinks
@@ -27,3 +29,11 @@ class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
             context['sublinks'] = sublinks
         
         return context
+
+
+class PostListView(ListView, SiteContextMixin, MultipleObjectContentRendererMixin):
+    model = PostDetail
+    template_name = 'posts/post-list.html'
+    extra_statics = [SiteStatic('posts/post-list.css'), SiteStatic('posts/post-list.js')]
+    context_object_name = 'post_list'
+    paginate_by = 6

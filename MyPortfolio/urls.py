@@ -19,13 +19,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from pages.views import HomePageView
-from posts.views import PostDetailView
+from posts.views import PostDetailView, PostListView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tinymce/', include('tinymce.urls')),
     path('nhome/', HomePageView.as_view(), name='home'),
-    path('post/<str:permalink>', PostDetailView.as_view(), name='post')
+    path('post/<str:permalink>', PostDetailView.as_view(), name='post-detail'),
+    path('posts/', PostListView.as_view(), name='post-list'),
 ]
 
 if settings.DEBUG:

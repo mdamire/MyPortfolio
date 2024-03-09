@@ -1,5 +1,14 @@
 body {
     font-family: 'Roboto', sans-serif;
+    padding-bottom: 50px;
+}
+
+a {
+    color: #187f58;
+}
+
+a:hover {
+    color: #6b8f71;
 }
 
 .nav-text {

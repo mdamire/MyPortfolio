@@ -18,3 +18,7 @@ class PostDetail(TimeStampedModel, AbstractRenderableContent):
         default=True, 
         help_text="Post sublinks will be generated from any header tag and will aprear in Post Content section"
     )
+
+    @property
+    def intro_len(self):
+        return len(self.heading) + len(self.introduction)

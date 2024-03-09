@@ -1,0 +1,95 @@
+{% extends 'base-view.html' %}
+
+{% block heading-content %}
+    Posts
+{% endblock %}
+
+{% block main-content %}
+<div class="mt-4"></div>
+<div class="accordion" id="filter-section">
+    <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-settings"  aria-expanded="false" aria-controls="filter-settings">
+            <i class="fa fa-gear pe-2"></i> <small class="pe-md-2 pe-1">Sort by: Featured</small>|<small class="ps-md-2 ps-1">Tags: All</small>
+        </button>
+    </h2>
+    <div id="filter-settings" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#filter-section">
+        <div class="accordion-body">
+            <div class="row">
+                <div class="col-md-2" style="border-right: 1px solid grey;">
+                    <div class="pb-3"><u>Sort By:</u></div>
+                    <div class="form-check">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Default radio
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="rd1">
+                        </label>
+                      </div>
+                      <div class="form-check">
+                          <label class="form-check-label" for="flexRadioDefault2">
+                              Default checked radio
+                              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="rd2" checked>
+                        </label>
+                      </div>
+                </div>
+                <div class="col-md-8" style="border-right: 1px solid grey;">
+                    <div class="pb-2"><u>Tags:</u></div>
+                    <label class="form-check-label pe-2" for="flexCheckDefault">
+                        <input class="form-check-input" type="checkbox" value="cb1" id="flexCheckDefault">
+                          Default checkbox
+                    </label>
+                    <label class="form-check-label" for="flexCheckChecked">
+                        <input class="form-check-input" type="checkbox" value="cb2" id="flexCheckChecked" checked>
+                          Checked checkbox
+                    </label>
+                </div>
+                <div class="col-md-2" style="position: relative;">
+                    <div style="position: absolute; bottom: 0;" onclick="submitFilters()">Filter</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row pt-md-4 pt-2">
+{% for post in post_list %}
+            <!-- if if loop counter in 1, 4, 7 -->
+    {% url 'post-detail' post.permalink as post_detail_url%}
+    <div class="col-md-4 post-button" onclick="window.location.href='{{post_detail_url}}';">
+        <h3 class="post-heading">{{post.heading|title}}</h3>
+        <div class="post-meta">
+            {% if post.publish_date %}
+                {{post.publish_date|date:"F j, Y"}}
+            {% else %}
+                {{post.created|date:"F j, Y"}}
+            {% endif %}
+        </div>
+        {% if post.introduction %}
+        <div class="post-introduction">{{post.introduction|safe}}</div>
+        {% endif %}
+    </div>
+    {% if forloop.counter|divisibleby:3 %}
+    </div>
+    <div class="row">
+    {% endif %}
+{% endfor %}
+</div>
+
+{% if page_obj.has_previous or page_obj.has_next %}
+    <div class="step-links pt-2">
+        <span>
+            {% if page_obj.has_previous %}
+                <span class="page-button" onclick="changePage(1)">&laquo; first</span>&nbsp;
+                <span class="page-button" onclick="changePage('{{ page_obj.previous_page_number }}')">previous</span>&nbsp;
+            {% endif %}
+            
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+    
+            {% if page_obj.has_next %}
+            &nbsp;<span class="page-button" onclick="changePage('{{ page_obj.next_page_number }}')">next</span>
+            &nbsp;<span class="page-button" onclick="changePage('{{ page_obj.paginator.num_pages }}')">last &raquo;</span>
+            {% endif %}
+        </span>
+    </div>
+{% endif %}
+{% endblock  %}
