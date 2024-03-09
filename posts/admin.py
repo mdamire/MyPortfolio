@@ -8,22 +8,18 @@ from tinymce.widgets import TinyMCE
 from django.templatetags.static import static
 
 from common.static import get_css_full_list
-from .models import PostDetail
+from .models import PostDetail, PostTag
 
 
 class PostDetailForm(forms.ModelForm):
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.fields["introduction"].widget = TinyMCE(mce_attrs={'content_css': get_css_full_list()})
-    
     class Meta:
         fields = (
-            'permalink', 'heading', 'introduction', 'content', 'requires_rendering', 'include_sublinks',
-            'is_published', 'publish_date'
+            'permalink', 'heading', 'tags', 'feature', 'introduction', 'content', 'requires_rendering', 
+            'include_sublinks', 'is_published', 'publish_date'
         )
         widgets = {
             'introduction': TinyMCE(mce_attrs={'content_css': get_css_full_list(), 'height': 300}),
-            'content': TinyMCE(mce_attrs={'content_css': get_css_full_list() + [static('posts/post.css')]}),
+            'content': TinyMCE(mce_attrs={'content_css': get_css_full_list() + [static('posts/post-detail.css')]}),
         }
     
     def clean_permalink(self):
@@ -32,9 +28,14 @@ class PostDetailForm(forms.ModelForm):
             raise ValidationError("Invalid Value")
         
         return permalink
-    
+
 
 @admin.register(PostDetail)
 class PostDetailAdmin(admin.ModelAdmin):
     list_display = ('permalink', 'heading', 'is_published', 'created')
     form = PostDetailForm
+
+
+@admin.register(PostTag)
+class PostTagAdmin(admin.ModelAdmin):
+    list_display = ('label', 'color', 'bg_color')

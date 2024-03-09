@@ -1,10 +1,12 @@
 .accordion-button {
     background-color: rgb(243, 243, 243);
+    border-radius: 20px;
 }
 
 .accordion-body {
     background-color: rgb(243, 243, 243);
     font-size: small;
+    border-radius: 20px;
 }
 
 .step-links {
@@ -35,4 +37,9 @@
 
 .page-button:hover {
     color: #6b8f71;
+}
+
+.filter-submit {
+    text-align: center;
+    width: 100%;
 }
