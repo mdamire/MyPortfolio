@@ -18,7 +18,7 @@ class PostDetail(TimeStampedModel, AbstractRenderableContent):
         default=True, 
         help_text="Post sublinks will be generated from any header tag and will aprear in Post Content section"
     )
-    tags = models.ManyToManyField('PostTag')
+    tags = models.ManyToManyField('PostTag', blank=True)
     feature = models.IntegerField(
         default=0, help_text="This value will help it sort in the post list page. Higher value has more priority."
     )

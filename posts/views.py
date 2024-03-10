@@ -54,7 +54,7 @@ class PostListView(ListView, SiteContextMixin, MultipleObjectContentRendererMixi
                 'label': pt.label, 
                 'color': pt.color, 
                 'bg_color': pt.bg_color, 
-                'count': len(pt.postdetail_set.all())
+                'count': len([pd.id for pd in pt.postdetail_set.all() if pd.is_published])
             }
             for pt in PostTag.objects.prefetch_related(
                     'postdetail_set'
@@ -74,7 +74,7 @@ class PostListView(ListView, SiteContextMixin, MultipleObjectContentRendererMixi
         return context
     
     def get_queryset(self):
-        qs = super().get_queryset()
+        qs = super().get_queryset().filter(is_published=True)
 
         tags_param = self.request.GET.get('tags')
         sort_param = self.request.GET.get('sort')

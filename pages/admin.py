@@ -1,11 +1,18 @@
 from django.contrib import admin
 from django.db import models
+from django.utils import timezone
 from tinymce.widgets import TinyMCE
 from django.urls import reverse
 from django.utils.html import format_html
 
 from common.static import get_css_full_list
 from .models import HomePageSection, StaticPage
+
+
+def publish_page(modeladmin, request, queryset):
+    for obj in queryset:
+        obj.is_published = True
+        obj.save()
 
 
 @admin.register(HomePageSection)
@@ -16,9 +23,11 @@ class HomePageSectionAdmin(admin.ModelAdmin):
         models.TextField: {'widget': TinyMCE(mce_attrs={'content_css': get_css_full_list()})}
     }
 
+
 @admin.register(StaticPage)
 class StaticPageAdmin(admin.ModelAdmin):
     list_display = ('permalink', 'heading', 'is_published', 'navbar_title', 'navbar_serial', 'created', '_url')
+    actions = (publish_page,)
 
     def _url(self, obj):
         url = reverse('static-page', kwargs={'permalink': obj.permalink})
