@@ -28,6 +28,8 @@ DEFAULT_CSS_FILES = [
     SiteStatic('https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js'),
     SiteStatic('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'),
     SiteStatic('https://fonts.googleapis.com/css?family=Roboto', 'css'),
+    SiteStatic('common/prism.css'),
+    SiteStatic('common/prism.js'),
     SiteStatic('common/common.css'),
     SiteStatic('common/common.js'),
 ]

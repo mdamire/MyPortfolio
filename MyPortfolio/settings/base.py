@@ -152,7 +152,7 @@ TINYMCE_DEFAULT_CONFIG = {
         aligncenter alignjustify | indent outdent | bullist numlist table |
     ''',
     'toolbar2': '''
-        link image media | codesample | visualblocks visualchars |
+        link image media | codesample blockquote | visualblocks visualchars |
         charmap hr pagebreak nonbreaking anchor | code | h1 h2 h3 h4 h5 h6 |
     ''',
     'contextmenu': 'formats | link image',
