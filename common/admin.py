@@ -3,6 +3,7 @@ import re
 from django.contrib import admin
 from django import forms
 from django.core.exceptions import ValidationError
+from django.utils.html import format_html
 
 from .models import SiteAsset
 
@@ -21,5 +22,8 @@ class SiteAssetForm(forms.ModelForm):
 
 @admin.register(SiteAsset)
 class SiteAssetAdmin(admin.ModelAdmin):
-    list_display = ('key', 'description')
+    list_display = ('key', 'description', '_url')
     form = SiteAssetForm
+
+    def _url(self, obj):
+        return format_html(f'<a href="{obj.file.url}" target="_blank">{obj.file.url}</a>')
