@@ -17,3 +17,20 @@ class HomePageSection(TimeStampedModel, AbstractRenderableContent):
 
     class Meta:
         ordering = ('serial', 'created')
+
+
+class StaticPage(TimeStampedModel, AbstractRenderableContent):
+    permalink = models.CharField(
+        max_length=80, unique=True, 
+        help_text="Allowed characters: Need to start with a letter followed by letter, number and underscore"
+    )
+    heading = models.CharField(max_length=200, help_text="max length: 200")
+    is_published = models.BooleanField(default=False)
+    navbar_title = models.CharField(
+        max_length=32, null=True, blank=True, 
+        help_text="When populated, this field will display the specified title on the navbar before 'POSTS'."
+    )
+    navbar_serial = models.IntegerField(default=0, help_text="Not effective if no navbar_title")
+
+    def __str__(self) -> str:
+        return f"{self.permalink}: {self.heading}"

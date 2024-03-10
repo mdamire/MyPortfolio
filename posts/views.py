@@ -43,6 +43,7 @@ class PostListView(ListView, SiteContextMixin, MultipleObjectContentRendererMixi
         context = super().get_context_data(**kwargs)
         context['tag_list'] = [
             {
+                'id': pt.id,
                 'label': pt.label, 
                 'color': pt.color, 
                 'bg_color': pt.bg_color, 

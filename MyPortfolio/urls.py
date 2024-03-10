@@ -18,7 +18,7 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from pages.views import HomePageView
+from pages.views import HomePageView, StaticPageView
 from posts.views import PostDetailView, PostListView
 
 urlpatterns = [
@@ -27,6 +27,7 @@ urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
     path('post/<str:permalink>', PostDetailView.as_view(), name='post-detail'),
     path('posts/', PostListView.as_view(), name='post-list'),
+    path('page/<str:permalink>', StaticPageView.as_view(), name='static-page'),
 ]
 
 if settings.DEBUG:
