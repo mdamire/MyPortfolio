@@ -1,0 +1,84 @@
+{% extends 'base-view.html' %}
+
+{% block heading-content %}
+    {{post.heading|title}}
+{% endblock %}
+
+
+{% block main-content %}
+    <div class="">
+        {% comment %} Meta section {% endcomment %}
+        <h6 class="pt-md-4 pt-2"><small>
+            {% if post.publish_date %}
+                {{post.publish_date|date:"F j, Y"}}
+            {% else %}
+                {{post.created|date:"F j, Y"}}
+            {% endif %}
+            &nbsp;&nbsp;
+            <i class="fa fa-eye"></i> {{post.view_count}}
+            &nbsp;&nbsp;
+            {% for tag in post.tags.all %}
+                <span class="badge rounded-pill" style="color: {{tag.color}}; background-color: {{tag.bg_color}};">{{tag.label}}</span>
+            {% endfor %}
+        </small></h6>
+
+        {% comment %} Sublink section {% endcomment %}
+        {% if post.include_sublinks and sublinks %}
+        <div class="pt-md-4 pt-2">
+        <button id="collapse-button" data-bs-toggle="collapse" type="button" class="collapsible px-md-5 px-2" data-bs-target="#collapseBody" aria-expanded="true" aria-controls="collapseBody">
+            <div class="row">
+                <div class="col">
+                    Post Contents
+                </div>
+                <div id="collapse-sign" class="col f-text" style="text-align: right;">
+                    <!-- value comes from posts.js -->
+                </div>
+            </div>
+        </button>
+        <div id="collapseBody" class="collapse show">
+            <div id="sublink-text" class="card card-body pt-md-4 pt-2 px-md-5 px-2">
+                {% for sublink in sublinks %}
+                    <p class="my-2">
+                        {% for i in sublink.indent_range %}
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                        {% endfor %}
+                        <a href="#{{sublink.div_id}}">{{sublink.text}}</a>
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+        </div>
+        {% endif %}
+
+        {% comment %} Content section {% endcomment %}
+        <div class="py-md-4 py-2 post-content">
+            {{post.content|safe}}
+        </div>
+        
+        {% comment %} Related post section {% endcomment %}
+        {% if related_posts %}
+            <div class="pt-md-5 pt-3" style="border-bottom: 1px solid white">
+                <h3>Related Posts:</h3>
+            </div>
+            
+            {% for rp in related_posts %}
+                <div class="pt-md-3 pt-2">
+                    <a href="{% url 'post-detail' rp.permalink %}"><h4>{{rp.heading}}</h4></a>
+                    <small>
+                        {% if rp.publish_date %}
+                            {{rp.publish_date|date:"F j, Y"}}
+                        {% else %}
+                            {{rp.created|date:"F j, Y"}}
+                        {% endif %}
+                        &nbsp;|&nbsp;
+                        {% for rt in rp.tags.all %}
+                            <span class="badge rounded-pill" style="color: {{rt.color}}; background-color: {{rt.bg_color}};">
+                                {{rt.label}}
+                            </span>
+                        {% endfor %}
+                    </small>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock  %}

@@ -1,5 +1,4 @@
 *.sqlite3
 **/__pycache__/
-media/images/*
-media/files/*
-static/*
+/media/
+/static/

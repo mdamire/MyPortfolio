@@ -1,0 +1,67 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head class="header">
+    <title>
+        {% block title %}
+        {% endblock %}
+        | Amir Ebrahim
+    </title>
+    
+    {% for static in statics %}
+        {% if static.type == 'css' %}
+            <link rel="stylesheet" type="text/css" href="{{static.url}}">    
+        {% endif %}
+    {% endfor %}
+    
+    
+    {% block head %}
+    {% endblock %}
+</head>
+
+{% if is_homepage %}
+<body data-bs-spy="scroll" data-bs-target="#navbar1" data-bs-offset="60" tabindex="0">
+{% else %}
+<body>
+{% endif %}
+    <nav id="navbar1" class="navbar navbar-custom px-3 fixed-top">
+        <div class="container-md">
+            <a class="navbar-brand" href="{% url 'home' %}"><div class="nav-bar-text">Home</div></a>
+            <ul class="nav nav-pills">
+                {% for nav_item in navbar_items %}
+                    <li class="nav-item">
+                        <a class="nav-link nav-text" href="{{nav_item.url}}">{{nav_item.title|upper}}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+    <div>
+        <div style="margin-top: 60px"></div>
+
+        {% if not is_homepage %}
+        <div class="heading container-fluid">
+            <div class="container-md">
+                <div class="heading-text">
+                    {% block heading-content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="container-md">
+            {% block main-content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    {% for static in statics %}
+        {% if static.type == 'js' %}
+            <script src="{{static.url}}"></script>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>
