@@ -9,7 +9,7 @@ from .sublink import parse_sublinks
 
 class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMixin):
     model = PostDetail
-    extra_statics = ['posts/post-detail.css', 'posts/post-detail.js']
+    extra_statics = ['posts/post-detail.css', 'posts/post-detail.js', 'posts/prism-tn.css', 'posts/prism-tn.js']
 
     # The name of the field on the model that contains the slug. 
     slug_field = 'permalink'

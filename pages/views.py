@@ -17,3 +17,5 @@ class StaticPageView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
     context_object_name = 'page'
     slug_field = 'permalink'
     slug_url_kwarg = 'permalink'
+
+    extra_statics = ['pages/prism.css', 'pages/prism.js']
