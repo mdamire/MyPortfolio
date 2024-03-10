@@ -28,8 +28,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-MY_EMAIL = 'md.amire02@gmail.com'
-
 
 # Application definition
 
@@ -119,7 +117,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-DOMAIN = "http://localhost:8000"
 
 
 # Static files (CSS, JavaScript, Images)
@@ -162,7 +159,3 @@ TINYMCE_DEFAULT_CONFIG = {
     'menubar': True,
     'statusbar': True,
 }
-
-
-# File keys
-CV_FILE = 'cv'

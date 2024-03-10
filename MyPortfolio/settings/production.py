@@ -6,7 +6,6 @@ DEBUG = os.environ.get('DJANGO_DEBUG', True)
 
 ALLOWED_HOSTS = os.environ['ALLOWED_HOST'].split(',')
 
-DOMAIN = 'http://www.amirebrahim.me/'
 
 DATABASES = {
     'default': {
