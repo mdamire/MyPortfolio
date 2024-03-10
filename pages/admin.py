@@ -28,6 +28,7 @@ class HomePageSectionAdmin(admin.ModelAdmin):
 class StaticPageAdmin(admin.ModelAdmin):
     list_display = ('permalink', 'heading', 'is_published', 'navbar_title', 'navbar_serial', 'created', '_url')
     actions = (publish_page,)
+    readonly_fields = ('_url',)
 
     def _url(self, obj):
         url = reverse('static-page', kwargs={'permalink': obj.permalink})

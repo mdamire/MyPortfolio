@@ -28,7 +28,11 @@ class PostDetailForm(forms.ModelForm):
         )
         widgets = {
             'introduction': TinyMCE(mce_attrs={'content_css': get_css_full_list(), 'height': 300}),
-            'content': TinyMCE(mce_attrs={'content_css': get_css_full_list(['posts/post-detail.css'])}),
+            'content': TinyMCE(
+                mce_attrs={
+                    'content_css': get_css_full_list(['posts/post-detail.css', 'posts/prism-tn.css'])
+                }
+            ),
         }
     
     def clean_permalink(self):
@@ -43,6 +47,7 @@ class PostDetailForm(forms.ModelForm):
 class PostDetailAdmin(admin.ModelAdmin):
     list_display = ('permalink', 'heading', 'is_published', 'publish_date', 'feature', 'created', 'view_count', '_url')
     form = PostDetailForm
+    readonly_fields = ('_url', )
 
     actions=(publish_post,)
 

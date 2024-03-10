@@ -24,6 +24,7 @@ class SiteAssetForm(forms.ModelForm):
 class SiteAssetAdmin(admin.ModelAdmin):
     list_display = ('key', 'description', '_url')
     form = SiteAssetForm
+    readonly_fields = ('_url',)
 
     def _url(self, obj):
         return format_html(f'<a href="{obj.file.url}" target="_blank">{obj.file.url}</a>')

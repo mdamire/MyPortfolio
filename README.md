@@ -12,7 +12,7 @@ The portfolio website is built on Django, offering a highly dynamic approach to 
 1. Clone the repository from git:
 
    ```bash
-   $ git clone https://github.com/toborrow/api.git
+   $ git clone https://github.com/mdamire/MyPortfolio.git
    ```
 
 2. Create a virtual environment to isolate the installation:
