@@ -24,7 +24,7 @@ from posts.views import PostDetailView, PostListView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tinymce/', include('tinymce.urls')),
-    path('nhome/', HomePageView.as_view(), name='home'),
+    path('', HomePageView.as_view(), name='home'),
     path('post/<str:permalink>', PostDetailView.as_view(), name='post-detail'),
     path('posts/', PostListView.as_view(), name='post-list'),
 ]

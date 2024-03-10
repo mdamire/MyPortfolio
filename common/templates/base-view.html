@@ -28,11 +28,11 @@
 {% endif %}
     <nav id="navbar1" class="navbar navbar-custom px-3 fixed-top">
         <div class="container-md">
-            <a class="navbar-brand" href="#"><div class="nav-text">Home</div></a>
+            <a class="navbar-brand" href="{% url 'home' %}"><div class="nav-bar-text">Home</div></a>
             <ul class="nav nav-pills">
                 {% for nav_item in navbar_items %}
                     <li class="nav-item">
-                        <a class="nav-link nav-text" href="{{nav_item.url}}">{{nav_item.title}}</a>
+                        <a class="nav-link nav-text" href="{{nav_item.url}}">{{nav_item.title|upper}}</a>
                     </li>
                 {% endfor %}
             </ul>

@@ -3,14 +3,13 @@ from operator import attrgetter
 from django.views.generic import DetailView, ListView
 
 from common.mixins import SiteContextMixin, SingleObjectContentRendererMixin, MultipleObjectContentRendererMixin
-from common.static import SiteStatic
 from .models import PostDetail, PostTag
 from .sublink import parse_sublinks
 
 
 class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMixin):
     model = PostDetail
-    extra_statics = [SiteStatic('posts/post-detail.css'), SiteStatic('posts/post-detail.js')]
+    extra_statics = ['posts/post-detail.css', 'posts/post-detail.js']
 
     # The name of the field on the model that contains the slug. 
     slug_field = 'permalink'
@@ -36,7 +35,7 @@ class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
 class PostListView(ListView, SiteContextMixin, MultipleObjectContentRendererMixin):
     model = PostDetail
     template_name = 'posts/post-list.html'
-    extra_statics = [SiteStatic('posts/post-list.css'), SiteStatic('posts/post-list.js')]
+    extra_statics = ['posts/post-list.css', 'posts/post-list.js']
     context_object_name = 'post_list'
     paginate_by = 12
 

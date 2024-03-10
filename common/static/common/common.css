@@ -13,6 +13,11 @@ a:hover {
 
 .nav-text {
     color: white;
+    font-size: 14px;
+}
+
+.nav-bar-text {
+    color: white;
 }
 
 .nav-text:hover {
