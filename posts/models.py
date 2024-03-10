@@ -31,7 +31,7 @@ class PostDetail(TimeStampedModel, AbstractRenderableContent):
         return f"{self.permalink}: {self.heading}"
 
     class Meta:
-        ordering = ['feature', '-publish_date', '-created']
+        ordering = ['-feature', '-publish_date', '-created']
 
 
 class PostTag(TimeStampedModel):

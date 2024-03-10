@@ -1,4 +1,24 @@
 
+function getUrlParams(excludes){
+    // Construct URL with parameters
+    var existingParams = window.location.href.split('?')[1];
+    var newParams = [];
+
+    // Append existing query parameters to newParams
+    if (existingParams) {
+        var paramsArray = existingParams.split('&');
+        paramsArray.forEach(function(param) {
+            var paramName = param.split('=')[0];
+            if (!excludes.includes(paramName)) {
+                newParams.push(param);
+            }
+        });
+    }
+
+    return newParams
+}
+
+
 function submitFilters(){
     let checkedItems = [];
     let filterSettings = document.getElementById('filter-settings');
@@ -13,21 +33,7 @@ function submitFilters(){
     var selectedOption = filterSettings.querySelector('input[type="radio"]:checked');
     var optionValue = selectedOption ? selectedOption.value : '';
 
-    // Construct URL with parameters
-    var currentUrl = window.location.href;
-    var existingParams = currentUrl.split('?')[1]; // Get the existing query parameters
-    var newParams = [];
-
-    // Append existing query parameters to newParams
-    if (existingParams) {
-        var paramsArray = existingParams.split('&');
-        paramsArray.forEach(function(param) {
-            var paramName = param.split('=')[0];
-            if (paramName !== 'tags' && paramName !== 'sort') {
-                newParams.push(param);
-            }
-        });
-    }
+    var newParams = getUrlParams(['tags', 'sort']);
 
     // Append new query parameters
     if (checkedItems.length > 0) {
@@ -49,25 +55,20 @@ function submitFilters(){
 
 
 function changePage(pageNumber){
-    // Construct URL with parameters
-    var currentUrl = window.location.href;
-    var existingParams = currentUrl.split('?')[1]; // Get the existing query parameters
-    var newParams = [];
-
-    // Append existing query parameters to newParams
-    if (existingParams) {
-        var paramsArray = existingParams.split('&');
-        paramsArray.forEach(function(param) {
-            var paramName = param.split('=')[0];
-            if (paramName !== 'page') {
-                newParams.push(param);
-            }
-        });
-    }
-    
+    var newParams = getUrlParams(['page']);
     newParams.push('page=' + pageNumber);
-
     let url = window.location.pathname + '?' + newParams.join('&');
 
     window.location.href = url;
+}
+
+
+function clearFilters(){
+    var remainingParams = getUrlParams(['tags', 'sort']);
+    let url = window.location.pathname 
+    if (remainingParams.length > 0) {
+        url = url + '?' + remainingParams.join('&');
+    }
+
+    window.location.href = url
 }

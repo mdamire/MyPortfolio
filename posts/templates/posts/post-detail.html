@@ -19,6 +19,7 @@
             {% endfor %}
         </small></h6>
 
+        {% if post.include_sublinks and sublinks %}
         <div class="pt-md-4 pt-2">
         <button id="collapse-button" data-bs-toggle="collapse" type="button" class="collapsible px-md-5 px-2" data-bs-target="#collapseBody" aria-expanded="true" aria-controls="collapseBody">
             <div class="row">
@@ -42,11 +43,37 @@
                 {% endfor %}
             </div>
         </div>
-        </div>   
+        </div>
+        {% endif %}
 
-        <div class="pt-md-5 pt-2 post-content">
+        <div class="py-md-4 py-2 post-content">
             {{post.content|safe}}
         </div>
-
+        
+        {% if related_posts %}
+            <div class="pt-md-5 pt-3" style="border-bottom: 1px solid white">
+                <h3>Related Posts:</h3>
+            </div>
+            
+            {% for rp in related_posts %}
+                <div class="pt-md-3 pt-2">
+                    <a href="{% url 'post-detail' rp.permalink %}"><h4>{{rp.heading}}</h4></a>
+                    <small>
+                        {% if rp.publish_date %}
+                            {{rp.publish_date|date:"F j, Y"}}
+                        {% else %}
+                            {{rp.created|date:"F j, Y"}}
+                        {% endif %}
+                        &nbsp;|&nbsp;
+                        {% for rt in rp.tags.all %}
+                            <span class="badge rounded-pill" style="color: {{rt.color}}; background-color: {{rt.bg_color}};">
+                                {{rt.label}}
+                            </span>
+                        {% endfor %}
+                    </small>
+                </div>
+            {% endfor %}
+        
+        {% endif %}
     </div>
 {% endblock  %}

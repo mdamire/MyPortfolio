@@ -28,6 +28,8 @@ class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
             obj.content = content
             context['sublinks'] = sublinks
         
+        context['related_posts'] = PostDetail.objects.filter(tags__in=obj.tags.all()).exclude(id=obj.id)[:5]
+        
         return context
 
 
@@ -36,11 +38,23 @@ class PostListView(ListView, SiteContextMixin, MultipleObjectContentRendererMixi
     template_name = 'posts/post-list.html'
     extra_statics = [SiteStatic('posts/post-list.css'), SiteStatic('posts/post-list.js')]
     context_object_name = 'post_list'
-    paginate_by = 6
+    paginate_by = 12
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tag_list'] = PostTag.objects.filter(postdetail__isnull=False).distinct()
+        context['tag_list'] = [
+            {
+                'label': pt.label, 
+                'color': pt.color, 
+                'bg_color': pt.bg_color, 
+                'count': len(pt.postdetail_set.all())
+            }
+            for pt in PostTag.objects.prefetch_related(
+                    'postdetail_set'
+                ).filter(
+                    postdetail__isnull=False
+                ).distinct()
+        ]
         context['sort_list'] = ['featured', 'latest', 'oldest']
 
         sort_param = self.request.GET.get('sort')
@@ -61,7 +75,7 @@ class PostListView(ListView, SiteContextMixin, MultipleObjectContentRendererMixi
         if not any([tags_param, sort_param]):
             return qs
         
-        order = ['feature', '-publish_date', '-created']
+        order = ['-feature', '-publish_date', '-created']
         if sort_param == 'latest':
             order = ['-publish_date', '-created']
         if sort_param == 'oldest':
