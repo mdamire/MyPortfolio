@@ -30,6 +30,13 @@ class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
         context['related_posts'] = PostDetail.objects.filter(tags__in=obj.tags.all()).exclude(id=obj.id)[:5]
         
         return context
+    
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        obj.view_count += 1
+        obj.save()
+
+        return obj
 
 
 class PostListView(ListView, SiteContextMixin, MultipleObjectContentRendererMixin):
@@ -55,7 +62,7 @@ class PostListView(ListView, SiteContextMixin, MultipleObjectContentRendererMixi
                     postdetail__isnull=False
                 ).distinct()
         ]
-        context['sort_list'] = ['featured', 'latest', 'oldest']
+        context['sort_list'] = ['featured', 'latest', 'oldest', 'viewed']
 
         sort_param = self.request.GET.get('sort')
         if sort_param:
@@ -80,10 +87,10 @@ class PostListView(ListView, SiteContextMixin, MultipleObjectContentRendererMixi
             order = ['-publish_date', '-created']
         if sort_param == 'oldest':
             order = ['publish_date', 'created']
+        if sort_param == 'viewed':
+            order = ['-view_count', '-feature', '-publish_date', '-created']
         
         filters = {'tags__id__in': str(tags_param).split(',')} if tags_param else {}
 
         qs = qs.filter(**filters).order_by(*order)
         return qs
-
-        
