@@ -156,6 +156,19 @@ TINYMCE_DEFAULT_CONFIG = {
         charmap hr pagebreak nonbreaking anchor | code | h1 h2 h3 h4 h5 h6 |
     ''',
     'contextmenu': 'formats | link image',
+    'codesample_languages': [
+        { 'text': 'HTML/XML', 'value': 'markup' },
+        { 'text': 'JavaScript', 'value': 'javascript' },
+        { 'text': 'CSS', 'value': 'css' },
+        { 'text': 'PHP', 'value': 'php' },
+        { 'text': 'Ruby', 'value': 'ruby' },
+        { 'text': 'Python', 'value': 'python' },
+        { 'text': 'Java', 'value': 'java' },
+        { 'text': 'C', 'value': 'c' },
+        { 'text': 'C#', 'value': 'csharp' },
+        { 'text': 'C++', 'value': 'cpp' },
+        { 'text': 'Shell', 'value': 'shell'},
+    ],
     'menubar': True,
     'statusbar': True,
 }

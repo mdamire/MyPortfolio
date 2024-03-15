@@ -31,8 +31,11 @@ class StaticPageAdmin(admin.ModelAdmin):
     readonly_fields = ('_url',)
 
     def _url(self, obj):
-        url = reverse('static-page', kwargs={'permalink': obj.permalink})
-        return format_html(f'<a href="{url}" target="_blank">{url}</a>')
+        try:
+            url = reverse('static-page', kwargs={'permalink': obj.permalink})
+            return format_html(f'<a href="{url}" target="_blank">{url}</a>')
+        except:
+            return
     
     formfield_overrides = {
         models.TextField: {'widget': TinyMCE(mce_attrs={'content_css': get_css_full_list()})}

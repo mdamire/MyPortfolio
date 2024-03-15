@@ -10,7 +10,7 @@ class PostDetail(TimeStampedModel, AbstractRenderableContent):
         help_text="Allowed characters: Need to start with a letter followed by letter, number and underscore"
     )
     heading = models.CharField(max_length=200, help_text="max length: 200")
-    introduction = models.TextField()
+    introduction = models.TextField(null=True, blank=True)
     is_published = models.BooleanField(default=False)
     publish_date = models.DateField(null=True, blank=True)
     view_count = models.IntegerField(default=0)
