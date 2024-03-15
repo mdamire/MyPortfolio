@@ -1,5 +1,10 @@
 {% extends 'base-view.html' %}
 
+{% block title %}
+    {{post.heading|title}}
+{% endblock %}
+
+
 {% block heading-content %}
     {{post.heading|title}}
 {% endblock %}

@@ -1,5 +1,8 @@
 {% extends 'base-view.html' %}
 
+{% block title %}
+    {{page.heading|title}}
+{% endblock %}
 
 {% block heading-content %}
     {{page.heading|title}}

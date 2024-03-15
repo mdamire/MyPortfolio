@@ -51,11 +51,11 @@ a:hover {
 }
 
 .button {
-    background-color: #187f58;
+    background-color: #31572c;
     color: white;
     cursor: pointer;
-    border: 1px solid green;
-    border-radius: 5px;
+    border: none;
+    width: 100%;
 }
 
 .button:hover {
@@ -67,4 +67,13 @@ blockquote {
     padding: 10px 0 10px 10px;
     border-left: 5px solid grey;
     font-style: italic;
+}
+
+.home-section {
+    padding-top: 150px;
+    padding-bottom: 150px;
+}
+
+.x-border-bottom {
+    border-bottom: 1px solid #187f58;
 }

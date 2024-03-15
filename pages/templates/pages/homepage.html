@@ -1,15 +1,33 @@
 {% extends 'base-view.html' %}
 
+{% block title %}
+    Home
+{% endblock %}
+
 {% block main-content %}
     <div class="container-md">
         <div class="" style="margin-top: 60px">
         {% for section in sections %}
             {% if section.navbar_title %}
-            <div id="{{section.navbar_title}}" style="padding-top: 60px; margin-top: -60px;" class="home-section">
+            <div id="{{section.navbar_title}}" style="padding-top: 60px; margin-top: -60px;">
             {% else %}
-            <div class="home-section">
+            <div>
             {% endif %}
+
+            {% if not forloop.first %}
+                {% if forloop.last %}
+                <div class="home-section">
+                {% else %}
+                <div class="home-section x-border-bottom">
+                {% endif %}
+            {% endif %}
+
                 {{section.content|safe}}
+
+            {% if not forloop.first %}
+            </div>
+            {% endif %}
+
             </div>
         {% endfor %}
         </div>
