@@ -13,7 +13,7 @@ class PostSubLink():
         self.indent_range = list(range(indent))
 
 
-def parse_sublinks(text) -> tuple[str, list[PostSubLink]]:
+def parse_sublinks(text):
     h_re = re.compile(r'<h([\d]) ?.*?>(.*?)</h\1>')
     start_pos = 0
     updated_text = ''
