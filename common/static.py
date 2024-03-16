@@ -35,9 +35,11 @@ DEFAULT_CSS_FILES = [
 CUSTOM_STYLE_KEY = 'style'
 
 def get_custom_static_list():
-    csl = [SiteStatic(sf.file.url) for sf in SiteAsset.objects.filter(key=CUSTOM_STYLE_KEY)]
-
-    return csl
+    try:
+        csl = [SiteStatic(sf.file.url) for sf in SiteAsset.objects.filter(key=CUSTOM_STYLE_KEY)]
+        return csl
+    except Exception: 
+        return []
 
 
 def get_static_full_list(extras: list=[]) -> List[SiteStatic]:
