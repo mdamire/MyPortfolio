@@ -2,7 +2,9 @@
 
 ### Overview
 
-The portfolio website is built on Django, offering a highly dynamic approach to content creation and management. One of its key features lies in its ability to effortlessly generate static pages through an intuitive admin interface. This dynamic capability empowers users to swiftly craft and modify static pages without delving into intricate coding or design processes. Additionally, the website provides extensive customization options, ensuring seamless integration of these dynamic static pages into the overall site structure.
+The portfolio website is built on Django, offering a highly dynamic approach to content creation and management. It doesn't have any hardcoded content.
+The website allows users to dynamically create homepage layouts, static pages, and posts using the TinyMCE editor within the Django admin interface. 
+Additionally, the website enables to dynamically add CSS file for any fine customization without deploying the code. The code is easy to understand and modify.
 
 
 ### Installation:
