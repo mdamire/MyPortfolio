@@ -8,7 +8,7 @@ from tinymce.widgets import TinyMCE
 from django.urls import reverse
 from django.utils.html import format_html
 
-from common.static import get_css_full_list
+from common.static import get_css_url_list
 from .models import PostDetail, PostTag
 
 
@@ -27,10 +27,10 @@ class PostDetailForm(forms.ModelForm):
             'include_sublinks', 'is_published', 'publish_date'
         )
         widgets = {
-            'introduction': TinyMCE(mce_attrs={'content_css': get_css_full_list(), 'height': 300}),
+            'introduction': TinyMCE(mce_attrs={'content_css': get_css_url_list(), 'height': 300}),
             'content': TinyMCE(
                 mce_attrs={
-                    'content_css': get_css_full_list(['posts/post-detail.css', 'posts/prism-tn.css'])
+                    'content_css': get_css_url_list(['posts/post-detail.css', 'posts/prism-tn.css'])
                 }
             ),
         }

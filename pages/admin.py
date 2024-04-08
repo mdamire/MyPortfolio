@@ -5,7 +5,7 @@ from tinymce.widgets import TinyMCE
 from django.urls import reverse
 from django.utils.html import format_html
 
-from common.static import get_css_full_list
+from common.static import get_css_url_list
 from .models import HomePageSection, StaticPage
 
 
@@ -20,7 +20,7 @@ class HomePageSectionAdmin(admin.ModelAdmin):
     list_display = ('name', 'serial', 'navbar_title',)
 
     formfield_overrides = {
-        models.TextField: {'widget': TinyMCE(mce_attrs={'content_css': get_css_full_list()})}
+        models.TextField: {'widget': TinyMCE(mce_attrs={'content_css': get_css_url_list()})}
     }
 
 
@@ -38,5 +38,5 @@ class StaticPageAdmin(admin.ModelAdmin):
             return
     
     formfield_overrides = {
-        models.TextField: {'widget': TinyMCE(mce_attrs={'content_css': get_css_full_list()})}
+        models.TextField: {'widget': TinyMCE(mce_attrs={'content_css': get_css_url_list(['pages/prism.css'])})}
     }

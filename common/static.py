@@ -23,7 +23,7 @@ class SiteStatic():
             self.type = None
 
 
-DEFAULT_CSS_FILES = [
+DEFAULT_STATIC_FILES = [
     SiteStatic('https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css'),
     SiteStatic('https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js'),
     SiteStatic('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'),
@@ -44,12 +44,12 @@ def get_custom_static_list():
 
 def get_static_full_list(extras: list=[]) -> List[SiteStatic]:
     ss_extra = [extra if isinstance(extra, SiteStatic) else SiteStatic(extra) for extra in list(extras)]
-    sfl = DEFAULT_CSS_FILES + ss_extra + get_custom_static_list()
+    sfl = DEFAULT_STATIC_FILES + ss_extra + get_custom_static_list()
 
     return sfl
 
 
-def get_css_full_list(extras: list=[]) -> List[str]:
-    cfl = [ss.url for ss in get_static_full_list(extras)]
+def get_css_url_list(extras: list=[]) -> List[str]:
+    cfl = [ss.url for ss in get_static_full_list(extras) if ss.type == 'css']
 
     return cfl
