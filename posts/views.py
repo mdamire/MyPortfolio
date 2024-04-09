@@ -26,11 +26,17 @@ class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
             context['sublinks'] = sublinks
         
         # get related post
-        related_post_ids = PostDetail.objects.filter(
-            tags__in=obj.tags.all()
-        ).exclude(id=obj.id).values_list('id', flat=True)[:5]
-        related_posts = PostDetail.objects.filter(id__in=related_post_ids)
+        all_related_posts = PostDetail.objects.filter(tags__in=obj.tags.all()).exclude(id=obj.id)
 
+        related_posts = []
+        related_post_ids = set()
+        for post in all_related_posts:
+            if post.id not in related_post_ids:
+                related_posts.append(post)
+                related_post_ids.add(post.id)
+                if len(related_posts) == 5:
+                    break
+        
         context['related_posts'] = related_posts
         
         return context
