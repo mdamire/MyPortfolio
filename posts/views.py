@@ -30,7 +30,11 @@ class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
         
         context['related_posts'] = PostDetail.objects.annotate(
             matching_tags=Count('tags', filter=Q(tags__in=obj.tags.all()), distinct=True)
-        ).exclude(id=obj.id).order_by('-matching_tags')[:5]
+        ).filter(
+            matching_tags__gt=0
+        ).exclude(
+            id=obj.id
+        ).order_by('-matching_tags')[:5]
         
         return context
     
