@@ -1,6 +1,7 @@
 from operator import attrgetter
 
 from django.views.generic import DetailView, ListView
+from django.db.models import Count, Q
 
 from common.mixins import SiteContextMixin, SingleObjectContentRendererMixin, MultipleObjectContentRendererMixin
 from .models import PostDetail, PostTag
@@ -27,7 +28,9 @@ class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
             obj.content = content
             context['sublinks'] = sublinks
         
-        context['related_posts'] = PostDetail.objects.filter(tags__in=obj.tags.all()).exclude(id=obj.id)[:5]
+        context['related_posts'] = PostDetail.objects.annotate(
+            matching_tags=Count('tags', filter=Q(tags__in=obj.tags.all()), distinct=True)
+        ).exclude(id=obj.id).order_by('-matching_tags')[:5]
         
         return context
     
