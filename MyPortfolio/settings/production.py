@@ -1,19 +1,22 @@
 from .base import *
 
+SECRET_KEY = get_secret_value('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', True)
+DEBUG = bool(get_secret_value('DJANGO_DEBUG', False))
 
-ALLOWED_HOSTS = os.environ['ALLOWED_HOST'].split(',')
+ALLOWED_HOSTS = get_secret_value('ALLOWED_HOST').split(',')
+
+CSRF_TRUSTED_ORIGINS = get_secret_value('CSRF_TRUSTED_ORIGINS').split(',')
 
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ['MYSQL_DATABASE'],
-        'USER': os.environ['MYSQL_USER'],
-        'PASSWORD': os.environ['MYSQL_PASSWORD'],
-        'HOST': os.environ['MYSQL_HOST'],
-        'PORT': os.environ['MYSQL_PORT'],
+        'NAME': get_secret_value('DB_NAME'),
+        'USER': get_secret_value('DB_USER'),
+        'PASSWORD': get_secret_value('DB_PASSWORD'),
+        'HOST': get_secret_value('DB_HOST'),
+        'PORT': get_secret_value('DB_PORT'),
     }
 }
+ 

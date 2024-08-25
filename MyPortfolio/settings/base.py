@@ -17,6 +17,17 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# get secret value
+secret_sentinal = object()
+def get_secret_value(secret, default=secret_sentinal):
+    value = os.environ.get(secret, default)
+
+    if value == secret_sentinal:
+        raise ValueError(f"Value not found for secret: {secret}")
+    
+    return value
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -122,10 +133,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR.parent, "static/")
+STATIC_ROOT = get_secret_value('STATIC_ROOT', os.path.join(BASE_DIR.parent, "static/"))
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR.parent, "media/")
+MEDIA_ROOT = get_secret_value('MEDIA_ROOT', os.path.join(BASE_DIR.parent, "media/"))
 MEDIA_URL = "/media/"
 
 # Default primary key field type
