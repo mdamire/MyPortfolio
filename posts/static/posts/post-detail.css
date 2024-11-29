@@ -37,3 +37,24 @@ body {
     border-top: 1px solid grey;
     padding: 18px;
 }
+
+.back-to-top {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    display: none;
+    background-color: #187f58;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+    border: 2px solid white;
+}
+
+.back-to-top:hover {
+    background-color: #31572c;
+    opacity: 0.8;  /* More transparent on hover */
+}
