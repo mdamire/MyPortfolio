@@ -19,16 +19,13 @@ class RPCResponseSchema:
             "jsonrpc": "2.0",
             "id": self.id,
         }
-    
+
     def build_success_schema(self, result):
         self.schema["result"] = result
         return self.schema
-    
+
     def build_error_schema(self, code, message, data=None):
-        error = {
-            "code": code,
-            "message": message
-        }
+        error = {"code": code, "message": message}
         if data:
             error["data"] = data
         self.schema["error"] = error
@@ -40,21 +37,17 @@ class PromptArgumentDefinition:
         self.argument_definition_list = []
 
     def add_argument_definition(self, name, description=None, required=False):
-        schema = {
-            "name": name,
-            "required": required
-        }
+        schema = {"name": name, "required": required}
         if description:
             schema["description"] = description
         self.argument_definition_list.append(schema)
         return schema
-    
+
     def build_schema(self):
         return self.argument_definition_list
 
 
 class PromptSchema:
-
     class PromptRole(Enum):
         USER = "user"
         ASSISTANT = "assistant"
@@ -64,7 +57,13 @@ class PromptSchema:
         self.message_list = []
         self.list_schema = None
 
-    def add_prompt_definition(self, name, title=None, description=None, arguments: PromptArgumentDefinition=None):
+    def add_prompt_definition(
+        self,
+        name,
+        title=None,
+        description=None,
+        arguments: PromptArgumentDefinition = None,
+    ):
         schema = {
             "name": name,
         }
@@ -76,52 +75,40 @@ class PromptSchema:
             schema["arguments"] = arguments.build_schema()
         self.definition_list.append(schema)
         return schema
-    
+
     def add_text_message(self, role: PromptRole, text):
-        schema = {
-            "role": role,
-            "content": {
-                "type": "text",
-                "text": text
-            }
-        }
+        schema = {"role": role, "content": {"type": "text", "text": text}}
         self.message_list.append(schema)
         return schema
-    
+
     def add_image_message(self, role: PromptRole, data):
         schema = {
             "role": role,
-            "content": {
-                "type": "image",
-                "data": data,
-                "mimeType": "image/png"
-            }
+            "content": {"type": "image", "data": data, "mimeType": "image/png"},
         }
         self.message_list.append(schema)
         return schema
-    
+
     def add_audio_message(self, role: PromptRole, data):
         schema = {
             "role": role,
-            "content": {
-                "type": "audio",
-                "data": data,
-                "mimeType": "audio/wav"
-            }
+            "content": {"type": "audio", "data": data, "mimeType": "audio/wav"},
         }
         self.message_list.append(schema)
         return schema
-    
-    def add_embedded_resource_message(self, role: PromptRole, uri, name, title, mime_type, text):
+
+    def add_embedded_resource_message(
+        self, role: PromptRole, uri, name, title, mime_type, text
+    ):
         schema = {
-        "type": "resource",
-        "resource": {
+            "type": "resource",
+            "resource": {
                 "uri": uri,
                 "name": name,
                 "title": title,
                 "mimeType": mime_type,
-                "text": text
-            }
+                "text": text,
+            },
         }
         self.message_list.append(schema)
         return schema
@@ -134,13 +121,9 @@ class PromptSchema:
 
     def build_message_schema(self, id, description):
         rpc_response_schema = RPCResponseSchema(id)
-        schema = {
-            "description": description,
-            "messages": self.message_list
-        }
+        schema = {"description": description, "messages": self.message_list}
         self.schema = rpc_response_schema.build_success_schema(schema)
         return self.schema
-
 
 
 class ResourceSchema:
@@ -150,7 +133,7 @@ class ResourceSchema:
         self.resource_content_list = []
         self.reading_schema = None
         self.listing_schema = None
-    
+
     class UriType(Enum):
         HTTP = "http://"
         HTTPS = "https://"
@@ -159,14 +142,18 @@ class ResourceSchema:
 
     def make_uri(self, uri_type: UriType, uri):
         return f"{uri_type}{uri}"
-    
+
     def add_resource_definition(
-            self, uri, name, title=None, description=None, mime_type=None, size=None, annotations: dict=None,
-        ):
-        schema = {
-            "uri": uri,
-            "name": name
-        }
+        self,
+        uri,
+        name,
+        title=None,
+        description=None,
+        mime_type=None,
+        size=None,
+        annotations: dict = None,
+    ):
+        schema = {"uri": uri, "name": name}
         if title:
             schema["title"] = title
         if description:
@@ -179,14 +166,17 @@ class ResourceSchema:
             schema["annotations"] = annotations
         self.resource_definition_list.append(schema)
         return schema
-    
+
     def add_resource_template(
-            self, uri_template, name, title=None, description=None, mime_type=None, annotations: dict=None
-        ):
-        schema = {
-            "uriTemplate": uri_template,
-            "name": name
-        }
+        self,
+        uri_template,
+        name,
+        title=None,
+        description=None,
+        mime_type=None,
+        annotations: dict = None,
+    ):
+        schema = {"uriTemplate": uri_template, "name": name}
         if title:
             schema["title"] = title
         if description:
@@ -197,8 +187,10 @@ class ResourceSchema:
             schema["annotations"] = annotations
         self.template_definition_list.append(schema)
         return schema
-    
-    def add_text_content(self, uri, text, name=None, title=None, mime_type=None, annotations: dict=None):
+
+    def add_text_content(
+        self, uri, text, name=None, title=None, mime_type=None, annotations: dict = None
+    ):
         schema = {"uri": uri, "text": text}
         if name:
             schema["name"] = name
@@ -210,8 +202,10 @@ class ResourceSchema:
             schema["annotations"] = annotations
         self.resource_content_list.append(schema)
         return schema
-    
-    def add_binary_content(self, uri, data, name=None, title=None, mime_type=None, annotations: dict=None):
+
+    def add_binary_content(
+        self, uri, data, name=None, title=None, mime_type=None, annotations: dict = None
+    ):
         schema = {"uri": uri, "blob": data}
         if name:
             schema["name"] = name
@@ -226,13 +220,11 @@ class ResourceSchema:
 
     def build_reading_schema(self, id):
         rpc_response_schema = RPCResponseSchema(id)
-        schema = {
-            "contents": self.resource_content_list
-        }
+        schema = {"contents": self.resource_content_list}
         self.reading_schema = rpc_response_schema.build_success_schema(schema)
         return self.reading_schema
-    
-    def build_listing_schema(self, id): 
+
+    def build_listing_schema(self, id):
         rpc_response_schema = RPCResponseSchema(id)
         schema = {
             "resources": self.resource_definition_list,
@@ -240,62 +232,58 @@ class ResourceSchema:
         }
         self.listing_schema = rpc_response_schema.build_success_schema(schema)
         return self.listing_schema
-    
+
     def build_resouce_not_found_error(self, id, uri):
         rpc_response_schema = RPCResponseSchema(id)
         schema = rpc_response_schema.build_error_schema(
-            code=-32002,
-            message="Resource not found",
-            data={"uri": uri}
+            code=-32002, message="Resource not found", data={"uri": uri}
         )
         return schema
 
+
 class ToolInputDefinitionSchema:
     def __init__(self):
-        self.schema = {
-            "type": "object",
-            "properties": {},
-            "required": []
-        }
-    
-    def add_property(self, name, prop_type: SchemaTypes, description=None, required=False):
+        self.schema = {"type": "object", "properties": {}, "required": []}
+
+    def add_property(
+        self, name, prop_type: SchemaTypes, description=None, required=False
+    ):
         property_def = {"type": prop_type}
         if description:
             property_def["description"] = description
-        
+
         self.schema["properties"][name] = property_def
-        
+
         if required:
             self.schema["required"].append(name)
-        
+
         return self
-    
+
     def build_schema(self):
         return self.schema
 
 
 class ToolOutputDefinitionSchema:
     def __init__(self):
-        self.schema = {
-            "type": "object",
-            "properties": {},
-            "required": []
-        }
-    
-    def add_property(self, name, prop_type: SchemaTypes, description=None, required=False):
+        self.schema = {"type": "object", "properties": {}, "required": []}
+
+    def add_property(
+        self, name, prop_type: SchemaTypes, description=None, required=False
+    ):
         property_def = {"type": prop_type}
         if description:
             property_def["description"] = description
-        
+
         self.schema["properties"][name] = property_def
-        
+
         if required:
             self.schema["required"].append(name)
-        
+
         return self
-    
+
     def build_schema(self):
         return self.schema
+
 
 class ToolsSchema:
     def __init__(self):
@@ -304,11 +292,16 @@ class ToolsSchema:
         self.output_structured_content = {}
         self.listing_schema = None
         self.output_schema = None
-    
+
     def add_definition(
-            self, name, title=None, description=None, input_schema: ToolInputDefinitionSchema=None, 
-            output_schema: ToolOutputDefinitionSchema=None, annotations: dict=None
-        ):
+        self,
+        name,
+        title=None,
+        description=None,
+        input_schema: ToolInputDefinitionSchema = None,
+        output_schema: ToolOutputDefinitionSchema = None,
+        annotations: dict = None,
+    ):
         schema = {}
         schema["name"] = name
         if title:
@@ -324,52 +317,40 @@ class ToolsSchema:
         self.definition_schema_list.append(schema)
         return schema
 
-    
     def add_text_output(self, text):
-        schema = {
-            "type": "text",
-            "text": text
-        }
+        schema = {"type": "text", "text": text}
         self.output_non_structured_schema_list.append(schema)
         return schema
-    
+
     def add_image_output(self, data):
-        schema = {
-            "type": "image",
-            "data": data,
-            "mimeType": "image/png"
-        }
+        schema = {"type": "image", "data": data, "mimeType": "image/png"}
         self.output_non_structured_schema_list.append(schema)
         return schema
-    
+
     def add_audio_output(self, data):
-        schema = {
-            "type": "audio",
-            "data": data,
-            "mimeType": "audio/wav"
-        }
+        schema = {"type": "audio", "data": data, "mimeType": "audio/wav"}
         self.output_non_structured_schema_list.append(schema)
         return schema
-    
+
     def add_embedded_resource(self, uri, name, title, mime_type, text):
         schema = {
-        "type": "resource",
+            "type": "resource",
             "resource": {
                 "uri": uri,
                 "name": name,
                 "title": title,
                 "mimeType": mime_type,
-                "text": text
-            }
+                "text": text,
+            },
         }
         self.output_non_structured_schema_list.append(schema)
         return schema
-    
-    def add_structured_content(self, content: dict={}, **kwargs):
+
+    def add_structured_content(self, content: dict = {}, **kwargs):
         self.output_structured_content.update(content)
         self.output_structured_content.update(kwargs)
         return self.output_structured_content
-    
+
     def build_listing_schema(self, id):
         rpc_response_schema = RPCResponseSchema(id)
         schema = {"tools": self.definition_schema_list}
@@ -394,4 +375,3 @@ class ToolsSchema:
             message=f"Unknown tool: {tool_name}",
         )
         return schema
-

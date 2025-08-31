@@ -12,19 +12,20 @@ class SiteAsset(models.Model):
             "Allowed letters: * Uppercase Letters * Lowercase Letters "
             "* Numbers (cannot be the first digit)  * Underscore. "
             "Max length: 128 characters."
-        )
+        ),
     )
     file = models.FileField(
-        upload_to='assets/',
+        upload_to="assets/",
         help_text=(
             "You can use this using the full url which can be found after saving the data. "
             "This also will be available for your homepage sections or posts as context variable where "
             "key is the name of the context variable."
-        )
+        ),
     )
     description = models.TextField(
-        null=True, blank=True, 
-        help_text="Optional: A note to yourself of where or how this can be used."
+        null=True,
+        blank=True,
+        help_text="Optional: A note to yourself of where or how this can be used.",
     )
 
 
@@ -32,7 +33,7 @@ class AbstractRenderableContent(models.Model):
     content = models.TextField()
     requires_rendering = models.BooleanField(
         default=False,
-        help_text="Set this to true, when the 'content' field contains Django template code that requires rendering"
+        help_text="Set this to true, when the 'content' field contains Django template code that requires rendering",
     )
 
     class Meta:

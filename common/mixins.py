@@ -13,15 +13,14 @@ class SiteContextMixin(ContextMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['navbar_items'] = get_navbar_items(self.is_homepage)
-        context['statics'] = list(get_static_full_list(self.extra_statics))
-        context['is_homepage'] = self.is_homepage
+        context["navbar_items"] = get_navbar_items(self.is_homepage)
+        context["statics"] = list(get_static_full_list(self.extra_statics))
+        context["is_homepage"] = self.is_homepage
 
         return context
 
 
 class SingleObjectContentRendererMixin(SingleObjectMixin, ContentRenderer):
-
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         obj = self.render_content(obj)
@@ -30,11 +29,10 @@ class SingleObjectContentRendererMixin(SingleObjectMixin, ContentRenderer):
 
 
 class MultipleObjectContentRendererMixin(MultipleObjectMixin, ContentRenderer):
-
     def get_queryset(self):
         qs = super().get_queryset()
 
         for obj in qs:
             obj = self.render_content(obj)
-        
+
         return qs

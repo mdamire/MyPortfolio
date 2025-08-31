@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
@@ -22,12 +23,12 @@ from pages.views import HomePageView, StaticPageView
 from posts.views import PostDetailView, PostListView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('tinymce/', include('tinymce.urls')),
-    path('', HomePageView.as_view(), name='home'),
-    path('post/<str:permalink>', PostDetailView.as_view(), name='post-detail'),
-    path('posts/', PostListView.as_view(), name='post-list'),
-    path('page/<str:permalink>', StaticPageView.as_view(), name='static-page'),
+    path("admin/", admin.site.urls),
+    path("tinymce/", include("tinymce.urls")),
+    path("", HomePageView.as_view(), name="home"),
+    path("post/<str:permalink>", PostDetailView.as_view(), name="post-detail"),
+    path("posts/", PostListView.as_view(), name="post-list"),
+    path("page/<str:permalink>", StaticPageView.as_view(), name="static-page"),
 ]
 
 if settings.DEBUG:

@@ -19,12 +19,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # get secret value
 secret_sentinal = object()
+
+
 def get_secret_value(secret, default=secret_sentinal):
     value = os.environ.get(secret, default)
 
     if value == secret_sentinal:
         raise ValueError(f"Value not found for secret: {secret}")
-    
+
     return value
 
 
@@ -32,68 +34,68 @@ def get_secret_value(secret, default=secret_sentinal):
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x0k6m&_$3++2qgnv+b*$sjwhh$@+2^o31$=z#$ryu%plj5)1#n'
+SECRET_KEY = "django-insecure-x0k6m&_$3++2qgnv+b*$sjwhh$@+2^o31$=z#$ryu%plj5)1#n"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django_cleanup.apps.CleanupConfig',
-    'tinymce',
-    'common',
-    'pages',
-    'posts',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django_cleanup.apps.CleanupConfig",
+    "tinymce",
+    "common",
+    "pages",
+    "posts",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'MyPortfolio.urls'
+ROOT_URLCONF = "MyPortfolio.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'MyPortfolio.wsgi.application'
+WSGI_APPLICATION = "MyPortfolio.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     },
 }
 
@@ -103,16 +105,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -120,66 +122,65 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
 USE_TZ = True
 
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_ROOT = get_secret_value('STATIC_ROOT', os.path.join(BASE_DIR.parent, "static/"))
-STATIC_URL = '/static/'
+STATIC_ROOT = get_secret_value("STATIC_ROOT", os.path.join(BASE_DIR.parent, "static/"))
+STATIC_URL = "/static/"
 
-MEDIA_ROOT = get_secret_value('MEDIA_ROOT', os.path.join(BASE_DIR.parent, "media/"))
+MEDIA_ROOT = get_secret_value("MEDIA_ROOT", os.path.join(BASE_DIR.parent, "media/"))
 MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Tinymce configuration
 TINYMCE_DEFAULT_CONFIG = {
-    'height': 800,
-    'cleanup_on_startup': True,
-    'custom_undo_redo_levels': 20,
+    "height": 800,
+    "cleanup_on_startup": True,
+    "custom_undo_redo_levels": 20,
     #    'selector': 'textarea',
-    'plugins': '''
+    "plugins": """
         textcolor save link image media preview codesample contextmenu
         table code lists fullscreen insertdatetime nonbreaking
         contextmenu directionality searchreplace wordcount visualblocks
         visualchars code fullscreen autolink lists charmap print hr
         anchor pagebreak
-    ''',
-    'toolbar1': '''
+    """,
+    "toolbar1": """
         fullscreen preview bold italic underline | fontselect,
         fontsizeselect | forecolor backcolor | alignleft alignright |
         aligncenter alignjustify | indent outdent | bullist numlist table |
-    ''',
-    'toolbar2': '''
+    """,
+    "toolbar2": """
         link image media | codesample blockquote | visualblocks visualchars |
         charmap hr pagebreak nonbreaking anchor | code | h1 h2 h3 h4 h5 h6 |
-    ''',
-    'contextmenu': 'formats | link image',
-    'codesample_languages': [
-        { 'text': 'HTML/XML', 'value': 'markup' },
-        { 'text': 'JavaScript', 'value': 'javascript' },
-        { 'text': 'CSS', 'value': 'css' },
-        { 'text': 'PHP', 'value': 'php' },
-        { 'text': 'Ruby', 'value': 'ruby' },
-        { 'text': 'Python', 'value': 'python' },
-        { 'text': 'Java', 'value': 'java' },
-        { 'text': 'C', 'value': 'c' },
-        { 'text': 'C#', 'value': 'csharp' },
-        { 'text': 'C++', 'value': 'cpp' },
-        { 'text': 'Shell', 'value': 'shell'},
+    """,
+    "contextmenu": "formats | link image",
+    "codesample_languages": [
+        {"text": "HTML/XML", "value": "markup"},
+        {"text": "JavaScript", "value": "javascript"},
+        {"text": "CSS", "value": "css"},
+        {"text": "PHP", "value": "php"},
+        {"text": "Ruby", "value": "ruby"},
+        {"text": "Python", "value": "python"},
+        {"text": "Java", "value": "java"},
+        {"text": "C", "value": "c"},
+        {"text": "C#", "value": "csharp"},
+        {"text": "C++", "value": "cpp"},
+        {"text": "Shell", "value": "shell"},
     ],
-    'menubar': True,
-    'statusbar': True,
+    "menubar": True,
+    "statusbar": True,
 }

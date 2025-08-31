@@ -6,47 +6,131 @@ import model_utils.fields
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='PostTag',
+            name="PostTag",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('label', models.CharField(max_length=64)),
-                ('color', models.CharField(default='white', help_text='css color (hex, rgb or color name) for text color', max_length=20)),
-                ('bg_color', models.CharField(default='grey', help_text='css color (hex, rgb or color name) for background color', max_length=20)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    model_utils.fields.AutoCreatedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="created",
+                    ),
+                ),
+                (
+                    "modified",
+                    model_utils.fields.AutoLastModifiedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="modified",
+                    ),
+                ),
+                ("label", models.CharField(max_length=64)),
+                (
+                    "color",
+                    models.CharField(
+                        default="white",
+                        help_text="css color (hex, rgb or color name) for text color",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "bg_color",
+                    models.CharField(
+                        default="grey",
+                        help_text="css color (hex, rgb or color name) for background color",
+                        max_length=20,
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-created'],
+                "ordering": ["-created"],
             },
         ),
         migrations.CreateModel(
-            name='PostDetail',
+            name="PostDetail",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('content', models.TextField()),
-                ('requires_rendering', models.BooleanField(default=False, help_text="Set this to true, when the 'content' field contains Django template code that requires rendering")),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('permalink', models.CharField(help_text='Allowed characters: Need to start with a letter followed by letter, number and underscore', max_length=80, unique=True)),
-                ('heading', models.CharField(help_text='max length: 200', max_length=200)),
-                ('introduction', models.TextField(blank=True, null=True)),
-                ('is_published', models.BooleanField(default=False)),
-                ('publish_date', models.DateField(blank=True, null=True)),
-                ('view_count', models.IntegerField(default=0)),
-                ('include_sublinks', models.BooleanField(default=True, help_text='Post sublinks will be generated from any header tag and will aprear in Post Content section')),
-                ('feature', models.IntegerField(default=0, help_text='This value will help it sort in the post list page. Higher value has more priority.')),
-                ('tags', models.ManyToManyField(blank=True, to='posts.PostTag')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("content", models.TextField()),
+                (
+                    "requires_rendering",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Set this to true, when the 'content' field contains Django template code that requires rendering",
+                    ),
+                ),
+                (
+                    "created",
+                    model_utils.fields.AutoCreatedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="created",
+                    ),
+                ),
+                (
+                    "modified",
+                    model_utils.fields.AutoLastModifiedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="modified",
+                    ),
+                ),
+                (
+                    "permalink",
+                    models.CharField(
+                        help_text="Allowed characters: Need to start with a letter followed by letter, number and underscore",
+                        max_length=80,
+                        unique=True,
+                    ),
+                ),
+                (
+                    "heading",
+                    models.CharField(help_text="max length: 200", max_length=200),
+                ),
+                ("introduction", models.TextField(blank=True, null=True)),
+                ("is_published", models.BooleanField(default=False)),
+                ("publish_date", models.DateField(blank=True, null=True)),
+                ("view_count", models.IntegerField(default=0)),
+                (
+                    "include_sublinks",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Post sublinks will be generated from any header tag and will aprear in Post Content section",
+                    ),
+                ),
+                (
+                    "feature",
+                    models.IntegerField(
+                        default=0,
+                        help_text="This value will help it sort in the post list page. Higher value has more priority.",
+                    ),
+                ),
+                ("tags", models.ManyToManyField(blank=True, to="posts.PostTag")),
             ],
             options={
-                'ordering': ['-feature', '-publish_date', '-created'],
+                "ordering": ["-feature", "-publish_date", "-created"],
             },
         ),
     ]
