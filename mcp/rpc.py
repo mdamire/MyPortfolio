@@ -2,6 +2,12 @@ import json
 from enum import Enum
 
 
+class SchemaTypeMappingError(Exception):
+    """Raised when schema type mapping fails"""
+
+    pass
+
+
 class SchemaTypes(Enum):
     STRING = "string"
     NUMBER = "number"
@@ -10,6 +16,57 @@ class SchemaTypes(Enum):
     ARRAY = "array"
     OBJECT = "object"
     NULL = "null"
+
+    @classmethod
+    def _get_type_mapping(cls):
+        """Get the bidirectional mapping between SchemaTypes and Python types"""
+        return {
+            cls.STRING: str,
+            cls.NUMBER: float,
+            cls.INTEGER: int,
+            cls.BOOLEAN: bool,
+            cls.ARRAY: list,
+            cls.OBJECT: dict,
+            cls.NULL: type(None),
+        }
+
+    @classmethod
+    def _get_reverse_mapping(cls):
+        """Get the reverse mapping from Python types to SchemaTypes"""
+        mapping = cls._get_type_mapping()
+        return {
+            python_type: schema_type for schema_type, python_type in mapping.items()
+        }
+
+    @classmethod
+    def from_python_type(cls, param_type):
+        """Convert Python type to SchemaTypes, with fallback to STRING"""
+        reverse_mapping = cls._get_reverse_mapping()
+
+        if param_type in reverse_mapping:
+            return reverse_mapping[param_type]
+        else:
+            # Fallback to STRING for unknown types
+            return cls.STRING
+
+    @classmethod
+    def to_python_type(cls, schema_type):
+        """Convert SchemaTypes to Python type"""
+        if not isinstance(schema_type, cls):
+            raise SchemaTypeMappingError(
+                f"Expected SchemaTypes enum, got {type(schema_type)}"
+            )
+
+        mapping = cls._get_type_mapping()
+        if schema_type in mapping:
+            return mapping[schema_type]
+        else:
+            raise SchemaTypeMappingError(f"Unknown schema type: {schema_type}")
+
+    @classmethod
+    def map_to_python_types(cls):
+        """Legacy method for backward compatibility"""
+        return cls._get_type_mapping()
 
 
 class RPCResponseSchema:
