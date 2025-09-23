@@ -14,16 +14,20 @@ class ResourceSchemaAssembler(FeatureSchemaAssembler):
         self.resource_list = []
         self.resource_template_list = []
 
-
     def add_resource_registry(self, resource_registry):
         from .container import FunctionRegistry
-        if isinstance(resource_registry, FunctionRegistry) and resource_registry.metadata.has_required_arguments:
+
+        if (
+            isinstance(resource_registry, FunctionRegistry)
+            and resource_registry.metadata.has_required_arguments
+        ):
             self.resource_template_list.append(resource_registry)
         else:
             self.resource_list.append(resource_registry)
 
     def _build_definition_schema(self, resource_registry_list):
         from .container import FunctionRegistry
+
         resource_schema_list = []
         for resource_registry in resource_registry_list:
             if isinstance(resource_registry, FunctionRegistry):
@@ -34,8 +38,10 @@ class ResourceSchemaAssembler(FeatureSchemaAssembler):
                     uri=resource_registry.uri,
                     name=resource_registry.extra.get("name") or metadata.name,
                     title=resource_registry.extra.get("title") or metadata.title,
-                    description=resource_registry.extra.get("description") or metadata.description,
-                    mimeType=resource_registry.extra.get("mimeType") or metadata.mimeType,
+                    description=resource_registry.extra.get("description")
+                    or metadata.description,
+                    mimeType=resource_registry.extra.get("mimeType")
+                    or metadata.mimeType,
                     size=resource_registry.extra.get("size"),
                     annotations=resource_registry.extra.get("annotations"),
                 )
@@ -69,7 +75,6 @@ class ResourceSchemaAssembler(FeatureSchemaAssembler):
         ).model_dump()
         return schema
 
-
     def process_content(self, resource_content, resource_registry):
         if not isinstance(resource_content, ResourceContent):
             raise self.UnsupportedResultTypeError(
@@ -82,8 +87,10 @@ class ResourceSchemaAssembler(FeatureSchemaAssembler):
                 "uri": content.uri or resource_registry.uri,
                 "name": content.name or resource_registry.extra.get("name"),
                 "title": content.title or resource_registry.extra.get("title"),
-                "mimeType": content.mime_type or resource_registry.extra.get("mimeType"),
-                "annotations": content.annotations or resource_registry.extra.get("annotations"),
+                "mimeType": content.mime_type
+                or resource_registry.extra.get("mimeType"),
+                "annotations": content.annotations
+                or resource_registry.extra.get("annotations"),
             }
 
             if isinstance(content, TextContent):

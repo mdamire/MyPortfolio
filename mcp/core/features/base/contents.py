@@ -239,7 +239,7 @@ class TextContentSanitizer:
 
     def _process_file_input(self, file: Union[str, BinaryIO]):
         file_content, file_name = self._read_file(file)
-        text = file_content.decode('utf-8')
+        text = file_content.decode("utf-8")
         mime_type = self._get_mime_type_from_file_name(file_name)
         return text, mime_type
 

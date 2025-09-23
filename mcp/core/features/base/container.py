@@ -40,6 +40,35 @@ class FeatureContainer:
         self.definitions = {}
         self.schema_assembler = self._get_schema_assembler()
 
+    def _call_function(self, func, **kwargs):
+        raise self.ContainerError("Function call not implemented")
+
+    def _get_function_metadata(self, func):
+        return FunctionParser(func).function_metadata
+
+    def _get_registry(self, registrations, key):
+        if key in registrations:
+            return registrations[key]
+        raise self.FunctionNotFoundError(key)
+
+    def _validate_parameters(self, func_metadata, kwargs):
+        validated_params = {}
+        for param_info in func_metadata.parameters:
+            param_name = param_info.name
+            param_type = param_info.type_hint
+
+            if param_name in kwargs:
+                try:
+                    validated_params[param_name] = JsonSchemaTypes.cast_python_type(
+                        kwargs[param_name], param_type
+                    )
+                except JsonSchemaTypes.CastingError as e:
+                    raise self.ParameterTypeCastingError(func_metadata.name, param_name)
+            elif param_info.required:
+                raise self.ParameterNotFoundError(func_metadata.name, param_name)
+
+        return validated_params
+
     def _get_schema_assembler(self) -> FeatureSchemaAssembler:
         if self.assembler_class is None:
             raise self.ContainerError("Schema class is not set")
@@ -47,9 +76,6 @@ class FeatureContainer:
 
     def _get_definition_key(self, func, **extra):
         return func.__name__
-
-    def _call_function(self, func, **kwargs):
-        raise self.ContainerError("Function call not implemented")
 
     def register(self, func, **extra):
         function_metadata = FunctionParser(func).function_metadata

@@ -4,17 +4,19 @@ from ..base.parsers import FunctionParser
 from .contents import ResourceContent
 
 
-class ContentRegistry():
+class ContentRegistry:
     def __init__(self, content, uri, extra: dict):
         self.content = content
         self.uri = uri
         self.extra = extra
 
-class FunctionRegistry():
+
+class FunctionRegistry:
     def __init__(self, metadata, uri, extra: dict):
         self.metadata = metadata
         self.uri = uri
         self.extra = extra
+
 
 class ResourceContainer(FeatureContainer):
     content_key = "content"
@@ -62,9 +64,17 @@ class ResourceContainer(FeatureContainer):
     def call(self, uri, **kwargs):
         parsed_uri, parsed_params = self._parse_uri(uri)
         registry = self._get_registry(self.registrations, parsed_uri)
+
         if isinstance(registry, ContentRegistry):
-            processed_result = self.schema_assembler.process_content(registry.content, registry)
-        
-        result_content = self._call_function(registry.metadata.function, parsed_params, **kwargs)
-        processed_result = self.schema_assembler.process_content(result_content, registry)
+            processed_result = self.schema_assembler.process_content(
+                registry.content, registry
+            )
+            return processed_result
+
+        result_content = self._call_function(
+            registry.metadata.function, parsed_params, **kwargs
+        )
+        processed_result = self.schema_assembler.process_content(
+            result_content, registry
+        )
         return processed_result

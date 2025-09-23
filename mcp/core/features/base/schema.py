@@ -38,6 +38,28 @@ class JsonSchemaTypes(Enum):
         return cls.STRING
 
     @classmethod
+    def cast_python_type(cls, value, python_type):
+        if type(value) == python_type:
+            return value
+
+        try:
+            if type(value) is str and value.lower() == "null":
+                return None
+            if python_type is bool:
+                if value.lower() in ("true", "1", "yes", "on"):
+                    return True
+                elif value.lower() in ("false", "0", "no", "off"):
+                    return False
+                return bool(value)
+            if python_type in (list, dict) and isinstance(value, str):
+                return json.loads(value)
+            return python_type(value)
+        except Exception as e:
+            raise cls.CastingError(
+                f"Cannot convert value '{value}' to {python_type}: {e}"
+            ) from e
+
+    @classmethod
     def cast_type(cls, value, param_type):
         try:
             if param_type == cls.INTEGER:

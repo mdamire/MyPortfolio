@@ -5,6 +5,7 @@ from datetime import datetime
 
 from ...logging import logger
 
+
 class AnnotationSchema(BaseModel):
     class AudienceType(Enum):
         USER = "user"
@@ -55,6 +56,7 @@ class AnnotationSchema(BaseModel):
                     return None
         return v
 
+
 class ResourceDefinitionSchema(BaseModel):
     uri: str
     name: str = None
@@ -63,6 +65,7 @@ class ResourceDefinitionSchema(BaseModel):
     mimeType: str = None
     size: Optional[int] = None
     annotations: Optional[AnnotationSchema] = None
+
 
 class ResourceListResultSchema(BaseModel):
     resources: List[ResourceDefinitionSchema]
