@@ -15,14 +15,19 @@ from typing import Optional, Dict, Any, List, Union
 import base64
 
 
-class PromptsContent():
+class PromptsContent:
     class ResourceNotFoundError(Exception):
         pass
 
     class ResourceContainerRequiredError(Exception):
         pass
 
-    def __init__(self, role: Optional[str] = None, resource_container=None, description: Optional[str] = None):
+    def __init__(
+        self,
+        role: Optional[str] = None,
+        resource_container=None,
+        description: Optional[str] = None,
+    ):
         self.messages = []
         self.default_role = role
         self.resource_container = resource_container
@@ -39,7 +44,12 @@ class PromptsContent():
         self.messages.append(message)
         return message
 
-    def add_text(self, text: str, role: Optional[str] = None, annotations: Optional[Dict[str, Any]] = None):
+    def add_text(
+        self,
+        text: str,
+        role: Optional[str] = None,
+        annotations: Optional[Dict[str, Any]] = None,
+    ):
         """Add text content as a message."""
         if not text or not isinstance(text, str):
             raise ValueError("Text must be a non-empty string")
@@ -50,7 +60,11 @@ class PromptsContent():
         return text_content
 
     def add_image(
-        self, data: str, mime_type: str, role: Optional[str] = None, annotations: Optional[Dict[str, Any]] = None
+        self,
+        data: str,
+        mime_type: str,
+        role: Optional[str] = None,
+        annotations: Optional[Dict[str, Any]] = None,
     ):
         """Add image content as a message."""
         if not data or not isinstance(data, str):
@@ -70,7 +84,11 @@ class PromptsContent():
         return image_content
 
     def add_audio(
-        self, data: str, mime_type: str, role: Optional[str] = None, annotations: Optional[Dict[str, Any]] = None
+        self,
+        data: str,
+        mime_type: str,
+        role: Optional[str] = None,
+        annotations: Optional[Dict[str, Any]] = None,
     ):
         """Add audio content as a message."""
         if not data or not isinstance(data, str):
@@ -89,7 +107,12 @@ class PromptsContent():
         self._add_message(role or self.default_role, audio_content)
         return audio_content
 
-    def add_file(self, file: str, role: Optional[str] = None, annotations: Optional[Dict[str, Any]] = None):
+    def add_file(
+        self,
+        file: str,
+        role: Optional[str] = None,
+        annotations: Optional[Dict[str, Any]] = None,
+    ):
         """Add content from file as a message - automatically detects if it's text, image, or audio."""
         try:
             text_sanitizer = TextContentSanitizer(file=file)
@@ -135,7 +158,7 @@ class PromptsContent():
         if self.resource_container:
             try:
                 resource_result = self.resource_container.call(uri)
-                resource_content = resource_result['contents'][0]
+                resource_content = resource_result["contents"][0]
             except Exception:
                 if not text and not blob:
                     raise self.ResourceNotFoundError(
@@ -147,20 +170,19 @@ class PromptsContent():
                     "ResourceContainer is required when only URI is provided for embedded resource"
                 )
 
-
-        text = text or resource_content.get('text')
-        blob = blob or resource_content.get('blob')
-        mime_type = mime_type or resource_content.get('mimeType')
+        text = text or resource_content.get("text")
+        blob = blob or resource_content.get("blob")
+        mime_type = mime_type or resource_content.get("mimeType")
 
         if not mime_type:
             raise ValueError("MIME type is required for embedded resource")
 
         content_data = {
-            'uri': uri,
-            'mimeType': mime_type,
-            'name': name or resource_content.get('name'),
-            'title': title or resource_content.get('title'),
-            'annotations': annotations or resource_content.get('annotations'),
+            "uri": uri,
+            "mimeType": mime_type,
+            "name": name or resource_content.get("name"),
+            "title": title or resource_content.get("title"),
+            "annotations": annotations or resource_content.get("annotations"),
         }
 
         if text:

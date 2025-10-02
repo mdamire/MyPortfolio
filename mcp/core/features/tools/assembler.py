@@ -1,3 +1,4 @@
+from typing import Optional
 from .schema import ToolsDefinitionSchema, ToolsListSchema, ContentSchema
 from ..base.assembler import FeatureSchemaAssembler
 from ..base.schema import JsonSchema, JsonSchemaTypes
@@ -30,7 +31,9 @@ class ToolsSchemaAssembler(FeatureSchemaAssembler):
         )
 
         # Convert to dict and add to tools list
-        self.tools_list.append(self._build_non_none_dict(definition_schema))
+        self._append_sorted_list(
+            self.tools_list, self._build_non_none_dict(definition_schema), "name"
+        )
         return definition_schema
 
     def _create_input_schema(self, metadata):
@@ -85,9 +88,12 @@ class ToolsSchemaAssembler(FeatureSchemaAssembler):
 
         return None
 
-    def build_list_result_schema(self):
-        return ToolsListSchema(tools=self.tools_list).model_dump()
-    
+    def build_list_result_schema(self, cursor: Optional[str] = None):
+        paginated_tools, next_cursor = self.pagination.paginate(self.tools_list, cursor)
+        return ToolsListSchema(
+            tools=paginated_tools, nextCursor=next_cursor
+        ).model_dump()
+
     def process_result(self, result):
         content_schema = ContentSchema()
         if isinstance(result, ToolsContent):

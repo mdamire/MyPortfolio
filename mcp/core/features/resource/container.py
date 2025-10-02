@@ -26,8 +26,10 @@ class ResourceContainer(FeatureContainer):
         self.schema_assembler = ResourceSchemaAssembler()
         self.registrations = {}
 
-    def add_resource(self, uri, **extra):
-        resource_content = ResourceContent()
+    def add_resource(self, uri, content: ResourceContent, **extra):
+        if not isinstance(content, ResourceContent):
+            raise ValueError("Content must be a ResourceContent object")
+        resource_content = content
         registry = ContentRegistry(resource_content, uri, extra)
         self.schema_assembler.add_resource_registry(registry)
         self.registrations[uri] = registry
@@ -60,6 +62,12 @@ class ResourceContainer(FeatureContainer):
         return_params = remaining_path.split("/") if remaining_path else []
 
         return return_uri, return_params
+
+    def build_list_result_schema(self):
+        return self.schema_assembler.build_list_result_schema()
+
+    def build_template_list_result_schema(self):
+        return self.schema_assembler.build_template_list_result_schema()
 
     def call(self, uri, **kwargs):
         parsed_uri, parsed_params = self._parse_uri(uri)

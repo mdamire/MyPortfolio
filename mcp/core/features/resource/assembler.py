@@ -1,3 +1,4 @@
+from typing import Optional
 from .schema import (
     ResourceListResultSchema,
     ResourceTemplateListResultSchema,
@@ -21,9 +22,11 @@ class ResourceSchemaAssembler(FeatureSchemaAssembler):
             isinstance(resource_registry, FunctionRegistry)
             and resource_registry.metadata.has_required_arguments
         ):
-            self.resource_template_list.append(resource_registry)
+            self._append_sorted_list(
+                self.resource_template_list, resource_registry, "uri"
+            )
         else:
-            self.resource_list.append(resource_registry)
+            self._append_sorted_list(self.resource_list, resource_registry, "uri")
 
     def _build_definition_schema(self, resource_registry_list):
         from .container import FunctionRegistry
@@ -61,9 +64,14 @@ class ResourceSchemaAssembler(FeatureSchemaAssembler):
 
         return resource_schema_list
 
-    def build_list_result_schema(self):
+    def build_list_result_schema(self, cursor: Optional[str] = None):
         resource_schema_list = self._build_definition_schema(self.resource_list)
-        schema = ResourceListResultSchema(resources=resource_schema_list).model_dump()
+        paginated_resource_schema_list, next_cursor = self.pagination.paginate(
+            resource_schema_list, cursor
+        )
+        schema = ResourceListResultSchema(
+            resources=paginated_resource_schema_list, nextCursor=next_cursor
+        ).model_dump()
         return schema
 
     def build_template_list_result_schema(self):

@@ -128,16 +128,16 @@ class ToolsContent:
         if self.resource_container:
             try:
                 resource_result = self.resource_container.call(uri)
-                resource_content = resource_result['contents'][0]
+                resource_content = resource_result["contents"][0]
             except Exception:
                 resource_content = {}
 
         resource_link = ResourceLinkContent(
             uri=uri,
-            name=name or resource_content.get('name'),
-            description=description or resource_content.get('description'),
-            mimeType=mime_type or resource_content.get('mimeType'),
-            annotations=annotations or resource_content.get('annotations'),
+            name=name or resource_content.get("name"),
+            description=description or resource_content.get("description"),
+            mimeType=mime_type or resource_content.get("mimeType"),
+            annotations=annotations or resource_content.get("annotations"),
         )
         self.content_list.append(resource_link)
         return resource_link
@@ -157,29 +157,29 @@ class ToolsContent:
             raise self.ResourceContainerRequiredError(
                 "ResourceContainer is required when only URI is provided for embedded resource"
             )
-            
+
         try:
             resource_result = self.resource_container.call(uri)
-            resource_content = resource_result['contents'][0]
+            resource_content = resource_result["contents"][0]
         except Exception:
             if not text and not blob:
                 raise self.ResourceNotFoundError(
                     f"Resource with URI '{uri}' not found in ResourceContainer"
                 )
             resource_content = {}
-        
-        text = text or resource_content.get('text')
-        blob = blob or resource_content.get('blob')
-        mime_type = mime_type or resource_content.get('mimeType')
+
+        text = text or resource_content.get("text")
+        blob = blob or resource_content.get("blob")
+        mime_type = mime_type or resource_content.get("mimeType")
         if not mime_type:
             raise ValueError("MIME type is required for embedded resource")
         content_data = {
-            'uri': uri,
-            'mimeType': mime_type,
-            'name': name or resource_content.get('name'),
-            'title': title or resource_content.get('title'),
-            'mimeType': mime_type or resource_content.get('mimeType'),
-            'annotations': annotations or resource_content.get('annotations'),
+            "uri": uri,
+            "mimeType": mime_type,
+            "name": name or resource_content.get("name"),
+            "title": title or resource_content.get("title"),
+            "mimeType": mime_type or resource_content.get("mimeType"),
+            "annotations": annotations or resource_content.get("annotations"),
         }
 
         # Create appropriate schema based on content type
@@ -201,7 +201,7 @@ class ToolsContent:
         embedded_resource = EmbeddedResource(resource=resource_schema)
         self.content_list.append(embedded_resource)
         return embedded_resource
-    
+
     def add_structured_content(self, content):
         if not isinstance(content, BaseModel):
             raise ValueError("Content must be a valid Pydantic model")

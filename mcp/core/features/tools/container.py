@@ -13,7 +13,7 @@ class ToolsContainer(FeatureContainer):
         self.schema_assembler.add_resource_registry(registry_data)
         self.registrations[func.__name__] = registry_data
         return function_metadata
-    
+
     def build_list_result_schema(self):
         return self.schema_assembler.build_list_result_schema()
 

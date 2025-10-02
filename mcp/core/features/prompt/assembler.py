@@ -1,3 +1,4 @@
+from typing import Optional
 from .schema import PromptDefinitionSchema, PromptsListSchema, PromptResultSchema
 from ..base.assembler import FeatureSchemaAssembler
 from ..base.schema import JsonSchemaTypes
@@ -24,7 +25,9 @@ class PromptsSchemaAssembler(FeatureSchemaAssembler):
         )
 
         # Convert to dict and add to prompts list
-        self.prompts_list.append(self._build_non_none_dict(definition_schema))
+        self._append_sorted_list(
+            self.prompts_list, self._build_non_none_dict(definition_schema), "name"
+        )
         return definition_schema
 
     def _create_arguments_schema(self, metadata):
@@ -45,17 +48,22 @@ class PromptsSchemaAssembler(FeatureSchemaAssembler):
 
         return arguments
 
-    def build_list_result_schema(self):
+    def build_list_result_schema(self, cursor: Optional[str] = None):
         """Build the list result schema for prompts."""
-        return PromptsListSchema(prompts=self.prompts_list).model_dump()
+        paginated_prompts, next_cursor = self.pagination.paginate(
+            self.prompts_list, cursor
+        )
+        return PromptsListSchema(
+            prompts=paginated_prompts, nextCursor=next_cursor
+        ).model_dump()
 
-    def process_result(self, result:PromptsContent, registry:dict={}):
+    def process_result(self, result: PromptsContent, registry: dict = {}):
         """Process the result from prompt function calls."""
         if not isinstance(result, PromptsContent):
             raise self.UnsupportedResultTypeError(
                 f"Unsupported result type: {type(result)}"
             )
-        
+
         result_schema = PromptResultSchema(
             description=result.description or registry.get("description"),
             messages=result.messages,

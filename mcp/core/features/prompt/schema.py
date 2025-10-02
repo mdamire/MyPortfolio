@@ -12,6 +12,7 @@ class PromptDefinitionSchema(BaseModel):
 
 class PromptsListSchema(BaseModel):
     prompts: List[dict]
+    nextCursor: Optional[str] = None
 
 
 # 'Getting a prompt' schema classes

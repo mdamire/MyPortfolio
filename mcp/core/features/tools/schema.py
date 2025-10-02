@@ -15,6 +15,7 @@ class ToolsDefinitionSchema(BaseModel):
 
 class ToolsListSchema(BaseModel):
     tools: List[dict]
+    nextCursor: Optional[str] = None
 
 
 # Content schema classes for tools
@@ -49,6 +50,7 @@ class ResourceLinkContent(BaseModel):
 class EmbeddedResource(BaseModel):
     type: str = "resource"
     resource: Union[TextContentSchema, BinaryContentSchema]
+
 
 class ContentSchema(BaseModel):
     content: Optional[list[dict]] = None
