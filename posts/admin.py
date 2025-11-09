@@ -23,21 +23,33 @@ def publish_post(modeladmin, request, queryset):
 class PostDetailForm(forms.ModelForm):
     class Meta:
         fields = (
-            'permalink', 'heading', 'tags', 'feature', 'introduction', 'content', 'requires_rendering',
-            'include_sublinks', 'is_published', 'publish_date'
+            "permalink",
+            "heading",
+            "tags",
+            "feature",
+            "introduction",
+            "content",
+            "requires_rendering",
+            "include_sublinks",
+            "is_published",
+            "publish_date",
         )
         widgets = {
-            'introduction': TinyMCE(mce_attrs={'content_css': get_css_url_list(), 'height': 300}),
-            'content': TinyMCE(
+            "introduction": TinyMCE(
+                mce_attrs={"content_css": get_css_url_list(), "height": 300}
+            ),
+            "content": TinyMCE(
                 mce_attrs={
-                    'content_css': get_css_url_list(['posts/post-detail.css', 'posts/prism-tn.css'])
+                    "content_css": get_css_url_list(
+                        ["posts/post-detail.css", "posts/prism-tn.css"]
+                    )
                 }
             ),
         }
 
     def clean_permalink(self):
-        permalink = self.cleaned_data['permalink']
-        if not re.match('^[A-Za-z][-A-Za-z0-9_]*$', permalink):
+        permalink = self.cleaned_data["permalink"]
+        if not re.match("^[A-Za-z][-A-Za-z0-9_]*$", permalink):
             raise ValidationError("Invalid Value")
 
         return permalink
@@ -46,21 +58,30 @@ class PostDetailForm(forms.ModelForm):
 class PostAssetInline(admin.TabularInline):
     model = PostAsset
     extra = 1
-    fields = ('asset',)
+    fields = ("asset",)
 
 
 @admin.register(PostDetail)
 class PostDetailAdmin(admin.ModelAdmin):
-    list_display = ('permalink', 'heading', 'is_published', 'publish_date', 'feature', 'created', 'view_count', '_url')
+    list_display = (
+        "permalink",
+        "heading",
+        "is_published",
+        "publish_date",
+        "feature",
+        "created",
+        "view_count",
+        "_url",
+    )
     form = PostDetailForm
-    readonly_fields = ('_url', )
+    readonly_fields = ("_url",)
     inlines = [PostAssetInline]
 
-    actions=(publish_post,)
+    actions = (publish_post,)
 
     def _url(self, obj):
         try:
-            url = reverse('post-detail', kwargs={'permalink': obj.permalink})
+            url = reverse("post-detail", kwargs={"permalink": obj.permalink})
             return format_html(f'<a href="{url}" target="_blank">{url}</a>')
         except:
             return
@@ -68,11 +89,11 @@ class PostDetailAdmin(admin.ModelAdmin):
 
 @admin.register(PostTag)
 class PostTagAdmin(admin.ModelAdmin):
-    list_display = ('label', 'color', 'bg_color')
+    list_display = ("label", "color", "bg_color")
 
 
 @admin.register(PostAsset)
 class PostAssetAdmin(admin.ModelAdmin):
-    list_display = ('post', 'asset', 'created')
-    list_filter = ('post',)
-    search_fields = ('post__permalink', 'post__heading')
+    list_display = ("post", "asset", "created")
+    list_filter = ("post",)
+    search_fields = ("post__permalink", "post__heading")

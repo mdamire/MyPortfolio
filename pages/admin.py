@@ -17,26 +17,44 @@ def publish_page(modeladmin, request, queryset):
 
 @admin.register(HomePageSection)
 class HomePageSectionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'serial', 'navbar_title',)
+    list_display = (
+        "name",
+        "serial",
+        "navbar_title",
+    )
 
     formfield_overrides = {
-        models.TextField: {'widget': TinyMCE(mce_attrs={'content_css': get_css_url_list()})}
+        models.TextField: {
+            "widget": TinyMCE(mce_attrs={"content_css": get_css_url_list()})
+        }
     }
 
 
 @admin.register(StaticPage)
 class StaticPageAdmin(admin.ModelAdmin):
-    list_display = ('permalink', 'heading', 'is_published', 'navbar_title', 'navbar_serial', 'created', '_url')
+    list_display = (
+        "permalink",
+        "heading",
+        "is_published",
+        "navbar_title",
+        "navbar_serial",
+        "created",
+        "_url",
+    )
     actions = (publish_page,)
-    readonly_fields = ('_url',)
+    readonly_fields = ("_url",)
 
     def _url(self, obj):
         try:
-            url = reverse('static-page', kwargs={'permalink': obj.permalink})
+            url = reverse("static-page", kwargs={"permalink": obj.permalink})
             return format_html(f'<a href="{url}" target="_blank">{url}</a>')
         except:
             return
-    
+
     formfield_overrides = {
-        models.TextField: {'widget': TinyMCE(mce_attrs={'content_css': get_css_url_list(['pages/prism.css'])})}
+        models.TextField: {
+            "widget": TinyMCE(
+                mce_attrs={"content_css": get_css_url_list(["pages/prism.css"])}
+            )
+        }
     }

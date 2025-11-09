@@ -4,7 +4,9 @@ from common.static import SiteStatic
 
 def get_related_posts(post: PostDetail, limit: int = 5) -> list[PostDetail]:
     """Get related posts based on shared tags, excluding the current post."""
-    all_related_posts = PostDetail.objects.filter(tags__in=post.tags.all()).exclude(id=post.id)
+    all_related_posts = PostDetail.objects.filter(tags__in=post.tags.all()).exclude(
+        id=post.id
+    )
 
     related_posts = []
     related_post_ids = set()

@@ -23,17 +23,17 @@ class TestSublink(TestCase):
         <h4>10. subheaders</h4>
             <p>Here's some explanation.<p>
     """
-        
+
     def test_parse_sublinks(self):
         ut, sll = parse_sublinks(self.text)
-        
+
         id_len = 0
         for sl in sll:
             id_len += len(SUBLINK_DIV.format(sl.div_id))
 
         self.assertEqual(len(sll), 10)
         self.assertEqual(len(ut), len(self.text) + id_len)
-        
+
         # check indents
         self.assertEqual(sll[0].indent, 0)
         self.assertEqual(sll[1].indent, 1)
@@ -42,5 +42,5 @@ class TestSublink(TestCase):
         self.assertEqual(sll[6].indent, 1)
         self.assertEqual(sll[7].indent, 2)
 
-        self.assertEqual(sll[5].text, '6. TEST')
-        self.assertEqual(sll[9].text, '10. subheaders')
+        self.assertEqual(sll[5].text, "6. TEST")
+        self.assertEqual(sll[9].text, "10. subheaders")
