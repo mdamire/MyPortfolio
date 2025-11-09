@@ -27,6 +27,8 @@ class SiteAsset(models.Model):
         help_text="Optional: A note to yourself of where or how this can be used."
     )
 
+    def __str__(self):
+        return self.key
 
 class AbstractRenderableContent(models.Model):
     content = models.TextField()

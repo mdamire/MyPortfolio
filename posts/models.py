@@ -1,7 +1,7 @@
 from django.db import models
 from model_utils.models import TimeStampedModel
 
-from common.models import AbstractRenderableContent
+from common.models import AbstractRenderableContent, SiteAsset
 
 
 class PostDetail(TimeStampedModel, AbstractRenderableContent):
@@ -46,5 +46,13 @@ class PostTag(TimeStampedModel):
     def __str__(self):
         return self.label
     
+    class Meta:
+        ordering = ['-created']
+
+
+class PostAsset(TimeStampedModel):
+    asset = models.OneToOneField(SiteAsset, on_delete=models.CASCADE)
+    post = models.ForeignKey(PostDetail, on_delete=models.CASCADE)
+
     class Meta:
         ordering = ['-created']

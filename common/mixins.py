@@ -11,10 +11,13 @@ class SiteContextMixin(ContextMixin):
     is_homepage = False
     extra_statics = []
 
+    def get_extra_statics(self):
+        return self.extra_statics
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['navbar_items'] = get_navbar_items(self.is_homepage)
-        context['statics'] = list(get_static_full_list(self.extra_statics))
+        context['statics'] = [static for static in get_static_full_list(self.get_extra_statics()) if static.type in ['css', 'js']]
         context['is_homepage'] = self.is_homepage
 
         return context

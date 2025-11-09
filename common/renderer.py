@@ -21,7 +21,7 @@ def render_django_template(template_string, context={}):
 
 class ContentRenderer():
 
-    def get_content_context_data(self, **kwargs):
+    def get_content_context_data(self, obj, *args, **kwargs):
         context = {}
         for site_asset in SiteAsset.objects.all():
             context[site_asset.key] = site_asset.file
@@ -35,7 +35,7 @@ class ContentRenderer():
         
         if renderable_object.requires_rendering:
             renderable_object.content = render_django_template(
-                renderable_object.content, self.get_content_context_data()
+                renderable_object.content, self.get_content_context_data(renderable_object)
             )
         
         return renderable_object

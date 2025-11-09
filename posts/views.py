@@ -1,13 +1,14 @@
 from django.views.generic import DetailView, ListView
+from django.db.models import F
 
 from common.mixins import SiteContextMixin, SingleObjectContentRendererMixin, MultipleObjectContentRendererMixin
-from .models import PostDetail, PostTag
+from .models import PostDetail, PostTag, PostAsset
 from .sublink import parse_sublinks
+from .utils import get_related_posts
 
 
 class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMixin):
     model = PostDetail
-    extra_statics = ['posts/post-detail.css', 'posts/post-detail.js', 'posts/prism-tn.css', 'posts/prism-tn.js']
 
     # The name of the field on the model that contains the slug. 
     slug_field = 'permalink'
@@ -17,36 +18,39 @@ class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
     context_object_name = 'post'
     template_name = 'posts/post-detail.html'
 
+    def get_extra_statics(self):
+        extras = super().get_extra_statics()
+        extras.extend(['posts/post-detail.css', 'posts/post-detail.js', 'posts/prism-tn.css', 'posts/prism-tn.js'])
+        extras.extend([asset.asset.file.url for asset in PostAsset.objects.filter(post=self.object)])
+        return extras
+    
+    def get_content_context_data(self, obj):
+        context = super().get_content_context_data(obj)
+        for asset in PostAsset.objects.filter(post=obj):
+            context[asset.asset.key] = asset.asset.file
+        return context
+
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('tags')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        obj = context[self.context_object_name]
+        obj = self.object
         if obj.include_sublinks:
             content, sublinks = parse_sublinks(obj.content)
             obj.content = content
             context['sublinks'] = sublinks
-        
-        # get related post
-        all_related_posts = PostDetail.objects.filter(tags__in=obj.tags.all()).exclude(id=obj.id)
 
-        related_posts = []
-        related_post_ids = set()
-        for post in all_related_posts:
-            if post.id not in related_post_ids:
-                related_posts.append(post)
-                related_post_ids.add(post.id)
-                if len(related_posts) == 5:
-                    break
-        
-        context['related_posts'] = related_posts
-        
+        # get related posts
+        context['related_posts'] = get_related_posts(obj)
+
         return context
-    
-    def get_object(self, queryset=None):
-        obj = super().get_object(queryset)
-        obj.view_count += 1
-        obj.save()
 
-        return obj
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        # Increment view count using F expression to avoid race conditions
+        PostDetail.objects.filter(pk=self.object.pk).update(view_count=F('view_count') + 1)
+        return response
 
 
 class PostListView(ListView, SiteContextMixin, MultipleObjectContentRendererMixin):

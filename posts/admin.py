@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 from common.static import get_css_url_list
-from .models import PostDetail, PostTag
+from .models import PostDetail, PostTag, PostAsset
 
 
 def publish_post(modeladmin, request, queryset):
@@ -23,7 +23,7 @@ def publish_post(modeladmin, request, queryset):
 class PostDetailForm(forms.ModelForm):
     class Meta:
         fields = (
-            'permalink', 'heading', 'tags', 'feature', 'introduction', 'content', 'requires_rendering', 
+            'permalink', 'heading', 'tags', 'feature', 'introduction', 'content', 'requires_rendering',
             'include_sublinks', 'is_published', 'publish_date'
         )
         widgets = {
@@ -34,13 +34,19 @@ class PostDetailForm(forms.ModelForm):
                 }
             ),
         }
-    
+
     def clean_permalink(self):
         permalink = self.cleaned_data['permalink']
         if not re.match('^[A-Za-z][-A-Za-z0-9_]*$', permalink):
             raise ValidationError("Invalid Value")
-        
+
         return permalink
+
+
+class PostAssetInline(admin.TabularInline):
+    model = PostAsset
+    extra = 1
+    fields = ('asset',)
 
 
 @admin.register(PostDetail)
@@ -48,6 +54,7 @@ class PostDetailAdmin(admin.ModelAdmin):
     list_display = ('permalink', 'heading', 'is_published', 'publish_date', 'feature', 'created', 'view_count', '_url')
     form = PostDetailForm
     readonly_fields = ('_url', )
+    inlines = [PostAssetInline]
 
     actions=(publish_post,)
 
@@ -62,3 +69,10 @@ class PostDetailAdmin(admin.ModelAdmin):
 @admin.register(PostTag)
 class PostTagAdmin(admin.ModelAdmin):
     list_display = ('label', 'color', 'bg_color')
+
+
+@admin.register(PostAsset)
+class PostAssetAdmin(admin.ModelAdmin):
+    list_display = ('post', 'asset', 'created')
+    list_filter = ('post',)
+    search_fields = ('post__permalink', 'post__heading')
