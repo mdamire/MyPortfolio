@@ -58,7 +58,7 @@ class PostDetailForm(forms.ModelForm):
 class PostAssetInline(admin.TabularInline):
     model = PostAsset
     extra = 1
-    fields = ("asset",)
+    fields = ("key", "file", "description")
 
 
 @admin.register(PostDetail)
@@ -94,6 +94,6 @@ class PostTagAdmin(admin.ModelAdmin):
 
 @admin.register(PostAsset)
 class PostAssetAdmin(admin.ModelAdmin):
-    list_display = ("post", "asset", "created")
+    list_display = ("key", "post", "file", "created")
     list_filter = ("post",)
-    search_fields = ("post__permalink", "post__heading")
+    search_fields = ("post__permalink", "post__heading", "key")

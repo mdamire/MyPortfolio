@@ -33,17 +33,14 @@ class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
             ]
         )
         extras.extend(
-            [
-                asset.asset.file.url
-                for asset in PostAsset.objects.filter(post=self.object)
-            ]
+            [asset.file.url for asset in PostAsset.objects.filter(post=self.object)]
         )
         return extras
 
     def get_content_context_data(self, obj):
         context = super().get_content_context_data(obj)
         for asset in PostAsset.objects.filter(post=obj):
-            context[asset.asset.key] = asset.asset.file
+            context[asset.key] = asset.file
         return context
 
     def get_queryset(self):

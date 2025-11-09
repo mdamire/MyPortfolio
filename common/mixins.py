@@ -17,12 +17,9 @@ class SiteContextMixin(ContextMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["navbar_items"] = get_navbar_items(self.is_homepage)
-        context["statics"] = [
-            static
-            for static in get_static_full_list(self.get_extra_statics())
-            if static.type in ["css", "js"]
-        ]
+        context["statics"] = get_static_full_list(self.get_extra_statics())
         context["is_homepage"] = self.is_homepage
+        print(context["statics"])
 
         return context
 

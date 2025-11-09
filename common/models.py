@@ -3,7 +3,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 
-class SiteAsset(models.Model):
+class AbstractAsset(models.Model):
     key = models.CharField(
         max_length=128,
         help_text=(
@@ -30,6 +30,13 @@ class SiteAsset(models.Model):
 
     def __str__(self):
         return self.key
+
+    class Meta:
+        abstract = True
+
+
+class SiteAsset(AbstractAsset):
+    pass
 
 
 class AbstractRenderableContent(models.Model):
