@@ -37,7 +37,7 @@ class PostDetail(TimeStampedModel, AbstractRenderableContent):
 
 
 class PostTag(TimeStampedModel):
-    label = models.CharField(max_length=64)
+    label = models.CharField(max_length=64, unique=True)
     color = models.CharField(
         max_length=20,
         default="white",

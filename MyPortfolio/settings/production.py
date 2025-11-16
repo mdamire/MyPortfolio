@@ -8,6 +8,7 @@ ALLOWED_HOSTS = get_secret_value("ALLOWED_HOST").split(",")
 
 CSRF_TRUSTED_ORIGINS = get_secret_value("CSRF_TRUSTED_ORIGINS").split(",")
 
+SITE_URL = get_secret_value("SITE_URL", "https://www.amirebrahim.me/")
 
 DATABASES = {
     "default": {
