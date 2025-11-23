@@ -1,86 +1,18 @@
 from mcp_serializer.registry import MCPRegistry
 from mcp_serializer.features.tool.result import ToolsResult
-from pydantic import BaseModel
+
 from django.conf import settings
 from posts.models import PostDetail, PostTag, PostAsset
+from mcp_serializer.features.prompt.result import PromptsResult
+from .schema import (
+    PostDetailResponse,
+    PostListResponse,
+    PostAssetResponse,
+    PostAssetListResponse,
+    _post_to_response,
+)
 
 registry = MCPRegistry()
-
-
-# Pydantic Models for Response Types
-class PostTagResponse(BaseModel):
-    """Response model for PostTag."""
-
-    id: int
-    label: str
-    color: str
-    bg_color: str
-
-
-class PostDetailResponse(BaseModel):
-    """Response model for PostDetail."""
-
-    id: int
-    permalink: str
-    heading: str
-    introduction: str
-    content: str
-    is_published: bool
-    publish_date: str
-    view_count: int
-    include_sublinks: bool
-    tags: list
-    feature: int
-
-
-class PostAssetResponse(BaseModel):
-    """Response model for PostAsset."""
-
-    id: int
-    post_id: int
-    key: str
-    file: str
-    description: str
-
-
-class PostListResponse(BaseModel):
-    """Response model for list of posts."""
-
-    post_list: list
-
-
-class TagListResponse(BaseModel):
-    """Response model for list of tags."""
-
-    tag_list: list
-
-
-class PostAssetListResponse(BaseModel):
-    """Response model for list of post assets."""
-
-    post_asset_list: list
-
-
-# Helper Functions
-def _post_to_response(post: PostDetail) -> PostDetailResponse:
-    """Convert a PostDetail model instance to PostDetailResponse.
-
-    Args:
-        post: PostDetail model instance.
-    """
-    return PostDetailResponse(
-        id=post.id,
-        permalink=post.permalink,
-        heading=post.heading,
-        introduction=post.introduction,
-        content=post.content,
-        is_published=post.is_published,
-        publish_date=str(post.publish_date) if post.publish_date else "",
-        view_count=post.view_count,
-        include_sublinks=post.include_sublinks,
-        tags=list(post.tags.values_list("label", flat=True)),
-        feature=post.feature,
-    )
 
 
 ## Resources
@@ -91,7 +23,7 @@ registry.add_file_resource(
     title="Base CSS for the post detail page",
     description=(
         "Core styling for post detail pages, ensuring consistency in appearance and "
-        "user experience across all such pages. This is available for every post.",
+        "user experience across all such pages. This is available for every post."
     ),
 )
 
@@ -100,7 +32,7 @@ registry.add_file_resource(
     title="Base JavaScript for the post detail page",
     description=(
         "Core JavaScript for post detail pages, ensuring consistency in appearance and "
-        "user experience across all such pages. This is available for every post.",
+        "user experience across all such pages. This is available for every post."
     ),
 )
 
@@ -115,7 +47,6 @@ def create_post(
     introduction: str = None,
     include_sublinks: bool = True,
     tags: list = None,
-    feature: int = 0,
 ) -> PostDetailResponse:
     """Create a new blog post.
 
@@ -129,9 +60,9 @@ def create_post(
         content: Main content of the post (supports HTML and Django templates).
         introduction: Optional brief introduction or summary of the post.
         include_sublinks: Whether to generate sublinks from header tags (default: True).
-        tags: List of tag IDs to associate with the post (optional).
-        feature: Priority value for sorting in post list (higher = more prominent,
-            default: 0).
+        tags: List of tags where each item is either:
+            - A string (label) for an existing tag
+            - A tuple/list (label, color, bg_color) to create a new tag
     """
     post = PostDetail.objects.create(
         permalink=permalink,
@@ -141,11 +72,24 @@ def create_post(
         requires_rendering=True,
         is_published=False,
         include_sublinks=include_sublinks,
-        feature=feature,
     )
 
     if tags:
-        post.tags.set(tags)
+        tag_objects = []
+        for tag_item in tags:
+            if isinstance(tag_item, str):
+                # It's a label string - get existing tag
+                tag_obj = PostTag.objects.get(label=tag_item)
+                tag_objects.append(tag_obj)
+            elif isinstance(tag_item, (list, tuple)) and len(tag_item) == 3:
+                # It's a tuple (label, color, bg_color) - create new tag
+                label, color, bg_color = tag_item
+                tag_obj, _ = PostTag.objects.get_or_create(
+                    label=label, defaults={"color": color, "bg_color": bg_color}
+                )
+                tag_objects.append(tag_obj)
+
+        post.tags.set(tag_objects)
 
     return _post_to_response(post)
 
@@ -294,138 +238,6 @@ def delete_post(permalink: str) -> str:
     return f"Post '{permalink}' deleted successfully, permalink: {permalink}"
 
 
-# tags
-@registry.tool()
-def create_tag(
-    label: str,
-    color: str = "white",
-    bg_color: str = "grey",
-) -> PostTagResponse:
-    """Create a new post tag.
-
-    Creates a new tag that can be associated with blog posts for categorization
-    and filtering.
-
-    Args:
-        label: The display name of the tag (max 64 characters).
-        color: CSS color for the tag text (hex, rgb, or color name, default: "white").
-        bg_color: CSS color for the tag background (hex, rgb, or color name,
-            default: "grey").
-    """
-    tag = PostTag.objects.create(
-        label=label,
-        color=color,
-        bg_color=bg_color,
-    )
-
-    return PostTagResponse(
-        id=tag.id,
-        label=tag.label,
-        color=tag.color,
-        bg_color=tag.bg_color,
-    )
-
-
-@registry.tool()
-def get_tag(tag_id: int) -> PostTagResponse:
-    """Retrieve a specific post tag by ID.
-
-    Fetches a single tag using its database ID.
-
-    Args:
-        tag_id: The database ID of the tag.
-    """
-    tag = PostTag.objects.get(id=tag_id)
-
-    return PostTagResponse(
-        id=tag.id,
-        label=tag.label,
-        color=tag.color,
-        bg_color=tag.bg_color,
-    )
-
-
-@registry.tool()
-def list_tags(limit: int = None) -> TagListResponse:
-    """List all post tags.
-
-    Retrieves a list of all tags, ordered by creation date (newest first).
-
-    Args:
-        limit: Maximum number of tags to return (optional).
-    """
-    queryset = PostTag.objects.all()
-
-    if limit:
-        queryset = queryset[:limit]
-
-    tags = []
-    for tag in queryset:
-        tags.append(
-            PostTagResponse(
-                id=tag.id,
-                label=tag.label,
-                color=tag.color,
-                bg_color=tag.bg_color,
-            )
-        )
-
-    return TagListResponse(tag_list=tags)
-
-
-@registry.tool()
-def update_tag(
-    tag_id: int,
-    label: str = None,
-    color: str = None,
-    bg_color: str = None,
-) -> PostTagResponse:
-    """Update an existing post tag.
-
-    Updates one or more fields of an existing tag. Only provided fields will be
-    updated; others remain unchanged.
-
-    Args:
-        tag_id: The database ID of the tag to update.
-        label: New display name for the tag (optional).
-        color: New text color for the tag (optional).
-        bg_color: New background color for the tag (optional).
-    """
-    tag = PostTag.objects.get(id=tag_id)
-
-    if label is not None:
-        tag.label = label
-    if color is not None:
-        tag.color = color
-    if bg_color is not None:
-        tag.bg_color = bg_color
-
-    tag.save()
-
-    return PostTagResponse(
-        id=tag.id,
-        label=tag.label,
-        color=tag.color,
-        bg_color=tag.bg_color,
-    )
-
-
-@registry.tool()
-def delete_tag(tag_id: int) -> str:
-    """Delete a post tag.
-
-    Permanently deletes a tag from the database. Posts associated with this tag
-    will not be deleted, but the tag association will be removed.
-
-    Args:
-        tag_id: The database ID of the tag to delete.
-    """
-    tag = PostTag.objects.get(id=tag_id)
-    tag.delete()
-
-    return f"Tag {tag_id} deleted successfully, tag_id: {tag_id}"
-
-
 # assets
 @registry.tool()
 def create_post_asset(
@@ -468,8 +280,8 @@ def create_post_asset(
         id=asset.id,
         post_id=asset.post.id,
         key=asset.key,
-        file=asset.file.url if asset.file else "",
-        description=asset.description,
+        file=asset.file.url if asset.file else " ",
+        description=asset.description or " ",
     )
 
 
@@ -585,19 +397,21 @@ def delete_post_asset(asset_id: int):
 
 
 ## Prompts
-# Post prompt
-registry.add_text_prompt(
-    name="post_create_prompt",
-    title="Create a blog post",
-    description="Create a new blog post with the given details.",
-    prompt="""You are a helpful assistant that can help create engaging blog posts. Here's the complete workflow:
+@registry.prompt()
+def post_create_prompt():
+    """Create a blog post
 
-**IMPORTANT - Approval Workflow**:
-Before creating any text-based post, you MUST present the content for review and approval:
-1. Show the heading, introduction, and content in markdown format
-2. Wait for explicit approval from the user
-3. Only after approval, proceed with creating the post using the `create_post` tool
-4. If content has already been approved in the conversation, you can proceed without asking again
+    Create a new blog post with the given details.
+    """
+    existing_tag_labels = [
+        (tag.label, tag.color, tag.bg_color) for tag in PostTag.objects.all()
+    ]
+    existing_tag_labels_str = ", ".join(existing_tag_labels)
+
+    result = PromptsResult()
+    result.add_text(
+        role=PromptsResult.Roles.USER,
+        text=f"""You are a helpful assistant that can help create engaging blog posts. Here's the complete workflow:
 
 **Post Creation Process**:
 1. Prepare the content (heading, introduction, content)
@@ -608,12 +422,16 @@ Before creating any text-based post, you MUST present the content for review and
 6. Add any post-specific assets with `create_post_asset` tool
 7. When ready, publish with `publish_post` tool
 
+**IMPORTANT - Approval Workflow**:
+Before creating any text-based post, you MUST present the content for review and approval:
+1. Show the post details your are about to create in plain text format.
+2. Wait for explicit approval from the user
+3. Only after approval, proceed with creating the post using the `create_post` tool
+4. If not approved then update the content and get approval again.
+
 **Required Fields**:
-
 - **Permalink**: Unique URL-friendly identifier (e.g., "my-first-post"). Must start with a letter, followed by letters, numbers, or underscores. Cannot be changed easily later, so choose carefully.
-
 - **Heading**: A short, single-line title that attracts readers and captures the essence of the post (max 200 characters).
-
 - **Content**: The main body of the post, written in HTML. The post has access to:
   - Bootstrap 5 CSS and JavaScript (already loaded)
   - `post-detail.css` (base styling for all posts)
@@ -621,20 +439,21 @@ Before creating any text-based post, you MUST present the content for review and
   - Django template language support for dynamic content
 
 **Optional Fields**:
-
 - **Introduction**: A brief, compelling summary (2-3 sentences) that will appear below the heading on the post list page. Entices readers to click and read more.
+- **Include Sublinks**: Whether to automatically generate a table of contents from header tags in the content (default: True). If the content is not text 
+- **Tags**:
+    - Tags helps to categorize, sort and find related posts easily.
+    - Here are the existing tags as (label, font_color, bg_color): {existing_tag_labels_str}
+        - label: Unique display name of the tag
+        - font_color: css color (hex, rgb or color name) for text color"
+        - bg_color: css color (hex, rgb or color name) for background color
+    - tags is list of either label or (label, font_color, bg_color)
+    - if you want to create a new tag then use (label, font_color, bg_color)
+    - if you want to use an existing tag then use only the label
 
-- **Include Sublinks**: Whether to automatically generate a table of contents from header tags in the content (default: True).
 
-- **Tags**: List of tag IDs to categorize the post. To manage tags:
-  1. Use `list_tags` to see existing tags
-  2. If a suitable tag exists, use its ID
-  3. If not, create a new descriptive tag using `create_tag` tool
-  4. Choose tags that accurately represent the post's topic and category
-
-- **Feature**: Priority value for sorting in post list (higher value = more prominent, default: 0). Use this to pin important posts at the top.
-
-**Assets**: You can add post-specific assets (CSS, JS, images, etc.) AFTER creating the post using the `create_post_asset` tool:
+**Assets**: 
+You can add post-specific assets (CSS, JS, images, etc.) AFTER creating the post using the `create_post_asset` tool:
 - Provide `filename` (e.g., "style.css", "script.js", "banner.png") and `file_content` (the actual file contents as text)
 - **CSS/JS assets**: Automatically included and available for the post to use
 - **Images and other files**: Access via Django template syntax: `{{asset_key.url}}` where `asset_key` is the key you assigned when creating the asset
@@ -644,23 +463,23 @@ Before creating any text-based post, you MUST present the content for review and
 - Need interactive functionality? Create a JavaScript asset file
 - Need custom styling? Create a CSS asset file
 
-**Publishing**:
-- Posts are created as drafts (unpublished) by default
-- Use the `publish_post` tool to publish when ready
-- This sets `is_published=True` and sets the publish date to today
 
 Remember: The content supports full Django template language, so you can use conditionals, loops, and access context variables including asset objects.""",
-)
+    )
+    return result
+
+
 # Update Post prompt
 registry.add_text_prompt(
     name="update_post_prompt",
     title="Update an existing blog post",
     description="Update an existing blog post's content, metadata, or assets.",
-    prompt="""You are a helpful assistant that can help update existing blog posts. Here's how to update a post:
+    role="user",
+    text="""You are a helpful assistant that can help update existing blog posts. Here's how to update a post:
 
 **IMPORTANT - Approval Workflow**:
 Before updating any text content (heading, introduction, or content), you MUST present the changes for review:
-1. Show the current version and the proposed changes in markdown format
+1. Show the current version and the proposed changes in plain text format
 2. Clearly indicate what is being changed
 3. Wait for explicit approval from the user
 4. Only after approval, proceed with updating the post using the `update_post` tool
@@ -673,7 +492,6 @@ Before updating any text content (heading, introduction, or content), you MUST p
 - **Permalink**: The URL identifier (use `new_permalink` parameter)
 - **Tags**: Add or remove tags to recategorize the post
 - **Include Sublinks**: Toggle automatic sublink generation from headers
-- **Feature**: Change the priority/prominence on the post list
 
 **Updating Process**:
 1. First, use `get_post` tool to retrieve the current post content
@@ -688,15 +506,6 @@ Before updating any text content (heading, introduction, or content), you MUST p
 - To remove assets: Use `delete_post_asset` tool
 - CSS/JS assets are automatically included in the post
 - Other files can be accessed via `{{asset_key.url}}` in Django templates
-
-**Tags Management**:
-- Use `list_tags` to see available tags
-- Pass a list of tag IDs to replace all tags
-- Create new tags with `create_tag` if needed
-
-**Publishing**:
-- To publish a draft post: Use the `publish_post` tool (this sets `is_published=True` and sets the publish date)
-- Do NOT use `update_post` to publish a post
 
 Remember: Only update the fields that actually need to change. The `update_post` tool accepts optional parameters, so you don't need to provide all fields.""",
 )
