@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "pages",
     "posts",
     "mcp",
+    "oauth2_provider",
 ]
 
 MIDDLEWARE = [

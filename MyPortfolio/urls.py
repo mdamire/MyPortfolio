@@ -21,6 +21,8 @@ from django.conf.urls.static import static
 
 from pages.views import HomePageView, StaticPageView
 from posts.views import PostDetailView, PostListView
+from oauth2_provider import urls as oauth2_urls
+from mcp.urls import urlpatterns as mcp_urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -29,6 +31,8 @@ urlpatterns = [
     path("post/<str:permalink>", PostDetailView.as_view(), name="post-detail"),
     path("posts/", PostListView.as_view(), name="post-list"),
     path("page/<str:permalink>", StaticPageView.as_view(), name="static-page"),
+    path("oauth/", include(oauth2_urls)),
+    path("mcp/", include(mcp_urls)),
 ]
 
 if settings.DEBUG:
