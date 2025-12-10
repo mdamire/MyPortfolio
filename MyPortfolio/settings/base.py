@@ -69,14 +69,13 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "common.middlewares.RequestResponseLoggingMiddleware",
+    "mcp.middlewares.WWWAuthenticateMiddleware",
 ]
 
 ROOT_URLCONF = "MyPortfolio.urls"
 
 # URL logging configuration, use '__all__' to log all urls
-LOGGED_URLS = [
-    "/mcp/",
-]
+LOGGED_URLS = ["/mcp/", "/oauth/", "/.well-known/", "/register/"]
 
 TEMPLATES = [
     {
@@ -245,3 +244,6 @@ LOGGING = {
         },
     },
 }
+
+
+LOGIN_URL = "/admin/login/"
