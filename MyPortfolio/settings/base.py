@@ -75,7 +75,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = "MyPortfolio.urls"
 
 # URL logging configuration, use '__all__' to log all urls
-LOGGED_URLS = ["/mcp/", "/oauth/", "/.well-known/", "/register/"]
+LOGGED_URLS = ["/mcp/", "/mcp", "/oauth/", "/.well-known/", "/register/"]
 
 TEMPLATES = [
     {
@@ -224,17 +224,17 @@ LOGGING = {
         },
         "django.request": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": "INFO",
             "propagate": False,
         },
         "django.db.backends": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": "INFO",
             "propagate": False,
         },
         "mcp": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": "INFO",
             "propagate": False,
         },
         "portfolio.url": {
@@ -247,3 +247,61 @@ LOGGING = {
 
 
 LOGIN_URL = "/admin/login/"
+
+
+# OAuth2 Provider settings
+# https://django-oauth-toolkit.readthedocs.io/en/latest/settings.html
+
+
+DEFAULT_REDIRECT_URI_SCHEMES = [
+    "http",
+    "https",
+    "cursor",          # Cursor IDE
+    "vscode",          # Visual Studio Code
+    "vscode-insiders", # VS Code Insiders
+    "claude",          # Claude Desktop
+    "windsurf",        # Windsurf IDE
+    "zed",             # Zed Editor
+    "jetbrains",       # JetBrains IDEs
+    "idea",            # IntelliJ IDEA
+    "pycharm",         # PyCharm
+    "webstorm",        # WebStorm
+    "goland",          # GoLand
+    "rider",           # Rider
+    "clion",           # CLion
+    "datagrip",        # DataGrip
+    "sublime",         # Sublime Text
+    "atom",            # Atom (legacy)
+    "nova",            # Nova (Mac)
+    "codeium",         # Codeium
+    "tabnine",         # Tabnine
+    "copilot",         # GitHub Copilot
+    "continue",        # Continue.dev
+]
+
+# Allow additional schemes via environment variable (comma-separated)
+# Example: EXTRA_REDIRECT_URI_SCHEMES=myapp,customclient
+extra_schemes = get_secret_value("EXTRA_REDIRECT_URI_SCHEMES", "")
+if extra_schemes:
+    extra_schemes_list = [s.strip() for s in extra_schemes.split(",") if s.strip()]
+    DEFAULT_REDIRECT_URI_SCHEMES.extend(extra_schemes_list)
+
+OAUTH2_PROVIDER = {
+    "ALLOWED_REDIRECT_URI_SCHEMES": DEFAULT_REDIRECT_URI_SCHEMES,
+    "PKCE_REQUIRED": True,
+    # Define supported scopes
+    # MCP resource scopes
+    # OpenID Connect scopes (requested by clients like Claude Desktop, Cursor)
+    "SCOPES": {
+        # MCP resource scopes
+        "read": "Read access to MCP resources",
+        "write": "Write access to MCP resources",
+        # Standard OpenID Connect scopes
+        "openid": "OpenID Connect - access to user identity",
+        "profile": "Access to user profile (name, picture, etc.)",
+        "email": "Access to user email address",
+        "address": "Access to user address",
+        "phone": "Access to user phone number",
+        "offline_access": "Request refresh token for offline access",
+    },
+}

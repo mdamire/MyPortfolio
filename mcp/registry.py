@@ -116,7 +116,7 @@ def get_post(permalink: str) -> PostDetailResponse:
 
     assets = PostAsset.objects.filter(post=post)
     for asset in assets:
-        result.add_file(file=asset.file, description=asset.description)
+        result.add_file(file=asset.file, title=asset.description or asset.key)
     return result
 
 
@@ -424,7 +424,8 @@ def post_create_prompt():
 
 **IMPORTANT - Approval Workflow**:
 Before creating any text-based post, you MUST present the content for review and approval:
-1. Show the post details your are about to create in plain text format.
+1. Show the post details you are about to create in plain text (no markdown, no code blocks, no special formatting)
+    It must include: Permalink, Heading, Introduction and Content
 2. Wait for explicit approval from the user
 3. Only after approval, proceed with creating the post using the `create_post` tool
 4. If not approved then update the content and get approval again.
@@ -479,7 +480,7 @@ registry.add_text_prompt(
 
 **IMPORTANT - Approval Workflow**:
 Before updating any text content (heading, introduction, or content), you MUST present the changes for review:
-1. Show the current version and the proposed changes in plain text format
+1. Show the current version and the proposed changes in plain text (no markdown, no code blocks, no special formatting)
 2. Clearly indicate what is being changed
 3. Wait for explicit approval from the user
 4. Only after approval, proceed with updating the post using the `update_post` tool

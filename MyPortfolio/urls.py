@@ -22,6 +22,7 @@ from oauth2_provider import urls as oauth2_urls
 
 from pages.views import HomePageView, StaticPageView
 from posts.views import PostDetailView, PostListView
+from django.urls import re_path
 from mcp.views import (
     McpView,
     OAuthProtectedResourceMetadataView,
@@ -37,7 +38,7 @@ urlpatterns = [
     path("posts/", PostListView.as_view(), name="post-list"),
     path("page/<str:permalink>", StaticPageView.as_view(), name="static-page"),
     path("oauth/", include(oauth2_urls)),
-    path("mcp/", McpView.as_view(), name="mcp"),
+    re_path(r"^mcp/?$", McpView.as_view(), name="mcp"),
     path(
         ".well-known/oauth-authorization-server",
         OAuthAuthorizationServerMetadataView.as_view(),

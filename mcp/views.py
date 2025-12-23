@@ -13,7 +13,7 @@ import secrets
 
 from .registry import registry
 
-mcp_initializer = MCPInitializer()
+mcp_initializer = MCPInitializer(protocol_version='2025-06-18')
 mcp_initializer.add_server_info(
     name="MyPortfolio",
     version="1.0.0",
@@ -121,10 +121,20 @@ class OAuthAuthorizationServerMetadataView(View):
             "response_types_supported": ["code"],
             "grant_types_supported": ["authorization_code", "refresh_token"],
             "token_endpoint_auth_methods_supported": [
+                "none",
                 "client_secret_basic",
                 "client_secret_post",
             ],
-            "scopes_supported": ["read", "write"],
+            "scopes_supported": [
+                "read",
+                "write",
+                "openid",
+                "profile",
+                "email",
+                "address",
+                "phone",
+                "offline_access",
+            ],
             "code_challenge_methods_supported": ["S256"],
         }
         return JsonResponse(metadata, status=200)
@@ -161,9 +171,7 @@ class DynamicClientRegistrationView(View):
         grant_types = data.get("grant_types", ["authorization_code"])
         response_types = data.get("response_types", ["code"])
         scope = data.get("scope", "read write")
-        token_endpoint_auth_method = data.get(
-            "token_endpoint_auth_method", "client_secret_basic"
-        )
+        token_endpoint_auth_method = data.get("token_endpoint_auth_method", "none")
 
         # MCP only supports authorization_code grant type
         if "authorization_code" not in grant_types:
@@ -195,31 +203,46 @@ class DynamicClientRegistrationView(View):
                 status=400,
             )
 
-        # MCP uses confidential clients with authorization_code grant
-        client_type = Application.CLIENT_CONFIDENTIAL
+        # Determine client type based on token_endpoint_auth_method
+        # "none" = public client (PKCE only, no secret)
+        # "client_secret_basic" or "client_secret_post" = confidential client
+        if token_endpoint_auth_method == "none":
+            client_type = Application.CLIENT_PUBLIC
+            client_secret = ""
+        else:
+            client_type = Application.CLIENT_CONFIDENTIAL
+            client_secret = secrets.token_urlsafe(48)
+
         authorization_grant_type = Application.GRANT_AUTHORIZATION_CODE
 
         # Create the OAuth application
         try:
-            application = Application.objects.create(
+            application = Application(
                 name=client_name,
                 client_type=client_type,
                 authorization_grant_type=authorization_grant_type,
                 redirect_uris=" ".join(redirect_uris) if redirect_uris else "",
+                client_secret=client_secret,
+                hash_client_secret=False,  # Store plain text for comparison during token exchange
             )
+
+            application.save()
 
             # Build RFC 7591 compliant response
             response_data = {
                 "client_id": application.client_id,
-                "client_secret": application.client_secret,
                 "client_id_issued_at": int(application.created.timestamp()),
-                "client_secret_expires_at": 0,  # 0 means it doesn't expire
                 "client_name": application.name,
                 "grant_types": grant_types,
                 "response_types": response_types,
                 "scope": scope,
                 "token_endpoint_auth_method": token_endpoint_auth_method,
             }
+
+            # Include client_secret for confidential clients
+            if client_type == Application.CLIENT_CONFIDENTIAL:
+                response_data["client_secret"] = client_secret
+                response_data["client_secret_expires_at"] = 0  # 0 means it doesn't expire
 
             if redirect_uris:
                 response_data["redirect_uris"] = redirect_uris
