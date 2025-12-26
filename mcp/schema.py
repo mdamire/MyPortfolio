@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from posts.models import PostDetail, PostTag, PostAsset
+from typing import Optional
 
 
 class PostDetailResponse(BaseModel):
@@ -8,10 +9,10 @@ class PostDetailResponse(BaseModel):
     id: int
     permalink: str
     heading: str
-    introduction: str
+    introduction: Optional[str]
     content: str
     is_published: bool
-    publish_date: str
+    publish_date: Optional[str]
     view_count: int
     include_sublinks: bool
     tags: list
@@ -51,10 +52,10 @@ def _post_to_response(post: PostDetail) -> PostDetailResponse:
         id=post.id,
         permalink=post.permalink,
         heading=post.heading,
-        introduction=post.introduction or " ",
+        introduction=post.introduction or None,
         content=post.content,
         is_published=post.is_published,
-        publish_date=str(post.publish_date) if post.publish_date else "",
+        publish_date=str(post.publish_date) if post.publish_date else None,
         view_count=post.view_count,
         include_sublinks=post.include_sublinks,
         tags=list(post.tags.values_list("label", flat=True)),

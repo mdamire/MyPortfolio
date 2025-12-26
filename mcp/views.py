@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from logging import getLogger
+
 from django.views import View
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
@@ -13,7 +14,7 @@ import secrets
 
 from .registry import registry
 
-mcp_initializer = MCPInitializer(protocol_version='2025-06-18')
+mcp_initializer = MCPInitializer(protocol_version="2025-06-18")
 mcp_initializer.add_server_info(
     name="MyPortfolio",
     version="1.0.0",
@@ -26,6 +27,9 @@ mcp_initializer.add_tools()
 mcp_serializer = MCPSerializer(
     initializer=mcp_initializer, registry=registry, page_size=20
 )
+
+
+_logger = getLogger(__name__)
 
 
 class McpView(ProtectedResourceView):
@@ -56,18 +60,27 @@ class McpView(ProtectedResourceView):
                 status=401,
             )
 
-    def get(self, request, *args, **kwargs):
-        """
-        Handle GET requests
-        """
-        return JsonResponse({"message": "Hello, world!"}, status=200)
-
     def post(self, request, *args, **kwargs):
         """
         Handle POST requests
         """
         request_data = request.body.decode("utf-8")
-        response_data = mcp_serializer.process_request(request_data)
+        response_context = mcp_serializer.process_request(request_data)
+        response_data = response_context.response_data
+
+        # Having no resoponse data means only received notification
+        if not response_data:
+            for entry in response_context.history:
+                if not entry.is_notification:
+                    _logger.error(
+                        "MCP Error: No response data for non-notification request.",
+                        extra={"request": entry.request},
+                    )
+
+                notification_name = entry.request.method.split("/")[-1]
+                _logger.info(f"MCP Notification: {notification_name} received.")
+            return HttpResponse(status=202)
+
         return JsonResponse(response_data, status=200, safe=False)
 
 
@@ -242,7 +255,9 @@ class DynamicClientRegistrationView(View):
             # Include client_secret for confidential clients
             if client_type == Application.CLIENT_CONFIDENTIAL:
                 response_data["client_secret"] = client_secret
-                response_data["client_secret_expires_at"] = 0  # 0 means it doesn't expire
+                response_data["client_secret_expires_at"] = (
+                    0  # 0 means it doesn't expire
+                )
 
             if redirect_uris:
                 response_data["redirect_uris"] = redirect_uris

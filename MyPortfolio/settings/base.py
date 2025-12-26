@@ -256,27 +256,27 @@ LOGIN_URL = "/admin/login/"
 DEFAULT_REDIRECT_URI_SCHEMES = [
     "http",
     "https",
-    "cursor",          # Cursor IDE
-    "vscode",          # Visual Studio Code
-    "vscode-insiders", # VS Code Insiders
-    "claude",          # Claude Desktop
-    "windsurf",        # Windsurf IDE
-    "zed",             # Zed Editor
-    "jetbrains",       # JetBrains IDEs
-    "idea",            # IntelliJ IDEA
-    "pycharm",         # PyCharm
-    "webstorm",        # WebStorm
-    "goland",          # GoLand
-    "rider",           # Rider
-    "clion",           # CLion
-    "datagrip",        # DataGrip
-    "sublime",         # Sublime Text
-    "atom",            # Atom (legacy)
-    "nova",            # Nova (Mac)
-    "codeium",         # Codeium
-    "tabnine",         # Tabnine
-    "copilot",         # GitHub Copilot
-    "continue",        # Continue.dev
+    "cursor",  # Cursor IDE
+    "vscode",  # Visual Studio Code
+    "vscode-insiders",  # VS Code Insiders
+    "claude",  # Claude Desktop
+    "windsurf",  # Windsurf IDE
+    "zed",  # Zed Editor
+    "jetbrains",  # JetBrains IDEs
+    "idea",  # IntelliJ IDEA
+    "pycharm",  # PyCharm
+    "webstorm",  # WebStorm
+    "goland",  # GoLand
+    "rider",  # Rider
+    "clion",  # CLion
+    "datagrip",  # DataGrip
+    "sublime",  # Sublime Text
+    "atom",  # Atom (legacy)
+    "nova",  # Nova (Mac)
+    "codeium",  # Codeium
+    "tabnine",  # Tabnine
+    "copilot",  # GitHub Copilot
+    "continue",  # Continue.dev
 ]
 
 # Allow additional schemes via environment variable (comma-separated)

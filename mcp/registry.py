@@ -11,6 +11,7 @@ from .schema import (
     PostAssetListResponse,
     _post_to_response,
 )
+from typing import Optional, List, Union, Tuple
 
 registry = MCPRegistry()
 
@@ -44,9 +45,8 @@ def create_post(
     permalink: str,
     heading: str,
     content: str,
-    introduction: str = None,
+    introduction: Optional[str] = None,
     include_sublinks: bool = True,
-    tags: list = None,
 ) -> PostDetailResponse:
     """Create a new blog post.
 
@@ -60,9 +60,6 @@ def create_post(
         content: Main content of the post (supports HTML and Django templates).
         introduction: Optional brief introduction or summary of the post.
         include_sublinks: Whether to generate sublinks from header tags (default: True).
-        tags: List of tags where each item is either:
-            - A string (label) for an existing tag
-            - A tuple/list (label, color, bg_color) to create a new tag
     """
     post = PostDetail.objects.create(
         permalink=permalink,
@@ -73,25 +70,10 @@ def create_post(
         is_published=False,
         include_sublinks=include_sublinks,
     )
-
-    if tags:
-        tag_objects = []
-        for tag_item in tags:
-            if isinstance(tag_item, str):
-                # It's a label string - get existing tag
-                tag_obj = PostTag.objects.get(label=tag_item)
-                tag_objects.append(tag_obj)
-            elif isinstance(tag_item, (list, tuple)) and len(tag_item) == 3:
-                # It's a tuple (label, color, bg_color) - create new tag
-                label, color, bg_color = tag_item
-                tag_obj, _ = PostTag.objects.get_or_create(
-                    label=label, defaults={"color": color, "bg_color": bg_color}
-                )
-                tag_objects.append(tag_obj)
-
-        post.tags.set(tag_objects)
-
-    return _post_to_response(post)
+    result = ToolsResult()
+    result.add_structured_content(_post_to_response(post))
+    result.add_text_content(f"Post '{permalink}' created successfully.")
+    return result
 
 
 @registry.tool()
@@ -141,9 +123,9 @@ def publish_post(permalink: str) -> PostDetailResponse:
 
 @registry.tool()
 def list_posts(
-    is_published: bool = None,
-    tag_id: int = None,
-    limit: int = None,
+    is_published: Optional[bool] = None,
+    tag_id: Optional[int] = None,
+    limit: Optional[int] = None,
 ) -> PostListResponse:
     """List all blog posts with optional filtering.
 
@@ -173,14 +155,13 @@ def list_posts(
 @registry.tool()
 def update_post(
     permalink: str,
-    new_permalink: str = None,
-    heading: str = None,
-    content: str = None,
-    introduction: str = None,
-    requires_rendering: bool = None,
-    include_sublinks: bool = None,
-    tags: list = None,
-    feature: int = None,
+    new_permalink: Optional[str] = None,
+    heading: Optional[str] = None,
+    content: Optional[str] = None,
+    introduction: Optional[str] = None,
+    requires_rendering: Optional[bool] = None,
+    include_sublinks: Optional[bool] = None,
+    feature: Optional[int] = None,
 ) -> PostDetailResponse:
     """Update an existing blog post.
 
@@ -217,9 +198,6 @@ def update_post(
 
     post.save()
 
-    if tags is not None:
-        post.tags.set(tags)
-
     return _post_to_response(post)
 
 
@@ -245,7 +223,7 @@ def create_post_asset(
     key: str,
     filename: str,
     file_content: str,
-    description: str = None,
+    description: Optional[str] = None,
 ) -> PostAssetResponse:
     """Create a new post asset.
 
@@ -307,8 +285,8 @@ def get_post_asset(asset_id: int) -> PostAssetResponse:
 
 @registry.tool()
 def list_post_assets(
-    post_permalink: str = None,
-    limit: int = None,
+    post_permalink: Optional[str] = None,
+    limit: Optional[int] = None,
 ) -> PostAssetListResponse:
     """List post assets with optional filtering.
 
@@ -345,9 +323,9 @@ def list_post_assets(
 @registry.tool()
 def update_post_asset(
     asset_id: int,
-    key: str = None,
-    file_path: str = None,
-    description: str = None,
+    key: Optional[str] = None,
+    file_path: Optional[str] = None,
+    description: Optional[str] = None,
 ) -> PostAssetResponse:
     """Update an existing post asset.
 
@@ -442,16 +420,6 @@ Before creating any text-based post, you MUST present the content for review and
 **Optional Fields**:
 - **Introduction**: A brief, compelling summary (2-3 sentences) that will appear below the heading on the post list page. Entices readers to click and read more.
 - **Include Sublinks**: Whether to automatically generate a table of contents from header tags in the content (default: True). If the content is not text 
-- **Tags**:
-    - Tags helps to categorize, sort and find related posts easily.
-    - Here are the existing tags as (label, font_color, bg_color): {existing_tag_labels_str}
-        - label: Unique display name of the tag
-        - font_color: css color (hex, rgb or color name) for text color"
-        - bg_color: css color (hex, rgb or color name) for background color
-    - tags is list of either label or (label, font_color, bg_color)
-    - if you want to create a new tag then use (label, font_color, bg_color)
-    - if you want to use an existing tag then use only the label
-
 
 **Assets**: 
 You can add post-specific assets (CSS, JS, images, etc.) AFTER creating the post using the `create_post_asset` tool:
@@ -491,7 +459,6 @@ Before updating any text content (heading, introduction, or content), you MUST p
 - **Introduction**: The summary shown on the post list page
 - **Content**: The main body of the post (HTML with Django template support)
 - **Permalink**: The URL identifier (use `new_permalink` parameter)
-- **Tags**: Add or remove tags to recategorize the post
 - **Include Sublinks**: Toggle automatic sublink generation from headers
 
 **Updating Process**:
