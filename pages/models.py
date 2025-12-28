@@ -1,7 +1,7 @@
 from django.db import models
 from model_utils.models import TimeStampedModel
 
-from common.models import AbstractRenderableContent
+from common.models import AbstractRenderableContent, AbstractAsset
 
 
 class HomePageSection(TimeStampedModel, AbstractRenderableContent):
@@ -41,3 +41,13 @@ class StaticPage(TimeStampedModel, AbstractRenderableContent):
 
     def __str__(self) -> str:
         return f"{self.permalink}: {self.heading}"
+
+
+class PageAsset(TimeStampedModel, AbstractAsset):
+    page = models.ForeignKey(
+        StaticPage, on_delete=models.CASCADE, null=True, blank=True,
+        help_text="Associated page for this asset. If left blank, the asset is considered home page asset."
+    )
+
+    class Meta:
+        ordering = ["-created"]

@@ -80,11 +80,10 @@ class PostDetailAdmin(admin.ModelAdmin):
     actions = (publish_post,)
 
     def _url(self, obj):
-        try:
-            url = reverse("post-detail", kwargs={"permalink": obj.permalink})
-            return format_html(f'<a href="{url}" target="_blank">{url}</a>')
-        except:
-            return
+        url = reverse("post-detail", kwargs={"permalink": obj.permalink})
+        return format_html('<a href="{}" target="_blank">{}</a>', url, url)
+
+    _url.short_description = "Post URL"
 
 
 @admin.register(PostTag)

@@ -22,4 +22,27 @@ class StaticPageView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
     slug_field = "permalink"
     slug_url_kwarg = "permalink"
 
-    extra_statics = ["pages/prism.css", "pages/prism.js"]
+    def get_extra_statics(self):
+        extras = super().get_extra_statics()
+
+        # Add Prism syntax highlighting library for code blocks
+        extras.extend(["pages/prism.css", "pages/prism.js"])
+
+        # add assets for this page
+        extras.extend(
+            [
+                asset.file.url
+                for asset in self.object.pageasset_set.filter(
+                    is_active=True, is_static=True
+                )
+            ]
+        )
+        return extras
+
+    def get_content_context_data(self, obj):
+        context = super().get_content_context_data(obj)
+
+        for asset in self.object.pageasset_set.filter(is_active=True, is_static=False):
+            context[asset.key] = asset.file
+
+        return context

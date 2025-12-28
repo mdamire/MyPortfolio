@@ -14,9 +14,7 @@ from .utils import get_related_posts
 class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMixin):
     model = PostDetail
 
-    # The name of the field on the model that contains the slug.
     slug_field = "permalink"
-    # The name of the URLConf keyword argument that contains the slug.
     slug_url_kwarg = "permalink"
 
     context_object_name = "post"
@@ -33,13 +31,20 @@ class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
             ]
         )
         extras.extend(
-            [asset.file.url for asset in PostAsset.objects.filter(post=self.object)]
+            [
+                asset.file.url
+                for asset in PostAsset.objects.filter(
+                    post=self.object, is_static=True, is_active=True
+                )
+            ]
         )
         return extras
 
     def get_content_context_data(self, obj):
         context = super().get_content_context_data(obj)
-        for asset in PostAsset.objects.filter(post=obj):
+        for asset in PostAsset.objects.filter(
+            post=obj, is_static=False, is_active=True
+        ):
             context[asset.key] = asset.file
         return context
 

@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from posts.models import PostDetail, PostTag, PostAsset
+from pages.models import StaticPage, PageAsset
 from typing import Optional
 
 
@@ -19,6 +20,18 @@ class PostDetailResponse(BaseModel):
     feature: int
 
 
+class PageDetailResponse(BaseModel):
+    """Response model for StaticPage."""
+
+    id: int
+    permalink: str
+    heading: str
+    content: str
+    is_published: bool
+    navbar_title: Optional[str]
+    navbar_serial: int
+
+
 class PostAssetResponse(BaseModel):
     """Response model for PostAsset."""
 
@@ -33,6 +46,12 @@ class PostListResponse(BaseModel):
     """Response model for list of posts."""
 
     post_list: list
+
+
+class PageListResponse(BaseModel):
+    """Response model for list of pages."""
+
+    page_list: list
 
 
 class PostAssetListResponse(BaseModel):
@@ -60,4 +79,21 @@ def _post_to_response(post: PostDetail) -> PostDetailResponse:
         include_sublinks=post.include_sublinks,
         tags=list(post.tags.values_list("label", flat=True)),
         feature=post.feature,
+    )
+
+
+def _page_to_response(page: StaticPage) -> PageDetailResponse:
+    """Convert a StaticPage model instance to PageDetailResponse.
+
+    Args:
+        page: StaticPage model instance.
+    """
+    return PageDetailResponse(
+        id=page.id,
+        permalink=page.permalink,
+        heading=page.heading,
+        content=page.content,
+        is_published=page.is_published,
+        navbar_title=page.navbar_title or None,
+        navbar_serial=page.navbar_serial,
     )

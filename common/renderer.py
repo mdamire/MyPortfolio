@@ -20,7 +20,18 @@ def render_django_template(template_string, context={}):
 
 
 class ContentRenderer:
+    """
+    Handles double Django template rendering for content objects.
+
+    First renders the saved content field containing Django template code,
+    then passes the rendered content to the actual template for final rendering.
+    """
+
     def get_content_context_data(self, obj, *args, **kwargs):
+        """Provides context data for rendering the content field.
+
+        This needs to include any context that would be needed to render the saved content.
+        """
         context = {}
         for site_asset in SiteAsset.objects.all():
             context[site_asset.key] = site_asset.file

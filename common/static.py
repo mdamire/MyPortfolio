@@ -46,14 +46,12 @@ DEFAULT_STATIC_FILES = [
     SiteStatic("common/common.js"),
 ]
 
-CUSTOM_STYLE_KEY = "style"
-
 
 def get_custom_static_list():
     try:
         csl = [
             SiteStatic(sf.file.url)
-            for sf in SiteAsset.objects.filter(key=CUSTOM_STYLE_KEY)
+            for sf in SiteAsset.objects.filter(is_active=True, is_static=True)
         ]
         return csl
     except Exception:

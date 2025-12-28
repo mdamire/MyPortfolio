@@ -1,6 +1,5 @@
 import re
 from django.db import models
-from django.core.exceptions import ValidationError
 
 
 class AbstractAsset(models.Model):
@@ -27,6 +26,8 @@ class AbstractAsset(models.Model):
         blank=True,
         help_text="Optional: A note to yourself of where or how this can be used.",
     )
+    is_active = models.BooleanField(default=True)
+    is_static = models.BooleanField(default=True)
 
     def __str__(self):
         return self.key
