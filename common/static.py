@@ -51,7 +51,13 @@ def get_custom_static_list():
     try:
         csl = [
             SiteStatic(sf.file.url)
-            for sf in SiteAsset.objects.filter(is_active=True, is_static=True)
+            for sf in SiteAsset.objects.filter(
+                is_active=True,
+                is_static=True,
+                page__isnull=True,
+                post__isnull=True,
+                homepage_section__isnull=True,
+            )
         ]
         return csl
     except Exception:
@@ -63,7 +69,8 @@ def get_static_full_list(extras: list = []) -> List[SiteStatic]:
         extra if isinstance(extra, SiteStatic) else SiteStatic(extra)
         for extra in list(extras)
     ]
-    sfl = DEFAULT_STATIC_FILES + ss_extra + get_custom_static_list()
+    custom_static_list = get_custom_static_list()
+    sfl = DEFAULT_STATIC_FILES + ss_extra + custom_static_list
     sfl = [ss for ss in sfl if ss.type in ["css", "js"]]
 
     return sfl

@@ -47,5 +47,5 @@ class SiteAssetAdmin(admin.ModelAdmin):
 
     def _url(self, obj):
         return format_html(
-            f'<a href="{obj.file.url}" target="_blank">{obj.file.url}</a>'
+            '<a href="{}" target="_blank">{}</a>', obj.file.url, obj.file.url
         )
