@@ -23,12 +23,10 @@ def create_page(
     content: str,
     navbar_title: Optional[str] = None,
     navbar_serial: int = 0,
-    css_file_content: Optional[str] = None,
-    js_file_content: Optional[str] = None,
 ) -> str:
     """Create a new static page.
 
-    Creates a new page as a draft with optional custom CSS and JavaScript files.
+    Creates a new page as a draft. Use create_site_asset to add CSS, JS, images, or other files.
 
     Args:
         permalink: Unique URL-friendly identifier (letters, numbers, underscores only).
@@ -36,8 +34,6 @@ def create_page(
         content: Main HTML content (supports Django templates).
         navbar_title: Title to display in navbar. Only required if page should appear in navbar.
         navbar_serial: Order in navbar (default: 0). Not effective if no navbar_title.
-        css_file_content: Custom CSS content for this page.
-        js_file_content: Custom JavaScript content for this page.
     """
     if StaticPage.objects.filter(permalink=permalink).exists():
         result = ToolsResult(is_error=True)
@@ -53,32 +49,6 @@ def create_page(
         requires_rendering=True,
         is_published=False,
     )
-
-    # Handle CSS file
-    if css_file_content:
-        css_file = ContentFile(
-            css_file_content.encode("utf-8"), name=f"{permalink}.css"
-        )
-        SiteAsset.objects.create(
-            page=page,
-            key=f"css_{permalink}",
-            file=css_file,
-            description="Custom CSS for this page",
-            is_static=True,
-            is_active=True,
-        )
-
-    # Handle JS file
-    if js_file_content:
-        js_file = ContentFile(js_file_content.encode("utf-8"), name=f"{permalink}.js")
-        SiteAsset.objects.create(
-            page=page,
-            key=f"js_{permalink}",
-            file=js_file,
-            description="Custom JavaScript for this page",
-            is_static=True,
-            is_active=True,
-        )
 
     return f"Page with permalink {page.permalink} created successfully."
 
@@ -142,12 +112,11 @@ def update_page(
     content: Optional[str] = None,
     navbar_title: Optional[str] = None,
     navbar_serial: Optional[int] = None,
-    css_file_content: Optional[str] = None,
-    js_file_content: Optional[str] = None,
 ) -> str:
     """Update an existing static page.
 
-    Updates page fields and/or CSS/JS assets. Only provided fields are updated.
+    Updates page fields. Only provided fields are updated.
+    Use create_site_asset and delete_site_asset to manage CSS, JS, images, and other files.
 
     Args:
         permalink: Current permalink of the page.
@@ -156,8 +125,6 @@ def update_page(
         content: New HTML content.
         navbar_title: New navbar title (set to empty string to remove from navbar).
         navbar_serial: New navbar order.
-        css_file_content: Updated CSS content (replaces existing).
-        js_file_content: Updated JS content (replaces existing).
     """
     from django.core.files.base import ContentFile
 
@@ -175,36 +142,6 @@ def update_page(
         page.navbar_serial = navbar_serial
 
     page.save()
-
-    # Handle CSS file update
-    if css_file_content is not None:
-        # Delete existing CSS asset
-        SiteAsset.objects.filter(page=page, key="custom_css").delete()
-        # Create new one
-        css_file = ContentFile(
-            css_file_content.encode("utf-8"), name=f"{page.permalink}.css"
-        )
-        SiteAsset.objects.create(
-            page=page,
-            key="custom_css",
-            file=css_file,
-            description="Custom CSS for this page",
-        )
-
-    # Handle JS file update
-    if js_file_content is not None:
-        # Delete existing JS asset
-        SiteAsset.objects.filter(page=page, key="custom_js").delete()
-        # Create new one
-        js_file = ContentFile(
-            js_file_content.encode("utf-8"), name=f"{page.permalink}.js"
-        )
-        SiteAsset.objects.create(
-            page=page,
-            key="custom_js",
-            file=js_file,
-            description="Custom JavaScript for this page",
-        )
 
     return f"Page with permalink {page.permalink} updated successfully."
 
@@ -226,8 +163,7 @@ def page_create_prompt():
 - **content**: HTML body with full Django template language support
   - Bootstrap 5 CSS and JavaScript are already loaded and available
   - Supports Django template syntax: variables, conditionals, loops, filters
-  - All media files are available as context variables (see Media Files section below)
-  - If media file is needed add it's reference like this: {{ filename_without_extension.url }} even before creating it.
+  - All assets are available as context variables: {{ filename_without_extension.url }}
 
 **Optional Fields:**
 - **navbar_title**: Title to display in the top navigation bar
@@ -237,19 +173,27 @@ def page_create_prompt():
 - **navbar_serial**: Order position in navbar (default: 0)
   - Lower numbers appear first
   - Only effective if navbar_title is provided
-- **css_file_content**: Custom CSS for this page only (scoped to this page, won't affect other pages)
-- **js_file_content**: Custom JavaScript for this page only (scoped to this page, won't affect other pages)
 
-**Media Files:**
-To add images or audio files to a page, use `create_media_file` tool after creating the page:
-- Provide base64-encoded content for binary files (images, audio)
-- Make sure the name has the correct extension (e.g., .jpg, .png, .mp3)
-- Files are automatically available in Django templates as context variables
-- Access in content using: {{ filename_without_extension.url }}
-- Example: For "banner.jpg", use {{ banner.url }} in the content.
-- Supported formats: images (jpg, png, gif, svg, etc.), audio (mp3, wav, etc.)
+**Adding Assets (CSS, JS, Images, JSON, etc.):**
+Use the `create_site_asset` tool to add any type of file to your page:
 
-Pages are created as drafts (is_published=False). Base styling from staticpage.html template is automatically available.""",
+**For CSS/JS Files (automatically linked):**
+- These are automatically included when viewing the page
+- Example: `create_site_asset(filename="custom.css", file_content=css_text, page_permalink="about-me")`
+- Example: `create_site_asset(filename="custom.js", file_content=js_text, page_permalink="about-me")`
+
+**For Images, JSON, and other files (available as template variables):**
+- These are available in Django templates as context variables
+- Access using: {{ filename_without_extension.url }}
+- Example: For "banner.jpg", use {{ banner.url }} in the content
+- Example: `create_site_asset(filename="banner.jpg", file_content=base64_encoded_image, page_permalink="about-me")`
+- Example: `create_site_asset(filename="data.json", file_content=json_text, page_permalink="about-me")`
+
+**File Content for Asset:**
+- Binary files (images, audio): Provide base64-encoded content
+- Text files (CSS, JS, JSON): Provide plain text content
+
+""",
     )
     return result
 
@@ -266,16 +210,23 @@ def page_update_prompt():
 - **new_permalink**: Change URL identifier (must remain unique)
 - **heading**: Update title
 - **content**: Update HTML body (supports Django template language)
-  - All media files are available as context variables: {{ filename.url }}
+  - All assets are available as context variables: {{ filename_without_extension.url }}
 - **navbar_title**: Update navbar title (set to empty string "" to remove from navbar)
 - **navbar_serial**: Update navbar order position
-- **css_file_content**: Replace custom CSS (scoped to this page only)
-- **js_file_content**: Replace custom JavaScript (scoped to this page only)
 
-**Media Files:**
-To update a media file, first delete it using `delete_media_file`, then create a new one with `create_media_file`.
-- Delete: `delete_media_file(content_type="page", permalink=page_permalink, filename=filename)`
-- Create: `create_media_file(content_type="page", permalink=page_permalink, filename=filename, file_content=base64_content)`
+**Managing Assets:**
+Use `create_site_asset` and `delete_site_asset` to manage CSS, JS, images, JSON, and other files.
+
+**To add a new asset:**
+- `create_site_asset(filename="custom.css", file_content=css_text, page_permalink=page_permalink)`
+- CSS/JS files are automatically linked; other files are available as template variables
+
+**To update an asset:**
+1. Delete: `delete_site_asset(filename="custom.css", page_permalink=page_permalink)`
+2. Create: `create_site_asset(filename="custom.css", file_content=new_css_text, page_permalink=page_permalink)`
+
+**To delete an asset:**
+- `delete_site_asset(filename="banner.jpg", page_permalink=page_permalink)`
 
 Only provided fields will be updated; others remain unchanged.""",
     )

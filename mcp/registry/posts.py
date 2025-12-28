@@ -1,5 +1,5 @@
 from typing import Optional, List, Tuple
-from django.core.files.base import ContentFile
+from django.conf import settings
 
 from mcp_serializer.features.tool.result import ToolsResult
 
@@ -14,8 +14,28 @@ from ..schema import (
 from .registry import registry
 
 
+## Resouces
+base_dir = settings.BASE_DIR.parent
+registry.add_file_resource(
+    file=f"{base_dir}/posts/static/posts/post-detail.css",
+    title="Base CSS for the post detail page",
+    description=(
+        "Core styling for post detail pages, ensuring consistency in appearance and "
+        "user experience across all such pages. This is available for every post."
+    ),
+)
+
+registry.add_file_resource(
+    file=f"{base_dir}/posts/static/posts/post-detail.js",
+    title="Base JavaScript for the post detail page",
+    description=(
+        "Core JavaScript for post detail pages, ensuring consistency in appearance and "
+        "user experience across all such pages. This is available for every post."
+    ),
+)
+
+
 ## Tools
-# posts
 @registry.tool()
 def create_post(
     permalink: str,
@@ -24,12 +44,10 @@ def create_post(
     tags: List[Tuple[str, str, str]],
     introduction: Optional[str] = None,
     include_sublinks: bool = False,
-    css_file_content: Optional[str] = None,
-    js_file_content: Optional[str] = None,
 ) -> str:
     """Create a new blog post.
 
-    Creates a new post as a draft with optional custom CSS and JavaScript files.
+    Creates a new post as a draft. Use create_site_asset to add CSS, JS, images, or other files.
 
     Args:
         permalink: Unique URL-friendly identifier (letters, numbers, underscores only).
@@ -38,8 +56,6 @@ def create_post(
         tags: List of tuples [(label, text_color, bg_color)]. At least one required.
         introduction: Brief summary for post list page.
         include_sublinks: Auto-generate table of contents from headers (default: True).
-        css_file_content: Custom CSS content for this post.
-        js_file_content: Custom JavaScript content for this post.
     """
     if PostDetail.objects.filter(permalink=permalink).exists():
         result = ToolsResult(is_error=True)
@@ -69,32 +85,6 @@ def create_post(
             tag.save()
         tag_objects.append(tag)
     post.tags.set(tag_objects)
-
-    # Handle CSS file
-    if css_file_content:
-        css_file = ContentFile(
-            css_file_content.encode("utf-8"), name=f"{permalink}.css"
-        )
-        SiteAsset.objects.create(
-            post=post,
-            key=f"css_{permalink}",
-            file=css_file,
-            description="Custom CSS for this post",
-            is_static=True,
-            is_active=True,
-        )
-
-    # Handle JS file
-    if js_file_content:
-        js_file = ContentFile(js_file_content.encode("utf-8"), name=f"{permalink}.js")
-        SiteAsset.objects.create(
-            post=post,
-            key=f"js_{permalink}",
-            file=js_file,
-            description="Custom JavaScript for this post",
-            is_static=True,
-            is_active=True,
-        )
 
     return f"Post with permalink {post.permalink} created successfully."
 
@@ -164,12 +154,11 @@ def update_post(
     introduction: Optional[str] = None,
     include_sublinks: Optional[bool] = None,
     tags: Optional[List[Tuple[str, str, str]]] = None,
-    css_file_content: Optional[str] = None,
-    js_file_content: Optional[str] = None,
 ) -> str:
     """Update an existing blog post.
 
-    Updates post fields and/or CSS/JS assets. Only provided fields are updated.
+    Updates post fields. Only provided fields are updated.
+    Use create_site_asset and delete_site_asset to manage CSS, JS, images, and other files.
 
     Args:
         permalink: Current permalink of the post.
@@ -179,8 +168,6 @@ def update_post(
         introduction: New summary.
         include_sublinks: Toggle sublink generation.
         tags: New list of tuples [(label, text_color, bg_color)].
-        css_file_content: Updated CSS content (replaces existing).
-        js_file_content: Updated JS content (replaces existing).
     """
     from django.core.files.base import ContentFile
 
@@ -213,36 +200,6 @@ def update_post(
                 tag.save()
             tag_objects.append(tag)
         post.tags.set(tag_objects)
-
-    # Handle CSS file update
-    if css_file_content is not None:
-        # Delete existing CSS asset
-        SiteAsset.objects.filter(post=post, key="custom_css").delete()
-        # Create new one
-        css_file = ContentFile(
-            css_file_content.encode("utf-8"), name=f"{post.permalink}.css"
-        )
-        SiteAsset.objects.create(
-            post=post,
-            key="custom_css",
-            file=css_file,
-            description="Custom CSS for this post",
-        )
-
-    # Handle JS file update
-    if js_file_content is not None:
-        # Delete existing JS asset
-        SiteAsset.objects.filter(post=post, key="custom_js").delete()
-        # Create new one
-        js_file = ContentFile(
-            js_file_content.encode("utf-8"), name=f"{post.permalink}.js"
-        )
-        SiteAsset.objects.create(
-            post=post,
-            key="custom_js",
-            file=js_file,
-            description="Custom JavaScript for this post",
-        )
 
     return f"Post with permalink {post.permalink} updated successfully."
 
@@ -282,21 +239,28 @@ def post_create_prompt():
 
 **Optional Fields:**
 - **introduction**: Brief summary (2-3 sentences) shown on post list
-- **include_sublinks**: Auto-generate table of contents (default: False). If the content has more than 500 words then set this to true. 
-- **css_file_content**: Custom CSS for this post only (scoped to this post, won't affect other posts)
-- **js_file_content**: Custom JavaScript for this post only (scoped to this post, won't affect other posts)
+- **include_sublinks**: Auto-generate table of contents (default: False). If the content has more than 500 words then set this to true.
 
-**Media Files:**
-To add images or audio files to a post, use `create_media_file` tool after creating the post:
-- Set content_type="post" and provide the post permalink
-- Provide base64-encoded content for binary files (images, audio)
-- Make sure the name has the correct extension (e.g., .jpg, .png, .mp3)
-- Files are automatically available in Django templates as context variables
-- Access in content using: {{{{ filename_without_extension.url }}}}
-- Example: For "banner.jpg", use {{{{ banner.url }}}} in the content.
-- Supported formats: images (jpg, png, gif, svg, etc.), audio (mp3, wav, etc.)
+**Adding Assets (CSS, JS, Images, JSON, etc.):**
+Use the `create_site_asset` tool to add any type of file to your post:
 
-Posts are created as drafts (is_published=False). Base styling (post-detail.css) and scripts (post-detail.js) are automatically available.""",
+**For CSS/JS Files (automatically linked):**
+- These are automatically included when viewing the post
+- Example: `create_site_asset(filename="custom.css", file_content=css_text, post_permalink="my-post")`
+- Example: `create_site_asset(filename="custom.js", file_content=js_text, post_permalink="my-post")`
+
+**For Images, JSON, and other files (available as template variables):**
+- These are available in Django templates as context variables
+- Access using: {{{{ filename_without_extension.url }}}}
+- Example: For "banner.jpg", use {{{{ banner.url }}}} in the content
+- Example: `create_site_asset(filename="banner.jpg", file_content=base64_encoded_image, post_permalink="my-post")`
+- Example: `create_site_asset(filename="data.json", file_content=json_text, post_permalink="my-post")`
+
+**File Content for Asset:**
+- Binary files (images, audio): Provide base64-encoded content
+- Text files (CSS, JS, JSON): Provide plain text content
+
+Base styling (post-detail.css) and scripts (post-detail.js) are automatically available.""",
     )
     return result
 
@@ -322,18 +286,25 @@ def post_update_prompt():
 - **new_permalink**: Change URL identifier (must remain unique)
 - **heading**: Update title
 - **content**: Update HTML body (supports Django template language)
-  - All media files are available as context variables: {{{{ filename.url }}}}
+  - All assets are available as context variables: {{{{ filename_without_extension.url }}}}
 - **introduction**: Update summary
 - **include_sublinks**: Toggle table of contents
 - **tags**: Replace tags with new list [(label, text_color, bg_color)]
   - Existing tags: {existing_tags_str}
-- **css_file_content**: Replace custom CSS (scoped to this post only)
-- **js_file_content**: Replace custom JavaScript (scoped to this post only)
 
-**Media Files:**
-To update a media file, first delete it using `delete_media_file`, then create a new one with `create_media_file`.
-- Delete: `delete_media_file(content_type="post", permalink=post_permalink, filename=filename)`
-- Create: `create_media_file(content_type="post", permalink=post_permalink, filename=filename, file_content=base64_content)`
+**Managing Assets:**
+Use `create_site_asset` and `delete_site_asset` to manage CSS, JS, images, JSON, and other files.
+
+**To add a new asset:**
+- `create_site_asset(filename="custom.css", file_content=css_text, post_permalink=post_permalink)`
+- CSS/JS files are automatically linked; other files are available as template variables
+
+**To update an asset:**
+1. Delete: `delete_site_asset(filename="custom.css", post_permalink=post_permalink)`
+2. Create: `create_site_asset(filename="custom.css", file_content=new_css_text, post_permalink=post_permalink)`
+
+**To delete an asset:**
+- `delete_site_asset(filename="banner.jpg", post_permalink=post_permalink)`
 
 Only provided fields will be updated; others remain unchanged.""",
     )

@@ -5,120 +5,201 @@ from django.core.files.base import ContentFile
 from mcp_serializer.features.tool.result import ToolsResult
 
 from posts.models import PostDetail
-from pages.models import StaticPage
+from pages.models import StaticPage, HomePageSection
 from common.models import SiteAsset
 from .registry import registry
 
 
 @registry.tool()
-def create_media_file(
-    content_type: str,
-    permalink: str,
+def create_site_asset(
     filename: str,
     file_content: str,
     description: Optional[str] = None,
+    post_permalink: Optional[str] = None,
+    page_permalink: Optional[str] = None,
+    homepage_section_name: Optional[str] = None,
 ) -> str:
-    """Create a media asset (image or audio) for a post or page.
+    """Create a site asset (CSS, JS, image, JSON, etc.) for a post, page, homepage section, or globally.
 
-    Creates an image or audio file asset associated with a specific post or page.
-    The file content should be base64 encoded for binary files.
+    Creates any type of file asset. The file will be automatically configured based on its extension:
+    - CSS/JS files: Automatically linked as static resources (is_static=True)
+    - Other files (images, JSON, etc.): Available as Django template context variables (is_static=False)
+
+    If no reference is provided (post, page, or homepage_section), the asset is global
+    and will be available across the entire site.
 
     Args:
-        content_type: Type of content - either "post" or "page".
-        permalink: The permalink of the post or page this media belongs to.
-        filename: Name of the file (e.g., "banner.jpg", "audio.mp3").
-        file_content: Base64 encoded content for images/audio, or text content.
-        description: Optional description of the media file.
-    """
+        filename: Name of the file with extension (e.g., "banner.jpg", "custom.css", "data.json").
+        file_content: Base64 encoded content for binary files, or plain text for text files.
+        description: Optional description of the asset.
+        post_permalink: Link to a specific post (optional).
+        page_permalink: Link to a specific page (optional).
+        homepage_section_name: Link to a specific homepage section (optional).
 
-    # Validate content_type
-    if content_type not in ["post", "page"]:
+    """
+    # Determine if file is static based on extension
+    file_ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+    is_static = file_ext in ["css", "js"]
+
+    # Extract key from filename (without extension)
+    key = filename.rsplit(".", 1)[0]
+
+    # Decode file content
+    # For text files (CSS, JS, etc.), treat as plain text - don't attempt base64 decode
+    text_extensions = ["css", "js", "txt", "json", "xml", "html", "htm", "md", "csv"]
+
+    if file_ext in text_extensions:
+        # Text file - use content directly
+        content_file = ContentFile(file_content.encode("utf-8"), name=filename)
+    else:
+        # Binary file - expect base64 encoding
+        try:
+            decoded_content = base64.b64decode(file_content, validate=True)
+            content_file = ContentFile(decoded_content, name=filename)
+        except Exception:
+            # If base64 decode fails, fall back to treating as text
+            content_file = ContentFile(file_content.encode("utf-8"), name=filename)
+
+    # Build asset kwargs
+    asset_kwargs = {
+        "key": key,
+        "file": content_file,
+        "description": description or f"Asset: {filename}",
+        "is_static": is_static,
+        "is_active": True,
+    }
+
+    # Handle references
+    reference_count = sum(
+        [
+            post_permalink is not None,
+            page_permalink is not None,
+            homepage_section_name is not None,
+        ]
+    )
+
+    if reference_count > 1:
         tool_result = ToolsResult(is_error=True)
         tool_result.add_text_content(
-            f"Error: content_type must be either 'post' or 'page', got '{content_type}'"
+            "Error: Can only specify one reference (post, page, or homepage_section)"
         )
         return tool_result
 
-    # Get the content object (post or page)
-    if content_type == "post":
+    # Get reference objects
+    if post_permalink:
         try:
-            content_obj = PostDetail.objects.get(permalink=permalink)
+            post = PostDetail.objects.get(permalink=post_permalink)
+            asset_kwargs["post"] = post
+            scope = f"post '{post_permalink}'"
         except PostDetail.DoesNotExist:
             tool_result = ToolsResult(is_error=True)
             tool_result.add_text_content(
-                f"Error: Post with permalink '{permalink}' does not exist"
+                f"Error: Post with permalink '{post_permalink}' does not exist"
             )
             return tool_result
-        content_field = "post"
-    else:  # page
+    elif page_permalink:
         try:
-            content_obj = StaticPage.objects.get(permalink=permalink)
+            page = StaticPage.objects.get(permalink=page_permalink)
+            asset_kwargs["page"] = page
+            scope = f"page '{page_permalink}'"
         except StaticPage.DoesNotExist:
             tool_result = ToolsResult(is_error=True)
             tool_result.add_text_content(
-                f"Error: Page with permalink '{permalink}' does not exist"
+                f"Error: Page with permalink '{page_permalink}' does not exist"
             )
             return tool_result
-        content_field = "page"
-
-    # Decode base64 content
-    try:
-        decoded_content = base64.b64decode(file_content)
-        content_file = ContentFile(decoded_content, name=filename)
-    except Exception:
-        # If not base64, treat as text
-        content_file = ContentFile(file_content.encode("utf-8"), name=filename)
+    elif homepage_section_name:
+        try:
+            homepage_section = HomePageSection.objects.get(name=homepage_section_name)
+            asset_kwargs["homepage_section"] = homepage_section
+            scope = f"homepage section '{homepage_section_name}'"
+        except HomePageSection.DoesNotExist:
+            tool_result = ToolsResult(is_error=True)
+            tool_result.add_text_content(
+                f"Error: Homepage section with name '{homepage_section_name}' does not exist"
+            )
+            return tool_result
+    else:
+        scope = "globally (site-wide)"
 
     # Create the asset
-    asset_kwargs = {
-        content_field: content_obj,
-        "key": filename.rsplit(".", 1)[0],  # Use filename without extension as key
-        "file": content_file,
-        "description": description or f"Media file: {filename}",
-        "is_static": False,
-        "is_active": True,
-    }
     asset = SiteAsset.objects.create(**asset_kwargs)
 
-    return f"Media file '{filename}' created successfully for {content_type} '{permalink}'. Access via: {{{{ {asset.key}.url }}}} in the content."
+    # Build response message
+    if is_static:
+        usage_msg = f"CSS/JS file '{filename}' will be automatically linked when viewing {scope}."
+    else:
+        usage_msg = (
+            f"Asset '{filename}' is available in templates as: {{{{ {key}.url }}}}"
+        )
+
+    return f"Asset '{filename}' created successfully for {scope}. {usage_msg}"
 
 
 @registry.tool()
-def delete_media_file(
-    content_type: str,
-    permalink: str,
+def delete_site_asset(
     filename: str,
+    post_permalink: Optional[str] = None,
+    page_permalink: Optional[str] = None,
+    homepage_section_name: Optional[str] = None,
 ) -> str:
-    """Delete a media file from a post or page.
+    """Delete a site asset by filename.
 
-    Removes a media asset by filename from the specified post or page.
+    Removes an asset from a specific post, page, homepage section, or global assets.
+    If no reference is provided, will search for global assets.
 
     Args:
-        content_type: Type of content - either "post" or "page".
-        permalink: The permalink of the post or page.
         filename: Name of the file to delete.
+        post_permalink: Post permalink if asset belongs to a post (optional).
+        page_permalink: Page permalink if asset belongs to a page (optional).
+        homepage_section_name: Homepage section name if asset belongs to a section (optional).
+
     """
-    # Validate content_type
-    if content_type not in ["post", "page"]:
-        return (
-            f"Error: content_type must be either 'post' or 'page', got '{content_type}'"
-        )
+    # Build filter kwargs
+    filter_kwargs = {}
 
-    # Get the content object (post or page)
-    if content_type == "post":
+    reference_count = sum(
+        [
+            post_permalink is not None,
+            page_permalink is not None,
+            homepage_section_name is not None,
+        ]
+    )
+
+    if reference_count > 1:
+        return "Error: Can only specify one reference (post, page, or homepage_section)"
+
+    # Get reference objects and build filter
+    if post_permalink:
         try:
-            content_obj = PostDetail.objects.get(permalink=permalink)
+            post = PostDetail.objects.get(permalink=post_permalink)
+            filter_kwargs["post"] = post
+            scope = f"post '{post_permalink}'"
         except PostDetail.DoesNotExist:
-            return f"Error: Post with permalink '{permalink}' does not exist"
-        assets = SiteAsset.objects.filter(post=content_obj)
-    else:  # page
+            return f"Error: Post with permalink '{post_permalink}' does not exist"
+    elif page_permalink:
         try:
-            content_obj = StaticPage.objects.get(permalink=permalink)
+            page = StaticPage.objects.get(permalink=page_permalink)
+            filter_kwargs["page"] = page
+            scope = f"page '{page_permalink}'"
         except StaticPage.DoesNotExist:
-            return f"Error: Page with permalink '{permalink}' does not exist"
-        assets = SiteAsset.objects.filter(page=content_obj)
+            return f"Error: Page with permalink '{page_permalink}' does not exist"
+    elif homepage_section_name:
+        try:
+            homepage_section = HomePageSection.objects.get(name=homepage_section_name)
+            filter_kwargs["homepage_section"] = homepage_section
+            scope = f"homepage section '{homepage_section_name}'"
+        except HomePageSection.DoesNotExist:
+            return f"Error: Homepage section with name '{homepage_section_name}' does not exist"
+    else:
+        # Global assets have all references as None
+        filter_kwargs["post__isnull"] = True
+        filter_kwargs["page__isnull"] = True
+        filter_kwargs["homepage_section__isnull"] = True
+        scope = "global assets"
 
-    # Find asset by filename pattern in the file field
+    # Find and delete asset
+    assets = SiteAsset.objects.filter(**filter_kwargs)
     deleted = False
 
     for asset in assets:
@@ -128,8 +209,6 @@ def delete_media_file(
             break
 
     if deleted:
-        return f"Media file '{filename}' deleted successfully from {content_type} '{permalink}'"
+        return f"Asset '{filename}' deleted successfully from {scope}"
     else:
-        return (
-            f"Error: Media file '{filename}' not found in {content_type} '{permalink}'"
-        )
+        return f"Error: Asset '{filename}' not found in {scope}"
