@@ -15,6 +15,33 @@ class HomePageView(ListView, SiteContextMixin, MultipleObjectContentRendererMixi
     context_object_name = "sections"
     model = HomePageSection
 
+    def get_extra_statics(self):
+        extras = super().get_extra_statics()
+
+        # Add assets for all active homepage sections
+        active_sections = HomePageSection.objects.filter(is_active=True)
+        for section in active_sections:
+            extras.extend(
+                [
+                    asset.file.url
+                    for asset in SiteAsset.objects.filter(
+                        homepage_section=section, is_active=True, is_static=True
+                    )
+                ]
+            )
+        return extras
+
+    def get_content_context_data(self, obj):
+        context = super().get_content_context_data(obj)
+
+        # Add non-static assets for this section as context variables
+        for asset in SiteAsset.objects.filter(
+            homepage_section=obj, is_active=True, is_static=False
+        ):
+            context[asset.key] = asset.file
+
+        return context
+
 
 class StaticPageView(DetailView, SiteContextMixin, SingleObjectContentRendererMixin):
     template_name = "pages/staticpage.html"

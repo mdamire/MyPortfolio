@@ -15,7 +15,6 @@ from .registry import registry
 
 
 ## Tools
-# pages
 @registry.tool()
 def create_page(
     permalink: str,

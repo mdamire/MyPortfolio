@@ -16,6 +16,7 @@ class HomePageSection(TimeStampedModel, AbstractRenderableContent):
         help_text="Entering a value here will display it's link in the top bar.",
     )
     serial = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ("serial", "created")

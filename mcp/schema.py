@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from posts.models import PostDetail, PostTag
-from pages.models import StaticPage
+from pages.models import StaticPage, HomePageSection
 from common.models import SiteAsset
 from typing import Optional
 
@@ -33,6 +33,17 @@ class PageDetailResponse(BaseModel):
     navbar_serial: int
 
 
+class HomePageSectionDetailResponse(BaseModel):
+    """Response model for HomePageSection."""
+
+    id: int
+    name: str
+    content: str
+    navbar_title: Optional[str]
+    serial: int
+    is_active: bool
+
+
 class PostListResponse(BaseModel):
     """Response model for list of posts."""
 
@@ -43,6 +54,12 @@ class PageListResponse(BaseModel):
     """Response model for list of pages."""
 
     page_list: list
+
+
+class HomePageSectionListResponse(BaseModel):
+    """Response model for list of homepage sections."""
+
+    section_list: list
 
 
 class PostAssetListResponse(BaseModel):
@@ -87,4 +104,22 @@ def _page_to_response(page: StaticPage) -> PageDetailResponse:
         is_published=page.is_published,
         navbar_title=page.navbar_title or None,
         navbar_serial=page.navbar_serial,
+    )
+
+
+def _homepage_section_to_response(
+    section: HomePageSection,
+) -> HomePageSectionDetailResponse:
+    """Convert a HomePageSection model instance to HomePageSectionDetailResponse.
+
+    Args:
+        section: HomePageSection model instance.
+    """
+    return HomePageSectionDetailResponse(
+        id=section.id,
+        name=section.name,
+        content=section.content,
+        navbar_title=section.navbar_title or None,
+        serial=section.serial,
+        is_active=section.is_active,
     )
