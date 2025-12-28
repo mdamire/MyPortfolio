@@ -1,4 +1,4 @@
-from .models import PostDetail, PostAsset
+from .models import PostDetail
 from common.static import SiteStatic
 
 

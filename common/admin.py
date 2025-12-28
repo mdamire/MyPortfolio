@@ -22,7 +22,26 @@ class SiteAssetForm(forms.ModelForm):
 
 @admin.register(SiteAsset)
 class SiteAssetAdmin(admin.ModelAdmin):
-    list_display = ("key", "description", "_url")
+    list_display = (
+        "key",
+        "post",
+        "page",
+        "homepage_section",
+        "is_active",
+        "is_static",
+        "description",
+        "_url",
+    )
+    list_filter = ("is_active", "is_static", "post", "page", "homepage_section")
+    search_fields = (
+        "key",
+        "description",
+        "post__permalink",
+        "post__heading",
+        "page__permalink",
+        "page__heading",
+        "homepage_section__name",
+    )
     form = SiteAssetForm
     readonly_fields = ("_url",)
 

@@ -4,8 +4,9 @@ from django.core.files.base import ContentFile
 
 from mcp_serializer.features.tool.result import ToolsResult
 
-from posts.models import PostDetail, PostAsset
-from pages.models import StaticPage, PageAsset
+from posts.models import PostDetail
+from pages.models import StaticPage
+from common.models import SiteAsset
 from .registry import registry
 
 
@@ -30,11 +31,12 @@ def create_media_file(
         description: Optional description of the media file.
     """
 
-
     # Validate content_type
     if content_type not in ["post", "page"]:
         tool_result = ToolsResult(is_error=True)
-        tool_result.add_text_content(f"Error: content_type must be either 'post' or 'page', got '{content_type}'")
+        tool_result.add_text_content(
+            f"Error: content_type must be either 'post' or 'page', got '{content_type}'"
+        )
         return tool_result
 
     # Get the content object (post or page)
@@ -43,18 +45,20 @@ def create_media_file(
             content_obj = PostDetail.objects.get(permalink=permalink)
         except PostDetail.DoesNotExist:
             tool_result = ToolsResult(is_error=True)
-            tool_result.add_text_content(f"Error: Post with permalink '{permalink}' does not exist")
+            tool_result.add_text_content(
+                f"Error: Post with permalink '{permalink}' does not exist"
+            )
             return tool_result
-        AssetModel = PostAsset
         content_field = "post"
     else:  # page
         try:
             content_obj = StaticPage.objects.get(permalink=permalink)
         except StaticPage.DoesNotExist:
             tool_result = ToolsResult(is_error=True)
-            tool_result.add_text_content(f"Error: Page with permalink '{permalink}' does not exist")
+            tool_result.add_text_content(
+                f"Error: Page with permalink '{permalink}' does not exist"
+            )
             return tool_result
-        AssetModel = PageAsset
         content_field = "page"
 
     # Decode base64 content
@@ -74,7 +78,7 @@ def create_media_file(
         "is_static": False,
         "is_active": True,
     }
-    asset = AssetModel.objects.create(**asset_kwargs)
+    asset = SiteAsset.objects.create(**asset_kwargs)
 
     return f"Media file '{filename}' created successfully for {content_type} '{permalink}'. Access via: {{{{ {asset.key}.url }}}} in the content."
 
@@ -96,7 +100,9 @@ def delete_media_file(
     """
     # Validate content_type
     if content_type not in ["post", "page"]:
-        return f"Error: content_type must be either 'post' or 'page', got '{content_type}'"
+        return (
+            f"Error: content_type must be either 'post' or 'page', got '{content_type}'"
+        )
 
     # Get the content object (post or page)
     if content_type == "post":
@@ -104,13 +110,13 @@ def delete_media_file(
             content_obj = PostDetail.objects.get(permalink=permalink)
         except PostDetail.DoesNotExist:
             return f"Error: Post with permalink '{permalink}' does not exist"
-        assets = PostAsset.objects.filter(post=content_obj)
+        assets = SiteAsset.objects.filter(post=content_obj)
     else:  # page
         try:
             content_obj = StaticPage.objects.get(permalink=permalink)
         except StaticPage.DoesNotExist:
             return f"Error: Page with permalink '{permalink}' does not exist"
-        assets = PageAsset.objects.filter(page=content_obj)
+        assets = SiteAsset.objects.filter(page=content_obj)
 
     # Find asset by filename pattern in the file field
     deleted = False
@@ -124,4 +130,6 @@ def delete_media_file(
     if deleted:
         return f"Media file '{filename}' deleted successfully from {content_type} '{permalink}'"
     else:
-        return f"Error: Media file '{filename}' not found in {content_type} '{permalink}'"
+        return (
+            f"Error: Media file '{filename}' not found in {content_type} '{permalink}'"
+        )

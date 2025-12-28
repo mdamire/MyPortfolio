@@ -3,7 +3,8 @@ from django.core.files.base import ContentFile
 
 from mcp_serializer.features.tool.result import ToolsResult
 
-from posts.models import PostDetail, PostTag, PostAsset
+from posts.models import PostDetail, PostTag
+from common.models import SiteAsset
 from mcp_serializer.features.prompt.result import PromptsResult
 from ..schema import (
     PostDetailResponse,
@@ -74,7 +75,7 @@ def create_post(
         css_file = ContentFile(
             css_file_content.encode("utf-8"), name=f"{permalink}.css"
         )
-        PostAsset.objects.create(
+        SiteAsset.objects.create(
             post=post,
             key=f"css_{permalink}",
             file=css_file,
@@ -86,7 +87,7 @@ def create_post(
     # Handle JS file
     if js_file_content:
         js_file = ContentFile(js_file_content.encode("utf-8"), name=f"{permalink}.js")
-        PostAsset.objects.create(
+        SiteAsset.objects.create(
             post=post,
             key=f"js_{permalink}",
             file=js_file,
@@ -118,7 +119,7 @@ def get_post(permalink: str) -> PostDetailResponse:
     result.add_structured_content(_post_to_response(post))
 
     # Add CSS and JS assets as embedded files
-    assets = PostAsset.objects.filter(post=post)
+    assets = SiteAsset.objects.filter(post=post)
     for asset in assets:
         result.add_file(file=asset.file, title=asset.description or asset.key)
     return result
@@ -216,12 +217,12 @@ def update_post(
     # Handle CSS file update
     if css_file_content is not None:
         # Delete existing CSS asset
-        PostAsset.objects.filter(post=post, key="custom_css").delete()
+        SiteAsset.objects.filter(post=post, key="custom_css").delete()
         # Create new one
         css_file = ContentFile(
             css_file_content.encode("utf-8"), name=f"{post.permalink}.css"
         )
-        PostAsset.objects.create(
+        SiteAsset.objects.create(
             post=post,
             key="custom_css",
             file=css_file,
@@ -231,12 +232,12 @@ def update_post(
     # Handle JS file update
     if js_file_content is not None:
         # Delete existing JS asset
-        PostAsset.objects.filter(post=post, key="custom_js").delete()
+        SiteAsset.objects.filter(post=post, key="custom_js").delete()
         # Create new one
         js_file = ContentFile(
             js_file_content.encode("utf-8"), name=f"{post.permalink}.js"
         )
-        PostAsset.objects.create(
+        SiteAsset.objects.create(
             post=post,
             key="custom_js",
             file=js_file,

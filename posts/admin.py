@@ -9,7 +9,8 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 from common.static import get_css_url_list
-from .models import PostDetail, PostTag, PostAsset
+from common.models import SiteAsset
+from .models import PostDetail, PostTag
 
 
 def publish_post(modeladmin, request, queryset):
@@ -55,10 +56,11 @@ class PostDetailForm(forms.ModelForm):
         return permalink
 
 
-class PostAssetInline(admin.TabularInline):
-    model = PostAsset
+class SiteAssetInline(admin.TabularInline):
+    model = SiteAsset
     extra = 1
-    fields = ("key", "file", "description")
+    fields = ("key", "file", "description", "is_active", "is_static")
+    fk_name = "post"
 
 
 @admin.register(PostDetail)
@@ -75,7 +77,7 @@ class PostDetailAdmin(admin.ModelAdmin):
     )
     form = PostDetailForm
     readonly_fields = ("_url",)
-    inlines = [PostAssetInline]
+    inlines = [SiteAssetInline]
 
     actions = (publish_post,)
 
@@ -89,10 +91,3 @@ class PostDetailAdmin(admin.ModelAdmin):
 @admin.register(PostTag)
 class PostTagAdmin(admin.ModelAdmin):
     list_display = ("label", "color", "bg_color")
-
-
-@admin.register(PostAsset)
-class PostAssetAdmin(admin.ModelAdmin):
-    list_display = ("key", "post", "file", "created")
-    list_filter = ("post",)
-    search_fields = ("post__permalink", "post__heading", "key")

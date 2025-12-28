@@ -5,6 +5,7 @@ from common.mixins import (
     MultipleObjectContentRendererMixin,
     SingleObjectContentRendererMixin,
 )
+from common.models import SiteAsset
 from .models import HomePageSection, StaticPage
 
 
@@ -32,8 +33,8 @@ class StaticPageView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
         extras.extend(
             [
                 asset.file.url
-                for asset in self.object.pageasset_set.filter(
-                    is_active=True, is_static=True
+                for asset in SiteAsset.objects.filter(
+                    page=self.object, is_active=True, is_static=True
                 )
             ]
         )
@@ -42,7 +43,9 @@ class StaticPageView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
     def get_content_context_data(self, obj):
         context = super().get_content_context_data(obj)
 
-        for asset in self.object.pageasset_set.filter(is_active=True, is_static=False):
+        for asset in SiteAsset.objects.filter(
+            page=obj, is_active=True, is_static=False
+        ):
             context[asset.key] = asset.file
 
         return context

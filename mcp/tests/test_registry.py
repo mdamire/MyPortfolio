@@ -13,7 +13,8 @@ from mcp.registry import (
     list_post_assets,
     delete_post_asset,
 )
-from posts.models import PostDetail, PostTag, PostAsset
+from posts.models import PostDetail, PostTag
+from common.models import SiteAsset
 
 
 class TestPostFunctions(TestCase):
@@ -170,7 +171,7 @@ class TestAssetFunctions(TestCase):
     def tearDown(self):
         """Clean up created files."""
         # Clean up all assets and their files
-        for asset in PostAsset.objects.all():
+        for asset in SiteAsset.objects.all():
             if asset.file:
                 file_path = asset.file.path
                 if os.path.exists(file_path):
@@ -224,4 +225,4 @@ class TestAssetFunctions(TestCase):
         self.assertIn("deleted successfully", result)
 
         # Verify asset is deleted
-        self.assertFalse(PostAsset.objects.filter(id=asset.id).exists())
+        self.assertFalse(SiteAsset.objects.filter(id=asset.id).exists())

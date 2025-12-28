@@ -41,13 +41,3 @@ class StaticPage(TimeStampedModel, AbstractRenderableContent):
 
     def __str__(self) -> str:
         return f"{self.permalink}: {self.heading}"
-
-
-class PageAsset(TimeStampedModel, AbstractAsset):
-    page = models.ForeignKey(
-        StaticPage, on_delete=models.CASCADE, null=True, blank=True,
-        help_text="Associated page for this asset. If left blank, the asset is considered home page asset."
-    )
-
-    class Meta:
-        ordering = ["-created"]

@@ -1,6 +1,7 @@
 from pydantic import BaseModel
-from posts.models import PostDetail, PostTag, PostAsset
-from pages.models import StaticPage, PageAsset
+from posts.models import PostDetail, PostTag
+from pages.models import StaticPage
+from common.models import SiteAsset
 from typing import Optional
 
 
@@ -30,16 +31,6 @@ class PageDetailResponse(BaseModel):
     is_published: bool
     navbar_title: Optional[str]
     navbar_serial: int
-
-
-class PostAssetResponse(BaseModel):
-    """Response model for PostAsset."""
-
-    id: int
-    post_id: int
-    key: str
-    file: str
-    description: str
 
 
 class PostListResponse(BaseModel):

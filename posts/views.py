@@ -6,7 +6,8 @@ from common.mixins import (
     SingleObjectContentRendererMixin,
     MultipleObjectContentRendererMixin,
 )
-from .models import PostDetail, PostTag, PostAsset
+from common.models import SiteAsset
+from .models import PostDetail, PostTag
 from .sublink import parse_sublinks
 from .utils import get_related_posts
 
@@ -33,7 +34,7 @@ class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
         extras.extend(
             [
                 asset.file.url
-                for asset in PostAsset.objects.filter(
+                for asset in SiteAsset.objects.filter(
                     post=self.object, is_static=True, is_active=True
                 )
             ]
@@ -42,7 +43,7 @@ class PostDetailView(DetailView, SiteContextMixin, SingleObjectContentRendererMi
 
     def get_content_context_data(self, obj):
         context = super().get_content_context_data(obj)
-        for asset in PostAsset.objects.filter(
+        for asset in SiteAsset.objects.filter(
             post=obj, is_static=False, is_active=True
         ):
             context[asset.key] = asset.file

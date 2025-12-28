@@ -54,10 +54,3 @@ class PostTag(TimeStampedModel):
 
     class Meta:
         ordering = ["-created"]
-
-
-class PostAsset(TimeStampedModel, AbstractAsset):
-    post = models.ForeignKey(PostDetail, on_delete=models.CASCADE)
-
-    class Meta:
-        ordering = ["-created"]

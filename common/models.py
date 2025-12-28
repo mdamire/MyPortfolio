@@ -37,7 +37,15 @@ class AbstractAsset(models.Model):
 
 
 class SiteAsset(AbstractAsset):
-    pass
+    post = models.ForeignKey(
+        "posts.PostDetail", on_delete=models.CASCADE, null=True, blank=True
+    )
+    page = models.ForeignKey(
+        "pages.StaticPage", on_delete=models.CASCADE, null=True, blank=True
+    )
+    homepage_section = models.ForeignKey(
+        "pages.HomePageSection", on_delete=models.CASCADE, null=True, blank=True
+    )
 
 
 class AbstractRenderableContent(models.Model):

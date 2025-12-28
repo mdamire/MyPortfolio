@@ -3,7 +3,8 @@ from django.core.files.base import ContentFile
 
 from mcp_serializer.features.tool.result import ToolsResult
 
-from pages.models import StaticPage, PageAsset
+from pages.models import StaticPage
+from common.models import SiteAsset
 from mcp_serializer.features.prompt.result import PromptsResult
 from ..schema import (
     PageDetailResponse,
@@ -58,7 +59,7 @@ def create_page(
         css_file = ContentFile(
             css_file_content.encode("utf-8"), name=f"{permalink}.css"
         )
-        PageAsset.objects.create(
+        SiteAsset.objects.create(
             page=page,
             key=f"css_{permalink}",
             file=css_file,
@@ -70,7 +71,7 @@ def create_page(
     # Handle JS file
     if js_file_content:
         js_file = ContentFile(js_file_content.encode("utf-8"), name=f"{permalink}.js")
-        PageAsset.objects.create(
+        SiteAsset.objects.create(
             page=page,
             key=f"js_{permalink}",
             file=js_file,
@@ -102,7 +103,7 @@ def get_page(permalink: str) -> PageDetailResponse:
     result.add_structured_content(_page_to_response(page))
 
     # Add CSS and JS assets as embedded files
-    assets = PageAsset.objects.filter(page=page)
+    assets = SiteAsset.objects.filter(page=page)
     for asset in assets:
         result.add_file(file=asset.file, title=asset.description or asset.key)
     return result
@@ -178,12 +179,12 @@ def update_page(
     # Handle CSS file update
     if css_file_content is not None:
         # Delete existing CSS asset
-        PageAsset.objects.filter(page=page, key="custom_css").delete()
+        SiteAsset.objects.filter(page=page, key="custom_css").delete()
         # Create new one
         css_file = ContentFile(
             css_file_content.encode("utf-8"), name=f"{page.permalink}.css"
         )
-        PageAsset.objects.create(
+        SiteAsset.objects.create(
             page=page,
             key="custom_css",
             file=css_file,
@@ -193,12 +194,12 @@ def update_page(
     # Handle JS file update
     if js_file_content is not None:
         # Delete existing JS asset
-        PageAsset.objects.filter(page=page, key="custom_js").delete()
+        SiteAsset.objects.filter(page=page, key="custom_js").delete()
         # Create new one
         js_file = ContentFile(
             js_file_content.encode("utf-8"), name=f"{page.permalink}.js"
         )
-        PageAsset.objects.create(
+        SiteAsset.objects.create(
             page=page,
             key="custom_js",
             file=js_file,

@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 from common.static import get_css_url_list
+from common.models import SiteAsset
 from .models import HomePageSection, StaticPage
 
 
@@ -30,6 +31,13 @@ class HomePageSectionAdmin(admin.ModelAdmin):
     }
 
 
+class SiteAssetInline(admin.TabularInline):
+    model = SiteAsset
+    extra = 1
+    fields = ("key", "file", "description", "is_active", "is_static")
+    fk_name = "page"
+
+
 @admin.register(StaticPage)
 class StaticPageAdmin(admin.ModelAdmin):
     list_display = (
@@ -43,6 +51,7 @@ class StaticPageAdmin(admin.ModelAdmin):
     )
     actions = (publish_page,)
     readonly_fields = ("_url",)
+    inlines = [SiteAssetInline]
 
     def _url(self, obj):
         try:
