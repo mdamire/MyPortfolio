@@ -130,11 +130,10 @@ class RequestResponseLoggingMiddleware:
         ):
             try:
                 content = response.content.decode("utf-8")
-                log_data["body"] = json.loads(content)
-                # if len(content) < 1000:  # Only log if response is small
-                #     log_data["body"] = json.loads(content)
-                # else:
-                #     log_data["body"] = f"Response too large ({len(content)} bytes)"
+                if len(content) < 1000:  # Only log if response is small
+                    log_data["body"] = json.loads(content)
+                else:
+                    log_data["body"] = f"Response too large ({len(content)} bytes)"
             except Exception:
                 log_data["body"] = "Unable to parse response"
 
