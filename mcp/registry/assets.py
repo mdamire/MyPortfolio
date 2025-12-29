@@ -41,8 +41,8 @@ def create_site_asset(
     file_ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
     is_static = file_ext in ["css", "js"]
 
-    # Extract key from filename (without extension)
-    key = filename.rsplit(".", 1)[0]
+    # Extract key from filename (replacing dots with dashes)
+    key = filename.replace(".", "-")
 
     # Decode file content
     # For text files (CSS, JS, etc.), treat as plain text - don't attempt base64 decode
