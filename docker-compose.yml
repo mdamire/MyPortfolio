@@ -14,7 +14,7 @@ services:
       
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:${PORT:-8000}
+    command: python manage.py runserver ${PORT:-8000}
     volumes:
       - .:/code
     ports:
