@@ -1,0 +1,64 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+venv-portfolio/
+env/
+ENV/
+.venv
+
+# Django
+*.log
+*.pot
+db.sqlite3
+db.sqlite3-journal
+/media/
+/static/
+/staticfiles/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Documentation
+README.md
+*.md
+docs/
+
+# Tests
+*/tests/
+*/test_*.py
+pytest.ini
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Development
+wnotes/

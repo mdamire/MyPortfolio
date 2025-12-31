@@ -1,8 +1,51 @@
-*.sqlite3
-*sqlite3*
-**/__pycache__/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Django
+*.log
+*.pot
+*.pyc
+db.sqlite3
+db.sqlite3-journal
 /media/
 /static/
+/staticfiles/
 
-.DS_Store
+# Virtual environments
+venv/
+venv-portfolio/
+env/
+ENV/
+.venv
+
+# Environment variables
 .env
+.env.local
+.env.*.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# Development notes
+wnotes/
