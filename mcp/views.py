@@ -1,5 +1,6 @@
 from logging import getLogger
 
+from django.conf import settings
 from django.views import View
 from django.http import JsonResponse, HttpResponse
 from django.utils.decorators import method_decorator
@@ -92,10 +93,10 @@ class OAuthProtectedResourceMetadataView(View):
 
     def get(self, request, *args, **kwargs):
         # Authorization server issuer - base URL where client fetches /.well-known/oauth-authorization-server
-        authorization_server_issuer = request.build_absolute_uri("/").rstrip("/")
+        authorization_server_issuer = settings.SITE_URL.rstrip("/")
         metadata = {
             # The protected resource identifier (this MCP server)
-            "resource": request.build_absolute_uri(reverse("mcp")),
+            "resource": authorization_server_issuer + reverse("mcp"),
             # Authorization servers this resource trusts
             "authorization_servers": [authorization_server_issuer],
             # Supported bearer token methods
@@ -113,24 +114,14 @@ class OAuthAuthorizationServerMetadataView(View):
     """
 
     def get(self, request, *args, **kwargs):
-        issuer = request.build_absolute_uri("/").rstrip("/")
+        issuer = settings.SITE_URL.rstrip("/")
         metadata = {
             "issuer": issuer,
-            "authorization_endpoint": request.build_absolute_uri(
-                reverse("oauth2_provider:authorize")
-            ),
-            "token_endpoint": request.build_absolute_uri(
-                reverse("oauth2_provider:token")
-            ),
-            "registration_endpoint": request.build_absolute_uri(
-                reverse("register_client")
-            ),
-            "revocation_endpoint": request.build_absolute_uri(
-                reverse("oauth2_provider:revoke-token")
-            ),
-            "introspection_endpoint": request.build_absolute_uri(
-                reverse("oauth2_provider:introspect")
-            ),
+            "authorization_endpoint": issuer + reverse("oauth2_provider:authorize"),
+            "token_endpoint": issuer + reverse("oauth2_provider:token"),
+            "registration_endpoint": issuer + reverse("register_client"),
+            "revocation_endpoint": issuer + reverse("oauth2_provider:revoke-token"),
+            "introspection_endpoint": issuer + reverse("oauth2_provider:introspect"),
             "response_types_supported": ["code"],
             "grant_types_supported": ["authorization_code", "refresh_token"],
             "token_endpoint_auth_methods_supported": [

@@ -21,6 +21,7 @@ services:
       - "127.0.0.1:${PORT:-8000}:${PORT:-8000}"
     environment:
       DJANGO_SETTINGS_MODULE: 'MyPortfolio.settings.develop'
+      PORT: '${PORT:-8000}'
       DB_NAME: 'django-db'
       DB_USER: 'root'
       DB_PASSWORD: 'secret'

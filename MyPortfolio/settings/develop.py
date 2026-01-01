@@ -1,6 +1,7 @@
 from .base import *
 
-SITE_URL = "http://localhost:8000"
+PORT = get_secret_value("PORT", "8000")
+SITE_URL = f"http://localhost:{PORT}"
 
 # Use MySQL if environment variables are set, otherwise fall back to SQLite
 DB_NAME = get_secret_value("DB_NAME", None)
