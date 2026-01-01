@@ -1,119 +1,234 @@
 # MyPortfolio
 
-### Overview
+**Build your portfolio or any static site with AI.**
 
-The portfolio website is built on Django, offering a highly dynamic approach to content creation and management. It doesn't have any hardcoded content.
-The website allows users to dynamically create homepage layouts, static pages, and posts using the TinyMCE editor within the Django admin interface. 
-Additionally, the website enables to dynamically add CSS file for any fine customization without deploying the code. The code is easy to understand and modify.
+MyPortfolio is a Django-based portfolio website that comes as an empty slate, containing only a navbar and post list page. Everything else is created dynamically through AI integration. Create content in HTML, JavaScript, and CSS with AI assistance. Build posts, pages, homepage sections, and global assets like color schemes—all with AI. Features built-in Model Context Protocol (MCP) integration with OAuth for powerful and easy content creation. Includes an admin page for manual content management.
 
+---
 
-### Installation:
+## 🚀 Quick Start
 
-#### Development:
+### Development Installation
 
-1. Clone the repository from git:
-
+1. **Clone the repository:**
    ```bash
-   $ git clone https://github.com/mdamire/MyPortfolio.git
+   git clone https://github.com/mdamire/MyPortfolio.git
+   cd MyPortfolio
    ```
 
-2. Create a virtual environment to isolate the installation:
-
+2. **Start with Docker Compose:**
    ```bash
-   $ python -m venv <path>/mysite
+   docker compose up
    ```
 
-3. Activate the virtual environment:
-
+   Or specify a custom port:
    ```bash
-   $ source <path>/mysite/bin/activate
+   PORT=8001 docker compose up
    ```
 
-4. Navigate to the project directory and install dependencies:
+3. **Access the application:**
+   - Navigate to [http://localhost:8000](http://localhost:8000) (or your custom port)
+   - Admin panel: [http://localhost:8000/admin](http://localhost:8000/admin)
 
+---
+
+### Production Installation
+
+1. **Clone the repository:**
    ```bash
-   $ pip install -r requirements.txt
+   git clone https://github.com/mdamire/MyPortfolio.git
+   cd MyPortfolio
    ```
 
-5. Migrate the database structure:
-
+2. **Create environment file:**
    ```bash
-   $ python manage.py migrate
+   touch .env
    ```
 
-6. Run the development server and navigate to [http://localhost:8000/](http://localhost:8000/):
-
-   ```bash
-   $ python manage.py runserver
+   Add the following environment variables to `.env`:
+   ```env
+   DB_NAME=myportfolio
+   DB_USER=myportfolio-user
+   DB_PASSWORD=portfolio-pass-42
+   ALLOWED_HOST=your-domain.com,www.your-domain.com,127.0.0.1
+   CSRF_TRUSTED_ORIGINS=http://your-domain.com,https://your-domain.com,http://www.your-domain.com,https://www.your-domain.com
+   SECRET_KEY='your-secret-key-here'
    ```
 
-#### Production:
+   > **Note:** Replace `your-domain.com` with your actual domain and generate a secure `SECRET_KEY`.
 
-- Yet to come.
+3. **Create static and media directories:**
+   ```bash
+   sudo mkdir -p /app/staticfiles
+   sudo chown www-data:www-data /app/staticfiles
+   sudo chmod 755 /app/staticfiles
 
+   sudo mkdir -p /app/mediafiles
+   sudo chown www-data:www-data /app/mediafiles
+   sudo chmod 755 /app/mediafiles
+   ```
 
-## Documentation:
+4. **Build and start the application:**
+   ```bash
+   docker compose -f docker-compose.prod.yml up --build
+   ```
+
+---
+
+## 👤 Create Admin User
+
+After installation, create an admin user to access the Django admin panel:
+
+**Development:**
+```bash
+docker compose run web python manage.py createsuperuser
+```
+
+**Production:**
+```bash
+docker compose -f docker-compose.prod.yml run web python manage.py createsuperuser
+```
+
+Access the admin panel at `/admin` and login with your credentials.
+
+---
+
+## 🤖 MCP Integration (AI-Powered Content Creation)
+
+### Connect with MCP
+
+- **MCP Endpoint:** `/mcp`
+- Use as an HTTP MCP server for any AI client
+- OAuth authentication required (use your admin credentials)
+
+### Available MCP Tools
+
+#### **Posts**
+- `create_post` - Create new blog posts with HTML content, tags, and assets
+- `get_post` - Retrieve post details and associated assets
+- `list_posts` - List posts with filtering by publication status and tags
+- `update_post` - Update existing posts
+
+#### **Pages**
+- `create_page` - Create static pages with custom content
+- `get_page` - Retrieve page details and assets
+- `list_pages` - List all static pages
+- `update_page` - Update existing pages
+
+#### **Homepage Sections**
+- `create_homepage_section` - Create homepage sections
+- `get_homepage_section` - Retrieve section details and shared assets
+- `list_homepage_sections` - List all active homepage sections
+- `update_homepage_section` - Update existing sections
+
+#### **Assets**
+- `create_site_asset` - Create CSS, JavaScript, images, or any file assets
+  - CSS/JS files are automatically linked as static resources
+  - Other files (images, JSON, etc.) are available as Django template context variables
+  - Can be scoped to posts, pages, homepage sections, or globally
+- `delete_site_asset` - Remove assets
+
+### Creating Content with AI
+
+#### **Posts**
+Ask AI to create a post. It should generate:
+- HTML content
+- JavaScript and CSS as assets
+- Appropriate tags
+
+Posts are created as drafts. Review them in the admin panel and publish manually by selecting the post and running the "publish post" action.
+
+#### **Pages**
+Ask AI to create a page with:
+- HTML, JavaScript, and CSS content
+- Optional navbar integration
+
+#### **Homepage**
+The homepage is composed of sections. Ask AI to create sections with:
+- HTML content
+- JavaScript and CSS (shared across all homepage sections)
+
+#### **Assets**
+Assets can be:
+- **Scoped:** Linked to specific posts, pages, or homepage sections
+- **Global:** Available across the entire site (useful for color schemes, global CSS/JS)
+
+CSS and JavaScript files are automatically linked to their pages. Images, audio, and video files are accessible as Django template context variables (e.g., `{{ asset_key }}` provides a file object).
+
+---
+
+## 📋 Manual Content Management
+
+### Admin Interface
+
+Login at `/admin` to manually manage:
+- Homepage sections
+- Static pages
+- Blog posts
+- Site assets
+- Tags
 
 ### Site Assets
 
-Users can upload various files such as images and PDFs to be incorporated into the website's content. These assets are stored with unique keys, making them easily accessible within the content. Additionally, with a key `style` , users can add CSS files that are immediately applied to the content.
+Upload files (images, PDFs, CSS, JS, etc.) to be incorporated into your content. Assets are stored with unique keys and can be:
+- Automatically linked (CSS/JS files)
+- Used as Django template variables (images, media files)
 
-If the django template rendering in on, these assets are passed as context where key is the context variable. So, an asset with key `mycv` can be accessed as `{{mycv}}` which is a file object and has file properties.
+**Example:** An asset with key `mycv` can be accessed as `{{ mycv }}` in templates, providing a file object with all file properties.
 
-#### "Site assests" in "COMMON" section of admin:
-- **Key:** Identifies uploaded files for integration into content.
-- **File:** File to be uploaded, including images, PDFs, etc.
+---
 
-### Home Page
+## 🏗️ Content Structure
 
-The homepage can be structured as a single-page design with multiple sections or as a traditional one-page layout. Sections are populated from the "Home Page Sections" model in the admin interface, allowing for seamless customization.
+### Homepage
 
-#### Properties of "Home Page Sections" in Pages:
+The homepage is structured with multiple sections, each with:
+- **Content:** HTML content (supports Django templates)
+- **Navbar Title:** Optional title for navbar link
+- **Serial:** Determines order of appearance
 
-- **Content:** Users can create content using the TinyMCE editor, allowing for rich text formatting and media embedding.
-- **Requires Rendering:** Toggle to enable processing of Django template syntax within the content.
-- **Navbar Title:** Title used for the navigation bar link associated with the section.
-- **Serial:** Determines the order of appearance on the homepage and in the navigation bar.
+### Posts
 
-### Post List Page
+Blog posts include:
+- **Permalink:** URL-friendly identifier
+- **Heading:** Post title
+- **Tags:** Color-coded labels for categorization
+- **Introduction:** Brief summary for post list page
+- **Content:** Full HTML content
+- **Include Sublinks:** Auto-generated table of contents from headers
+- **Is Published:** Control visibility
+- **Metadata:** Publication date, view count, related posts
 
-This page displays a list of posts with sorting and filtering functionality based on tags and other properties. Pagination is implemented to manage large numbers of posts efficiently.
-
-### Post Detail Page
-
-Posts are structured for readability and navigation ease. Users can create posts using the "Post Details" model in the admin interface.
-
-#### Sections:
-
-- **Meta:** Displays metadata such as publication date, view count, and associated tags.
-- **Tags:** Allows for categorization and organization of posts.
-- **Heading:** Title of the post.
-- **Sublink:** Automatically generated links within the post, facilitating navigation. 
-Sublinks are generated from the heading tags used in the post's content. By keeping headings in a sequential manner, users can create nested sections within their posts. For instance, if an H3 heading is used for a section, any lower heading (in HTML, actually a higher number) like H4 or H6 will be considered an inner section and will appear after the top section. This hierarchical organization enables users to present content in a structured and easily navigable format.
-- **Body:** Main content of the post.
-- **Related Posts:** Shows the five most related posts based on tags.
-
-#### "Post Details" in "POSTS" section in admin:
-
-- **Permalink:** Defines the URL structure for the post.
-- **Heading:** Title of the post.
-- **Tags:** Enables the assignment of descriptive labels to categorize the post.
-- **Feature:** Integer value used for sorting posts.
-- **Introduction:** A brief overview of the post displayed on the post list page.
-- **Content:** Detailed content of the post.
-- **Include Sublinks:** Toggle to display or hide sublinks within the post.
-- **Is Published:** Toggle to control whether the post is displayed in the post list.
-- **Publish Date:** Date when the post was published.
+**Sublinks** are automatically generated from heading tags (H1-H6) in sequential order, creating nested sections for easy navigation.
 
 ### Static Pages
 
-Users can create multiple static pages, which can be linked in the navigation bar or accessed via their URL.
+Create custom pages with:
+- **Permalink:** Custom URL
+- **Heading:** Page title
+- **Content:** HTML content (supports Django templates)
+- **Navbar Integration:** Optional navbar title and position
 
-#### "Static Pages" in "PAGES" section of admin:
+---
 
-- **Content:** Content of the static page, editable using the TinyMCE editor.
-- **Requires Rendering:** Toggle to enable processing of Django template syntax within the content.
-- **Permalink:** Defines the URL structure for the static page.
-- **Heading:** Title of the static page.
-- **Navbar Title:** Title used for the navigation bar link associated with the static page.
-- **Navbar Serial:** Determines the order of appearance in the navigation bar.
+## 🛠️ Technical Details
+
+- **Framework:** Django
+- **Database:** MySQL 8.0
+- **Web Server:** Gunicorn (production)
+- **Containerization:** Docker & Docker Compose
+- **Content Editing:** Dynamic HTML, CSS, JS
+- **Template Engine:** Django Templates
+- **MCP Server:** Built-in HTTP MCP with OAuth
+
+---
+
+## 📖 License
+
+This project is open source and available under the MIT License.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.

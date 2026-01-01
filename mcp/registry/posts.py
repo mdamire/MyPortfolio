@@ -41,7 +41,7 @@ def create_post(
     permalink: str,
     heading: str,
     content: str,
-    tags: List[Tuple[str, str, str]],
+    tags,
     introduction: Optional[str] = None,
     include_sublinks: bool = False,
 ) -> str:
@@ -153,7 +153,7 @@ def update_post(
     content: Optional[str] = None,
     introduction: Optional[str] = None,
     include_sublinks: Optional[bool] = None,
-    tags: Optional[List[Tuple[str, str, str]]] = None,
+    tags=None,
 ) -> str:
     """Update an existing blog post.
 
