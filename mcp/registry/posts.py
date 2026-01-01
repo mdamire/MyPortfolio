@@ -1,5 +1,6 @@
 from typing import Optional, List, Tuple
 from django.conf import settings
+import json
 
 from mcp_serializer.features.tool.result import ToolsResult
 
@@ -41,7 +42,7 @@ def create_post(
     permalink: str,
     heading: str,
     content: str,
-    tags,
+    tags: str,
     introduction: Optional[str] = None,
     include_sublinks: bool = False,
 ) -> str:
@@ -53,7 +54,7 @@ def create_post(
         permalink: Unique URL-friendly identifier (letters, numbers, underscores only).
         heading: Post title (max 200 characters).
         content: Main HTML content (supports Django templates).
-        tags: List of tuples [(label, text_color, bg_color)]. At least one required.
+        tags: JSON string of list of tuples [(label, text_color, bg_color)]. At least one required.
         introduction: Brief summary for post list page.
         include_sublinks: Auto-generate table of contents from headers (default: True).
     """
@@ -74,17 +75,22 @@ def create_post(
 
     # Handle tags
     tag_objects = []
-    for tag_label, color, bg_color in tags:
-        label_lower = tag_label.lower()
-        tag, created = PostTag.objects.get_or_create(
-            label=label_lower, defaults={"color": color, "bg_color": bg_color}
-        )
-        if not created and (tag.color != color or tag.bg_color != bg_color):
-            tag.color = color
-            tag.bg_color = bg_color
-            tag.save()
-        tag_objects.append(tag)
-    post.tags.set(tag_objects)
+    try:
+        tags_list = json.loads(tags) if isinstance(tags, str) else tags
+        for tag_label, color, bg_color in tags_list:
+            label_lower = tag_label.lower()
+            tag, created = PostTag.objects.get_or_create(
+                label=label_lower, defaults={"color": color, "bg_color": bg_color}
+            )
+            if not created and (tag.color != color or tag.bg_color != bg_color):
+                tag.color = color
+                tag.bg_color = bg_color
+                tag.save()
+            tag_objects.append(tag)
+        post.tags.set(tag_objects)
+    except (json.JSONDecodeError, ValueError, TypeError) as e:
+        # If tags parsing fails, just continue without tags
+        pass
 
     return f"Post with permalink {post.permalink} created successfully."
 
@@ -153,7 +159,7 @@ def update_post(
     content: Optional[str] = None,
     introduction: Optional[str] = None,
     include_sublinks: Optional[bool] = None,
-    tags=None,
+    tags: Optional[str] = None,
 ) -> str:
     """Update an existing blog post.
 
@@ -167,7 +173,7 @@ def update_post(
         content: New HTML content.
         introduction: New summary.
         include_sublinks: Toggle sublink generation.
-        tags: New list of tuples [(label, text_color, bg_color)].
+        tags: JSON string of new list of tuples [(label, text_color, bg_color)].
     """
     from django.core.files.base import ContentFile
 
@@ -189,17 +195,22 @@ def update_post(
     # Handle tags update
     if tags is not None:
         tag_objects = []
-        for tag_label, color, bg_color in tags:
-            label_lower = tag_label.lower()
-            tag, created = PostTag.objects.get_or_create(
-                label=label_lower, defaults={"color": color, "bg_color": bg_color}
-            )
-            if not created and (tag.color != color or tag.bg_color != bg_color):
-                tag.color = color
-                tag.bg_color = bg_color
-                tag.save()
-            tag_objects.append(tag)
-        post.tags.set(tag_objects)
+        try:
+            tags_list = json.loads(tags) if isinstance(tags, str) else tags
+            for tag_label, color, bg_color in tags_list:
+                label_lower = tag_label.lower()
+                tag, created = PostTag.objects.get_or_create(
+                    label=label_lower, defaults={"color": color, "bg_color": bg_color}
+                )
+                if not created and (tag.color != color or tag.bg_color != bg_color):
+                    tag.color = color
+                    tag.bg_color = bg_color
+                    tag.save()
+                tag_objects.append(tag)
+            post.tags.set(tag_objects)
+        except (json.JSONDecodeError, ValueError, TypeError) as e:
+            # If tags parsing fails, just continue without updating tags
+            pass
 
     return f"Post with permalink {post.permalink} updated successfully."
 
