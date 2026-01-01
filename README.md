@@ -1,234 +1,192 @@
 # MyPortfolio
 
-**Build your portfolio or any static site with AI.**
+**Build your portfolio or any static website with AI.**
 
-MyPortfolio is a Django-based portfolio website that comes as an empty slate, containing only a navbar and post list page. Everything else is created dynamically through AI integration. Create content in HTML, JavaScript, and CSS with AI assistance. Build posts, pages, homepage sections, and global assets like color schemes—all with AI. Features built-in Model Context Protocol (MCP) integration with OAuth for powerful and easy content creation. Includes an admin page for manual content management.
+MyPortfolio is a Django-based website that starts as an empty slate.
+Out of the box, it includes only a navbar and a posts list page; everything else can be created with AI.
 
----
+You create content as **HTML, CSS, and JavaScript**, letting AI design pages, posts, homepage sections, and even global styles like color schemes.
+An admin panel is included for full manual control when needed.
 
-## 🚀 Quick Start
-
-### Development Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/mdamire/MyPortfolio.git
-   cd MyPortfolio
-   ```
-
-2. **Start with Docker Compose:**
-   ```bash
-   docker compose up
-   ```
-
-   Or specify a custom port:
-   ```bash
-   PORT=8001 docker compose up
-   ```
-
-3. **Access the application:**
-   - Navigate to [http://localhost:8000](http://localhost:8000) (or your custom port)
-   - Admin panel: [http://localhost:8000/admin](http://localhost:8000/admin)
+AI integration is powered by **MCP (Model Context Protocol)** with OAuth, so you can connect your favorite AI client and start creating immediately.
 
 ---
 
-### Production Installation
+## What you can build
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/mdamire/MyPortfolio.git
-   cd MyPortfolio
-   ```
+- Blog posts with custom HTML, CSS, and JavaScript.
+- Static pages (About, Projects, Contact, etc.).
+- A homepage composed of reusable sections.
+- Global styles and assets (themes, colors, shared JS/CSS).
+- Images, audio, video, and other media assets.
 
-2. **Create environment file:**
-   ```bash
-   touch .env
-   ```
-
-   Add the following environment variables to `.env`:
-   ```env
-   DB_NAME=myportfolio
-   DB_USER=myportfolio-user
-   DB_PASSWORD=portfolio-pass-42
-   ALLOWED_HOST=your-domain.com,www.your-domain.com,127.0.0.1
-   CSRF_TRUSTED_ORIGINS=http://your-domain.com,https://your-domain.com,http://www.your-domain.com,https://www.your-domain.com
-   SECRET_KEY='your-secret-key-here'
-   ```
-
-   > **Note:** Replace `your-domain.com` with your actual domain and generate a secure `SECRET_KEY`.
-
-3. **Create static and media directories:**
-   ```bash
-   sudo mkdir -p /app/staticfiles
-   sudo chown www-data:www-data /app/staticfiles
-   sudo chmod 755 /app/staticfiles
-
-   sudo mkdir -p /app/mediafiles
-   sudo chown www-data:www-data /app/mediafiles
-   sudo chmod 755 /app/mediafiles
-   ```
-
-4. **Build and start the application:**
-   ```bash
-   docker compose -f docker-compose.prod.yml up --build
-   ```
+AI generates the content — **you stay in control**.
 
 ---
 
-## 👤 Create Admin User
+## Quick Start (Local Development)
 
-After installation, create an admin user to access the Django admin panel:
+### Requirements
+- Docker.
+- Docker Compose.
 
-**Development:**
+### Run locally
+
+```bash
+git clone https://github.com/mdamire/MyPortfolio.git
+cd MyPortfolio
+docker compose up
+```
+
+Optional custom port:
+
+```bash
+PORT=8001 docker compose up
+```
+
+Then open:
+
+- Website: [http://localhost:8000](http://localhost:8000) (or the custom port).
+- Admin panel: [http://localhost:8000/admin](http://localhost:8000/admin).
+
+---
+
+## Production Setup (Docker)
+
+1. **Clone the repository**.
+
+```bash
+git clone https://github.com/mdamire/MyPortfolio.git
+cd MyPortfolio
+```
+
+2. **Create `.env` file**.
+
+```bash
+touch .env
+```
+
+Example `.env`:
+
+```env
+DB_NAME=myportfolio
+DB_USER=myportfolio-user
+DB_PASSWORD=portfolio-pass-42
+ALLOWED_HOST=your-domain.com,www.your-domain.com,127.0.0.1
+CSRF_TRUSTED_ORIGINS=https://your-domain.com,https://www.your-domain.com
+SECRET_KEY=your-secret-key
+```
+
+3. **Create static and media directories**.
+
+```bash
+sudo mkdir -p /app/staticfiles /app/mediafiles
+sudo chown www-data:www-data /app/staticfiles /app/mediafiles
+sudo chmod 755 /app/staticfiles /app/mediafiles
+```
+
+4. **Build and start**.
+
+```bash
+docker compose -f docker-compose.prod.yml up --build
+```
+
+---
+
+## Create Admin User
+
+You’ll need an admin account to manage content.
+
+**Local**
+
 ```bash
 docker compose run web python manage.py createsuperuser
 ```
 
-**Production:**
+**Production**
+
 ```bash
 docker compose -f docker-compose.prod.yml run web python manage.py createsuperuser
 ```
 
-Access the admin panel at `/admin` and login with your credentials.
+Admin panel: [http://localhost:8000/admin](http://localhost:8000/admin).
 
 ---
 
-## 🤖 MCP Integration (AI-Powered Content Creation)
+## Using AI (MCP)
 
-### Connect with MCP
-
-- **MCP Endpoint:** `/mcp`
-- Use as an HTTP MCP server for any AI client
-- OAuth authentication required (use your admin credentials)
-
-### Available MCP Tools
-
-#### **Posts**
-- `create_post` - Create new blog posts with HTML content, tags, and assets
-- `get_post` - Retrieve post details and associated assets
-- `list_posts` - List posts with filtering by publication status and tags
-- `update_post` - Update existing posts
-
-#### **Pages**
-- `create_page` - Create static pages with custom content
-- `get_page` - Retrieve page details and assets
-- `list_pages` - List all static pages
-- `update_page` - Update existing pages
-
-#### **Homepage Sections**
-- `create_homepage_section` - Create homepage sections
-- `get_homepage_section` - Retrieve section details and shared assets
-- `list_homepage_sections` - List all active homepage sections
-- `update_homepage_section` - Update existing sections
-
-#### **Assets**
-- `create_site_asset` - Create CSS, JavaScript, images, or any file assets
-  - CSS/JS files are automatically linked as static resources
-  - Other files (images, JSON, etc.) are available as Django template context variables
-  - Can be scoped to posts, pages, homepage sections, or globally
-- `delete_site_asset` - Remove assets
-
-### Creating Content with AI
-
-#### **Posts**
-Ask AI to create a post. It should generate:
-- HTML content
-- JavaScript and CSS as assets
-- Appropriate tags
-
-Posts are created as drafts. Review them in the admin panel and publish manually by selecting the post and running the "publish post" action.
-
-#### **Pages**
-Ask AI to create a page with:
-- HTML, JavaScript, and CSS content
-- Optional navbar integration
-
-#### **Homepage**
-The homepage is composed of sections. Ask AI to create sections with:
-- HTML content
-- JavaScript and CSS (shared across all homepage sections)
-
-#### **Assets**
-Assets can be:
-- **Scoped:** Linked to specific posts, pages, or homepage sections
-- **Global:** Available across the entire site (useful for color schemes, global CSS/JS)
-
-CSS and JavaScript files are automatically linked to their pages. Images, audio, and video files are accessible as Django template context variables (e.g., `{{ asset_key }}` provides a file object).
+- **MCP endpoint:** [http://localhost:8000/mcp](http://localhost:8000/mcp).
+- Works as an HTTP MCP server.
+- OAuth authentication using your admin credentials.
 
 ---
 
-## 📋 Manual Content Management
-
-### Admin Interface
-
-Login at `/admin` to manually manage:
-- Homepage sections
-- Static pages
-- Blog posts
-- Site assets
-- Tags
-
-### Site Assets
-
-Upload files (images, PDFs, CSS, JS, etc.) to be incorporated into your content. Assets are stored with unique keys and can be:
-- Automatically linked (CSS/JS files)
-- Used as Django template variables (images, media files)
-
-**Example:** An asset with key `mycv` can be accessed as `{{ mycv }}` in templates, providing a file object with all file properties.
-
----
-
-## 🏗️ Content Structure
+## Creating Content with AI
 
 ### Homepage
 
-The homepage is structured with multiple sections, each with:
-- **Content:** HTML content (supports Django templates)
-- **Navbar Title:** Optional title for navbar link
-- **Serial:** Determines order of appearance
+The homepage is built from multiple sections, each with its own content, assets, and display order.
+
+- Ask AI to create or update homepage sections.
+- Sections are added to the navbar if a navbar title is provided.
+- Sections can be activated or deactivated from the admin panel.
+- CSS and JavaScript from active sections are shared across the entire homepage.
+- Manage sections at:
+  * [http://localhost:8000/admin/pages/homepagesection/](http://localhost:8000/admin/pages/homepagesection/)
+
+### Pages
+
+Pages are standalone static pages with a heading and content. They can be linked from anywhere on the site and optionally appear in the navbar.
+
+- Ask AI to create a page.
+- AI generates HTML content and related CSS/JS.
+- You can ask AI to add the page to the navbar.
+- Manage pages at:
+  * [http://localhost:8000/admin/pages/staticpage/](http://localhost:8000/admin/pages/staticpage/)
 
 ### Posts
 
-Blog posts include:
-- **Permalink:** URL-friendly identifier
-- **Heading:** Post title
-- **Tags:** Color-coded labels for categorization
-- **Introduction:** Brief summary for post list page
-- **Content:** Full HTML content
-- **Include Sublinks:** Auto-generated table of contents from headers
-- **Is Published:** Control visibility
-- **Metadata:** Publication date, view count, related posts
+Posts are blog-style content with a heading, introduction, full HTML content, and tags. They are listed on http://localhost:8000/posts/ with pagination, filtering, sorting, and related posts based on shared tags.
 
-**Sublinks** are automatically generated from heading tags (H1-H6) in sequential order, creating nested sections for easy navigation.
+- Ask AI to create a post.
+- AI generates HTML content and related CSS/JS.
+- Posts are created as **drafts**.
+- Review and publish manually from admin:
+  * Go to [http://localhost:8000/admin/posts/postdetail/](http://localhost:8000/admin/posts/postdetail/).
+  * Select the post.
+  * Select "Publish post" from the action dropdown and click Run.
 
-### Static Pages
+### Assets
 
-Create custom pages with:
-- **Permalink:** Custom URL
-- **Heading:** Page title
-- **Content:** HTML content (supports Django templates)
-- **Navbar Integration:** Optional navbar title and position
+Assets are files used by your site, such as styles, scripts, and media. They can be created by AI or uploaded manually through the admin panel.
 
----
-
-## 🛠️ Technical Details
-
-- **Framework:** Django
-- **Database:** MySQL 8.0
-- **Web Server:** Gunicorn (production)
-- **Containerization:** Docker & Docker Compose
-- **Content Editing:** Dynamic HTML, CSS, JS
-- **Template Engine:** Django Templates
-- **MCP Server:** Built-in HTTP MCP with OAuth
+- You can create **images, audio, video, CSS, and JavaScript** files.
+- **CSS and JavaScript** files are automatically loaded on the pages they belong to.
+- **Media files** (images, audio, video, PDFs, etc.) are available in Django templates as context. The asset key is the context name and the value is a Python file object.
+- Assets can be **scoped** to a post, page, or homepage section, or made **global**.
+- **Global assets** are loaded on every page and are useful for things like themes, fonts, and color schemes.
+- Manage all assets from:
+   * [http://localhost:8000/admin/common/siteasset/](http://localhost:8000/admin/common/siteasset/)
 
 ---
 
-## 📖 License
+## Tech Stack
 
-This project is open source and available under the MIT License.
+- Django.
+- MySQL.
+- Docker & Docker Compose.
+- Django Templates.
+- MCP (HTTP + OAuth).
 
 ---
 
-## 🤝 Contributing
+## License
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+MIT License.
+
+---
+
+## Contributing
+
+Pull requests are welcome 🙂
+
